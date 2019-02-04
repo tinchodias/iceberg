@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "IceAbstractTestCase",
+	"category" : "Iceberg-Tests-CherryPick",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "IceCherryPickingTest",
+	"type" : "normal"
+}
