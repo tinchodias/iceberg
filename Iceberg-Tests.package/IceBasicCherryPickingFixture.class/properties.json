@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "IceBasicRepositoryFixture",
+	"category" : "Iceberg-Tests-CherryPick",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "IceBasicCherryPickingFixture",
+	"type" : "normal"
+}

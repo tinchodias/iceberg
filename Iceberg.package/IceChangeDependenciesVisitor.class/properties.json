@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "IceTreeVisitor",
+	"category" : "Iceberg-Changes-Dependencies",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"dependencies"
+	],
+	"name" : "IceChangeDependenciesVisitor",
+	"type" : "normal"
+}
