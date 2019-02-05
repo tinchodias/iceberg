@@ -7,3 +7,10 @@ addTransitiveDependenciesFrom: anIceDiff to: anIceChangeDependencies
 			className: aName;
 			execute;
 			ifFound: [ :aIceNode | anIceChangeDependencies addClassDependencyOf: aIceNode value definition asMCDefinition ]].
+
+	self referencedTraits do: [ :aName | 
+		IceNodeQuery new
+			on: anIceDiff tree;
+			traitName: aName;
+			execute;
+			ifFound: [ :aIceNode | anIceChangeDependencies addTraitDependencyOf: aIceNode value definition asMCDefinition ]].

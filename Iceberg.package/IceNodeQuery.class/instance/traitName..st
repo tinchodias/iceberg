@@ -1,4 +1,4 @@
 building
-className: aString 
+traitName: aString 
 	
 	entityName := aString

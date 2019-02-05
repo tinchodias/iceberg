@@ -1,5 +1,5 @@
 tests
-testAddMethodWithoutDependencies
+testAddMethodInExistingClass
 	
 	| commitToCherryPick diff |
 		

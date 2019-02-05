@@ -1,0 +1,4 @@
+visiting
+visitTraitDefinition: anIceClassDefinition 
+	
+	^ false

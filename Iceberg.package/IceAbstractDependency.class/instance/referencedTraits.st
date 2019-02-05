@@ -1,0 +1,4 @@
+dependencies
+referencedTraits
+
+	^ self subclassResponsibility 
