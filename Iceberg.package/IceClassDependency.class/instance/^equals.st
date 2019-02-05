@@ -1,4 +1,4 @@
 comparing
 = anObject
 
-	^ super = anObject and: [superclassName = anObject superclassName]
+	^ super = anObject and: [definition superclassName = anObject definition superclassName]

@@ -1,4 +1,4 @@
 comparing
 = anObject
 
-	^ super = anObject and: [selector = anObject selector]
+	^ super = anObject and: [definition selector = anObject definition selector]

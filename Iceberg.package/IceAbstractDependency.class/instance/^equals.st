@@ -4,4 +4,4 @@ comparing
 
 	self == anObject ifTrue: [ ^ true ].
 	self species = anObject species ifFalse: [ ^ false ].
-	^ className = anObject className
+	^ definition className = anObject definition className

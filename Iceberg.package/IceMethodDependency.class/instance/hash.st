@@ -1,4 +1,4 @@
 comparing
 hash
 
-	^ super hash bitXor: className hash
+	^ super hash bitXor: definition className hash

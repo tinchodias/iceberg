@@ -6,7 +6,7 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"className"
+		"definition"
 	],
 	"name" : "IceAbstractDependency",
 	"type" : "normal"

@@ -1,4 +1,4 @@
 visiting
 visitClassDefinition: anIceClassDefinition
 
-	^ anIceClassDefinition asMCDefinition className = className
+	^ anIceClassDefinition asMCDefinition className = definition className

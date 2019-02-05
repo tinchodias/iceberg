@@ -1,0 +1,38 @@
+tests
+testAddMethodWithClassVariableAsDependencyWithSuperclassAlreadyCommited
+	
+	| commitToCherryPick diff |
+		
+	self repository createBranch: 'b2'.
+
+	self repository workingCopy addPackageNamed: self packageName1.
+	self repository workingCopy 
+		createClass: 'TestClass' 
+		inPackage: self packageName1 asSymbol 
+		with: [:class | class addClassVariable: (RG2ClassVariableDefinition named: 'TestClassVariable' asSymbol parent: class) ].
+	self repository commitWithMessage: 'Adding a test class with class variable'.
+
+	self repository workingCopy addPackageNamed: self packageName1.
+	self repository workingCopy 
+		createClass: 'TestClass2' 
+		inPackage: self packageName1 asSymbol 
+		with: [:class | class superclass: (class environment ask behaviorNamed: #TestClass) ].
+	self repository commitWithMessage: 'Adding another test class'.
+
+	self repository workingCopy addPackageNamed: self packageName1.	
+	self repository workingCopy createMethod: 'm1 ^TestClassVariable' inClass: 'TestClass2' asSymbol.
+	self repository commitWithMessage: 'Adding method using test class variable'.
+
+	commitToCherryPick := fixture repository head.
+
+	self repository checkoutBranch: 'master'.
+	diff := fixture repository cherryPickFrom: commitToCherryPick.
+
+	self assert: diff codeSubdirectoryNode children size equals: 1.
+	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 2.
+
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'TestClass') value isModification.
+
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'TestClass2') value isAddition.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'TestClass2') children size equals: 1.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'TestClass2' / 'm1') value isAddition.

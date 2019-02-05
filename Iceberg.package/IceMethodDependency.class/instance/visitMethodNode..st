@@ -1,4 +1,4 @@
 testing
 visitMethodNode: anIceMethodDefinition 
 	
-	^ anIceMethodDefinition asMCDefinition className = className and: [ anIceMethodDefinition asMCDefinition selector = selector ]
+	^ anIceMethodDefinition asMCDefinition className = definition className and: [ anIceMethodDefinition asMCDefinition selector = definition selector ]
