@@ -1,5 +1,5 @@
 tests
-testCherryPickingAddingMethodNoConflictsAndNoDependencies
+testAddMethodWithoutDependencies
 	
 	| commitToCherryPick diff |
 		

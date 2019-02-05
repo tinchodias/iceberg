@@ -1,5 +1,5 @@
 tests
-testCherryPickingAddingClassWithSuperclassAsDependency
+testAddClassWithSuperclassAsDependency
 	
 	| commitToCherryPick diff |
 		

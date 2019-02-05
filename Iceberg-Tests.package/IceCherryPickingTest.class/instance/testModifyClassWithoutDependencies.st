@@ -1,5 +1,5 @@
 tests
-testCherryPickingModifiedClassNoConflictsAndNoDependencies
+testModifyClassWithoutDependencies
 	
 	| commitToCherryPick diff |
 		
