@@ -1,7 +1,12 @@
 cherry-picking
 cherryPickTo: anotherCommit 
 
-	| diffToParent |
+	| diffToParent diffToHead dependencies | 
 	
 	diffToParent := self commit diffToParent.	
-   ^ diffToParent dependencies filterDiff: (self diffTo: anotherCommit).
+   diffToHead := self diffTo: anotherCommit.
+	dependencies := diffToParent dependencies.
+
+   ^ dependencies 
+		addTransitiveDependencies: diffToHead;
+		filterDiff: diffToHead.

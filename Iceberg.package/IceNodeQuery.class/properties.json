@@ -1,13 +1,16 @@
 {
 	"commentStamp" : "",
-	"super" : "IceAbstractDependency",
+	"super" : "IceTreeVisitor",
 	"category" : "Iceberg-Changes-Dependencies",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"superclassName"
+		"root",
+		"className",
+		"results",
+		"selector"
 	],
-	"name" : "IceSuperclassDependency",
+	"name" : "IceNodeQuery",
 	"type" : "normal"
 }

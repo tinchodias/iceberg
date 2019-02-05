@@ -1,0 +1,4 @@
+visiting
+visitClassDefinition: anIceClassDefinition 
+	
+	^ false
