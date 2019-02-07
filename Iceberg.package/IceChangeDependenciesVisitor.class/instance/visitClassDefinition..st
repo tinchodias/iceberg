@@ -1,4 +1,6 @@
 visiting
 visitClassDefinition: anIceClassDefinition
-	
-	dependencies addClassDependencyOf: anIceClassDefinition asMCDefinition.	
+
+	anIceClassDefinition isMeta
+		ifTrue: [ dependencies addMetaclassDependencyToClassNamed: anIceClassDefinition basicName ]
+		ifFalse: [ dependencies addClassDependencyOf: anIceClassDefinition asMCDefinition ]
