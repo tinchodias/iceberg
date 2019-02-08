@@ -1,0 +1,4 @@
+patching
+removePackage: anIcePackageDefinition
+	
+	workingCopy unloadPackage: anIcePackageDefinition

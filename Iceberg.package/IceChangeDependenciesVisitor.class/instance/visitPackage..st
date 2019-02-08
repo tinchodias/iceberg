@@ -1,0 +1,4 @@
+visiting
+visitPackage: anIcePackageDefinition 
+	
+	dependencies addPackageDependencyOfPackageNamed: anIcePackageDefinition name
