@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "IceAbstractDependency",
+	"super" : "IceDefinedDependency",
 	"category" : "Iceberg-Changes-Dependencies",
 	"classinstvars" : [ ],
 	"pools" : [ ],

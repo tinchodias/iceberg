@@ -1,11 +1,11 @@
 {
 	"commentStamp" : "",
-	"super" : "IceDefinedDependency",
+	"super" : "Object",
 	"category" : "Iceberg-Changes-Dependencies",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "IceClassDependency",
+	"name" : "IceDependency",
 	"type" : "normal"
 }

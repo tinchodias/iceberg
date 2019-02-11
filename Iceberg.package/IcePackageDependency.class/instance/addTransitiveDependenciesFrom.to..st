@@ -1,3 +1,3 @@
 dependencies
-addTransitiveDependenciesFrom: anIceDiff to: anIceChangeDependencies 
+addTransitiveDependenciesFrom: anIceDiff to: anIceCherrypicker 
 	"No transitive dependencies of a package"

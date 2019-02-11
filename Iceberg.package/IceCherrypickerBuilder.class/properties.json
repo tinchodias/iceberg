@@ -1,11 +1,13 @@
 {
 	"commentStamp" : "",
-	"super" : "IceDefinedDependency",
+	"super" : "IceTreeVisitor",
 	"category" : "Iceberg-Changes-Dependencies",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "IceClassDependency",
+	"instvars" : [
+		"cherrypicker"
+	],
+	"name" : "IceCherrypickerBuilder",
 	"type" : "normal"
 }

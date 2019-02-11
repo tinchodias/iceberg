@@ -1,0 +1,4 @@
+visiting
+visitPackage: anIcePackageDefinition 
+	
+	cherrypicker addPackageDependencyOfPackageNamed: anIcePackageDefinition name

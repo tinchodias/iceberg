@@ -1,12 +1,20 @@
 cherry-picking
 cherryPickTo: anotherCommit 
 
-	| diffToParent diffToHead dependencies | 
+	| diffToParent diffToHead cherrypicker | 
 	
-	diffToParent := self commit diffToParent.	
+	diffToParent := self commit diffToParent.
    diffToHead := self diffTo: anotherCommit.
-	dependencies := diffToParent dependencies.
 
-   ^ dependencies 
-		addTransitiveDependencies: diffToHead;
-		filterDiff: diffToHead.
+	"Obtain the initial change set (ICS)"
+	cherrypicker := IceCherrypickerBuilder newCherrypickerOn: diffToParent.
+
+	"Obtain an estimated transitive change set (ETCS)"
+   cherrypicker addTransitiveDependencies: diffToHead.
+
+	"Transform the diff to hold the ETCS"
+	IceCherrypickerDiffPruner new
+		cherrypicker: cherrypicker;
+		applyTo: diffToHead.
+	
+	^ diffToHead
