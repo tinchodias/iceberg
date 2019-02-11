@@ -1,1 +1,1 @@
-I am a dependency for IceDefinitions that have a non-nil MC defintion.
+I am a dependency for the IceDefinitions that have a MCDefinition.

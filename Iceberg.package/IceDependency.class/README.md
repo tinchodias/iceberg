@@ -1,1 +1,1 @@
-I am an abstract dependency of a IceDefinition in a IceDiff.
+I am a dependency of an IceDefinition in a IceDiff.
