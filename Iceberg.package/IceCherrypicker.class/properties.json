@@ -1,12 +1,14 @@
 {
-	"commentStamp" : "",
+	"commentStamp" : "MartinDias 2/11/2019 15:57",
 	"super" : "Object",
 	"category" : "Iceberg-Cherrypicking",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"dependencies"
+		"dependencies",
+		"sourceDiff",
+		"targetDiff"
 	],
 	"name" : "IceCherrypicker",
 	"type" : "normal"

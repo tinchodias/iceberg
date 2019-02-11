@@ -1,5 +1,5 @@
-transitive dependencies
-addTransitiveDependencies: anIceDiff
+execution - private
+addTransitiveDependencies
 
 	| originalDependencies |
 	originalDependencies := nil.
@@ -7,4 +7,4 @@ addTransitiveDependencies: anIceDiff
 	[ 	originalDependencies ~= dependencies ] whileTrue: [
 		originalDependencies := dependencies copy.
 		originalDependencies do: [ :each |
-			each addTransitiveDependenciesFrom: anIceDiff to: self ] ]
+			each addTransitiveDependenciesFrom: targetDiff to: self ] ]

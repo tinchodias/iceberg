@@ -1,5 +1,5 @@
 {
-	"commentStamp" : "",
+	"commentStamp" : "MartinDias 2/11/2019 15:48",
 	"super" : "IceTreeVisitor",
 	"category" : "Iceberg-Cherrypicking",
 	"classinstvars" : [ ],
@@ -8,6 +8,6 @@
 	"instvars" : [
 		"cherrypicker"
 	],
-	"name" : "IceCherrypickerBuilder",
+	"name" : "IceCherrypickerInitialDependenciesCollector",
 	"type" : "normal"
 }

@@ -1,0 +1,1 @@
+I am a IceNode (and IceDefinition) visitor that can detect a code entity in the tree.
