@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "IceDependency",
-	"category" : "Iceberg-Changes-Dependencies",
+	"category" : "Iceberg-Cherrypicking",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

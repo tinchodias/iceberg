@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "IceAbstractTestCase",
-	"category" : "Iceberg-Tests-CherryPick",
+	"category" : "Iceberg-Tests-Cherrypicking",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
