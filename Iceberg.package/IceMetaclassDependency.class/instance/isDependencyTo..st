@@ -1,4 +1,4 @@
-testring
-isDependencyTo: aDefinition 
-	
-	^ aDefinition accept: self
+visiting
+isDependencyTo: anIceClassDefinition
+
+	^ anIceClassDefinition basicName = name

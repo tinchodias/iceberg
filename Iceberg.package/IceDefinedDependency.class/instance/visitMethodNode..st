@@ -1,4 +1,0 @@
-visiting
-visitMethodNode: aDefinition 
-	
-	^ false

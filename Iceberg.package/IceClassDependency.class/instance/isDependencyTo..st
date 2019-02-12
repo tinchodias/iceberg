@@ -1,4 +1,4 @@
 visiting
-visitClassDefinition: anIceClassDefinition
+isDependencyTo: anIceClassDefinition
 
 	^ anIceClassDefinition asMCDefinition className = definition className

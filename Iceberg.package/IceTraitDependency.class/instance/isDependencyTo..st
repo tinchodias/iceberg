@@ -1,4 +1,4 @@
 visiting
-visitTraitDefinition: anIceTraitDefinition
+isDependencyTo: anIceTraitDefinition
 
 	^ anIceTraitDefinition name = definition className
