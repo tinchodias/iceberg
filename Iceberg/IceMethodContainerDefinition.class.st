@@ -11,71 +11,56 @@ Class {
 	#name : #IceMethodContainerDefinition,
 	#superclass : #IceCodeDefinition,
 	#instVars : [
-		'isMeta',
 		'mcDefinition'
 	],
 	#category : 'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
-IceMethodContainerDefinition class >> named: aString isMeta: isMeta [
+IceMethodContainerDefinition class >> named: aString [
 	
 	^ self new
 		name: aString;
-		isMeta: isMeta;
 		yourself
 ]
 
 { #category : #patching }
-IceMethodContainerDefinition >> asMCDefinition [
+IceMethodContainerDefinition >> allPropertyNames [
+	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp)
+]
 
+{ #category : #patching }
+IceMethodContainerDefinition >> asMCDefinition [
 	^ mcDefinition
 ]
 
-{ #category : #accessing }
-IceMethodContainerDefinition >> contents [
-	
-	mcDefinition ifNil: [ ^ '' ].
-	^ self isMeta
-		ifFalse: [ mcDefinition definitionString ]
-		ifTrue: [ mcDefinition classDefinitionString ]
+{ #category : #private }
+IceMethodContainerDefinition >> childrenDefinitions [
+	^ self propertyDefinitions, self variableDefinitions
 ]
 
-{ #category : #accessing }
-IceMethodContainerDefinition >> isMeta [
-	^ isMeta
-]
-
-{ #category : #accessing }
-IceMethodContainerDefinition >> isMeta: anObject [
-	isMeta := anObject
-]
-
-{ #category : #accessing }
-IceMethodContainerDefinition >> key [
-	
-	^ super key , (self isMeta ifTrue: [ ' class' ] ifFalse: [ '' ])
+{ #category : #patching }
+IceMethodContainerDefinition >> mcDefinition [
+	^ mcDefinition
 ]
 
 { #category : #patching }
 IceMethodContainerDefinition >> mcDefinition: aMCDefinition [
-
 	mcDefinition := aMCDefinition
-]
-
-{ #category : #accessing }
-IceMethodContainerDefinition >> name [
-	^ name , (isMeta ifTrue: [ ' class' ] ifFalse: [ '' ])
-]
-
-{ #category : #accessing }
-IceMethodContainerDefinition >> name: aString [
-
-	name := aString
 ]
 
 { #category : #patching }
 IceMethodContainerDefinition >> removeFrom: aPatcher [
 	
 	aPatcher removeClass: self
+]
+
+{ #category : #patching }
+IceMethodContainerDefinition >> variableDefinitions [
+	^ mcDefinition variables
+		collect: [ :each | 
+			IceVariableDefinition new
+				mcVariableDefinition: each;
+				containerIceDefinition: self;
+				yourself ]
 ]

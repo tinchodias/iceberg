@@ -31,7 +31,7 @@ IceTipDiffSelectingPanel >> newChangeTreeDataSource [
 	^ IceTipTreeSelectingDataSource new
 		tool: self;
 		rootForItems: self model treeRoots;
-		childrenBlock: [ :data | data children ];
+		childrenBlock: [ :data | data childrenPreservingOrder ];
 		icon: [ :each | each value icon ];
 		format: #description;
 		selectAll;

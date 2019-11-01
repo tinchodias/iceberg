@@ -9,7 +9,7 @@ See my superclasses for more information.
 Class {
 	#name : #IceExtensionDefinition,
 	#superclass : #IceMethodContainerDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #comparing }
@@ -25,20 +25,13 @@ IceExtensionDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceExtensionDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
-	
-	"Do nothing. Monticello does not have definitions for extensions"
-]
-
-{ #category : #patching }
-IceExtensionDefinition >> addToPatcher: aMCPatcher [ 
+IceExtensionDefinition >> addInPatcher: aMCPatcher [ 
 	
 	"Monticello does not reify extensions"
 ]
 
-{ #category : #visiting }
+{ #category : #accessing }
 IceExtensionDefinition >> contents [
-
 	^ ''
 ]
 
@@ -53,6 +46,17 @@ IceExtensionDefinition >> isExtensionDefinition [
 	^ true
 ]
 
+{ #category : #comparing }
+IceExtensionDefinition >> key [
+	^ super key, ' (extension)'
+]
+
+{ #category : #patching }
+IceExtensionDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
+
+	"Do nothing. Monticello does not have definitions for extensions"
+]
+
 { #category : #patching }
 IceExtensionDefinition >> removeFrom: aPatcher [
 	
@@ -60,7 +64,7 @@ IceExtensionDefinition >> removeFrom: aPatcher [
 ]
 
 { #category : #patching }
-IceExtensionDefinition >> removeFromPatcher: aMCPatcher [ 
+IceExtensionDefinition >> removeInPatcher: aMCPatcher [ 
 	
 	"Monticello does not reify extensions"
 ]

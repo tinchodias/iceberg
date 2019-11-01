@@ -14,7 +14,7 @@ Class {
 		'protocol',
 		'sourceCode'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -50,9 +50,14 @@ IceMethodDefinition >> actualClass [
 ]
 
 { #category : #patching }
-IceMethodDefinition >> addToPatcher: aMCPatcher [ 
+IceMethodDefinition >> addInPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition
+]
+
+{ #category : #'as yet unclassified' }
+IceMethodDefinition >> allPropertyNames [
+	^ #(category source)
 ]
 
 { #category : #patching }
@@ -65,6 +70,12 @@ IceMethodDefinition >> asMCDefinition [
 		category: self protocol
 		timeStamp: ''
 		source: sourceCode
+]
+
+{ #category : #accessing }
+IceMethodDefinition >> ast [
+
+	^ RBParser parseMethod: sourceCode
 ]
 
 { #category : #accessing }
@@ -115,10 +126,31 @@ IceMethodDefinition >> isLoadable [
 	^ self contextClass notNil
 ]
 
+{ #category : #'as yet unclassified' }
+IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [ 
+
+	^ sourceCode = anotherIceMethodDefinition sourceCode
+		and: [ self ast = anotherIceMethodDefinition ast ]
+]
+
 { #category : #testing }
 IceMethodDefinition >> isMethodDefinition [
 	
 	^ true
+]
+
+{ #category : #accessing }
+IceMethodDefinition >> key [
+	^ self classIsMeta
+		ifTrue: [ 'class >> ', name ]
+		ifFalse: [ '>> ', name ]
+]
+
+{ #category : #patching }
+IceMethodDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
+	aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition
 ]
 
 { #category : #accessing }
@@ -144,7 +176,7 @@ IceMethodDefinition >> removeFrom: aPatcher [
 ]
 
 { #category : #patching }
-IceMethodDefinition >> removeFromPatcher: aMCPatcher [ 
+IceMethodDefinition >> removeInPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition
 ]

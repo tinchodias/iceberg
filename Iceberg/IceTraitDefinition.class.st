@@ -8,7 +8,7 @@ See my superclasses for more information.
 Class {
 	#name : #IceTraitDefinition,
 	#superclass : #IceMethodContainerDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #visiting }
@@ -18,28 +18,19 @@ IceTraitDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceTraitDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
+IceTraitDefinition >> addInPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses if their mcDefinition is nil.
 	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
-	
-	aMCPatcher
-		modifyDefinition: anIceModification rightDefinition asMCDefinition
-		to: anIceModification leftDefinition asMCDefinition
-]
-
-{ #category : #patching }
-IceTraitDefinition >> addToPatcher: aMCPatcher [ 
-	
-	"We should not handle metaclasses if their mcDefinition is nil.
-	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
+	mcDefinition ifNil: [ ^ self ].
 
 	"We should only be in this case if there is not instace-side changes."
 	aMCPatcher addDefinition: self asMCDefinition
+]
+
+{ #category : #accessing }
+IceTraitDefinition >> contents [
+	^ mcDefinition definitionString
 ]
 
 { #category : #testing }
@@ -49,10 +40,18 @@ IceTraitDefinition >> isTraitDefinition [
 ]
 
 { #category : #patching }
-IceTraitDefinition >> removeFromPatcher: aMCPatcher [ 
+IceTraitDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
+	
+	aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition
+]
+
+{ #category : #patching }
+IceTraitDefinition >> removeInPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses. They will be added automatically when added the instance side"
-	self isMeta ifTrue: [ ^ self ].
+	mcDefinition ifNil: [ ^ self ].
 	
 	aMCPatcher removeDefinition: self asMCDefinition
 ]

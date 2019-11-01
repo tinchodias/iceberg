@@ -36,7 +36,7 @@ Class {
 		'childrenDictionary',
 		'value'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -65,7 +65,7 @@ IceNode >> / aString [
 IceNode >> = anotherNode [
 
 	^ (self basicEqualsTo: anotherNode)
-		and: [ self children asSet = anotherNode children asSet ]
+		and: [ self childrenAsSet = anotherNode childrenAsSet ]
 ]
 
 { #category : #visiting }
@@ -167,10 +167,23 @@ IceNode >> children [
 	^ childrenDictionary values sorted: [ :a :b | a key < b key ]
 ]
 
+{ #category : #accessing }
+IceNode >> childrenAsSet [
+	"Optimized children converted as Set."
+
+	^ childrenDictionary asSet
+]
+
 { #category : #enumerating }
 IceNode >> childrenDo: aBlockClosure [ 
 	
 	self children do: aBlockClosure
+]
+
+{ #category : #accessing }
+IceNode >> childrenPreservingOrder [
+	
+	^ childrenDictionary values
 ]
 
 { #category : #enumerating }
@@ -268,7 +281,7 @@ IceNode >> includesKey: anObject [
 IceNode >> initialize [
 
 	super initialize.
-	childrenDictionary := Dictionary new
+	childrenDictionary := SmallDictionary new
 ]
 
 { #category : #testing }
@@ -480,7 +493,7 @@ IceNode >> rootNode [
 IceNode >> select: aBlock [
 
 	| selectedChildren newNode |
-	selectedChildren := self children collect: [ :childNode | 
+	selectedChildren := self childrenPreservingOrder collect: [ :childNode | 
 		childNode select: aBlock ].
 	
 	((selectedChildren anySatisfy: [ :each | each isEmptyNode not ])

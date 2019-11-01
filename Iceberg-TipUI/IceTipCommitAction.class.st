@@ -9,7 +9,7 @@ Class {
 		'items',
 		'message'
 	],
-	#category : 'Iceberg-TipUI-Commands'
+	#category : #'Iceberg-TipUI-Commands'
 }
 
 { #category : #executing }
@@ -57,7 +57,9 @@ IceTipCommitAction >> message: anObject [
 
 { #category : #validating }
 IceTipCommitAction >> validateCanCommit [
-	self validateMessageNotEmpty
+	self
+		validateMessageNotEmpty;
+		validateChangeListNotEmpty
 ]
 
 { #category : #validating }

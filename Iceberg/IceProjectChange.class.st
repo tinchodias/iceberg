@@ -4,11 +4,16 @@ I represent the fact that the project changed. I'm using during the double-dispa
 Class {
 	#name : #IceProjectChange,
 	#superclass : #Object,
-	#category : 'Iceberg-Project'
+	#category : #'Iceberg-Project'
 }
 
 { #category : #visiting }
 IceProjectChange >> accept: anIceChangeImporter [ 
 	
 	anIceChangeImporter visitProjectChange: self
+]
+
+{ #category : #'as yet unclassified' }
+IceProjectChange >> displayingProgressString [
+	^ 'Comparing Project change'
 ]

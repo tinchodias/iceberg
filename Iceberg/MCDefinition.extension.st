@@ -11,6 +11,16 @@ MCDefinition >> addToPackageDiff: anIcePackageDiff leftSnapshot: anObject rightS
 	self subclassResponsibility
 ]
 
+{ #category : #'*Iceberg' }
+MCDefinition >> basicAtPropertyNamed: aName [
+	^ self instVarNamed: aName
+]
+
+{ #category : #'*Iceberg' }
+MCDefinition >> basicAtPropertyNamed: aName put: aValue [
+	self instVarNamed: aName put: aValue
+]
+
 { #category : #'*Iceberg-Changes' }
 MCDefinition >> buildOn: anIceDiffBuilder [
 	

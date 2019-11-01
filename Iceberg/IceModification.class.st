@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'oldNode'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -34,8 +34,10 @@ IceModification >> accept: aVisitor [
 
 { #category : #accessing }
 IceModification >> description [
-	
-	^ definition name
+	^ definition key asString,
+			(self isOnlyLowImpact
+				ifTrue: [ ' [low impact] ' ]
+				ifFalse: [ '' ])
 ]
 
 { #category : #operations }
@@ -51,9 +53,8 @@ IceModification >> isModification [
 ]
 
 { #category : #accessing }
-IceModification >> key [
-	
-	^ definition key
+IceModification >> isOnlyLowImpact [
+	^ definition isLowImpactAppliedTo: oldNode 
 ]
 
 { #category : #accessing }
@@ -132,4 +133,9 @@ IceModification >> rightDefinition [
 IceModification >> rightDefinition: aDefinition [
 	
 	oldNode := aDefinition
+]
+
+{ #category : #'as yet unclassified' }
+IceModification >> ritaColor [
+	^ Color cyan muchDarker mixed: 0.5 with: Color blue
 ]

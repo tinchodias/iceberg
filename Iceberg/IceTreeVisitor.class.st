@@ -7,13 +7,13 @@ Class {
 	#instVars : [
 		'currentNode'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #visiting }
 IceTreeVisitor >> visitChildrenOf: anIceNode [ 
 	
-	anIceNode childrenDo: [ :each | each accept: self ]
+	anIceNode childrenPreservingOrder do: [ :each | each accept: self ]
 ]
 
 { #category : #visiting }

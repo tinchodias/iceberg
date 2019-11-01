@@ -8,7 +8,7 @@ Class {
 		'repository',
 		'loader'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -79,6 +79,14 @@ IceWorkingCopyPatcherVisitor >> visitClassDefinition: anIceClassDefinition [
 	
 	repository workingCopy applyDefinition: anIceClassDefinition inNode: currentNode.
 	self visitChildrenOf: currentNode.
+]
+
+{ #category : #'as yet unclassified' }
+IceWorkingCopyPatcherVisitor >> visitContainedDefinition: anIceContainedDefinition [ 
+
+1halt.
+	"repository workingCopy applyDefinition: anIceContainedDefinition containerIceDefinition inNode: currentNode parent.
+	self visitChildrenOf: currentNode."
 ]
 
 { #category : #visiting }

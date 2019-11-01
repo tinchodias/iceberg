@@ -6,7 +6,7 @@ See my sub/superclasses for more information.
 Class {
 	#name : #IceCodeDefinition,
 	#superclass : #IceDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'as yet unclassified' }
@@ -25,39 +25,46 @@ IceCodeDefinition >> = anotherDefinition [
 ]
 
 { #category : #patching }
-IceCodeDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
-	
-	aMCPatcher
-		modifyDefinition: anIceModification rightDefinition asMCDefinition
-		to: anIceModification leftDefinition asMCDefinition
-]
-
-{ #category : #patching }
-IceCodeDefinition >> addToPatcher: aMCPatcher [ 
+IceCodeDefinition >> addInPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-IceCodeDefinition >> contents [
-	
-	^ self subclassResponsibility
+{ #category : #properties }
+IceCodeDefinition >> allPropertyNames [
+	^ #()
+]
+
+{ #category : #properties }
+IceCodeDefinition >> childrenDefinitions [
+	^ self propertyDefinitions
 ]
 
 { #category : #comparing }
 IceCodeDefinition >> hash [
-
-	^ self contents hash
+	^ super hash bitXor: self contents hash
 ]
 
 { #category : #patching }
-IceCodeDefinition >> removeFrom: aPatcher [
+IceCodeDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
 
+{ #category : #properties }
+IceCodeDefinition >> propertyDefinitions [
+	^ self allPropertyNames
+		collect: [ :each | 
+			IcePropertyDefinition new
+				name: each;
+				containerIceDefinition: self;
+				yourself.
+			 ].
+
+]
+
 { #category : #patching }
-IceCodeDefinition >> removeFromPatcher: aMCPatcher [ 
+IceCodeDefinition >> removeFrom: aPatcher [
 	
 	self subclassResponsibility
 ]

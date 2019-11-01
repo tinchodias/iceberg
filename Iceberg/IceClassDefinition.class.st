@@ -8,7 +8,7 @@ See my superclasses for more information.
 Class {
 	#name : #IceClassDefinition,
 	#superclass : #IceMethodContainerDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #visiting }
@@ -18,36 +18,14 @@ IceClassDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceClassDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
+IceClassDefinition >> addInPatcher: aMCPatcher [ 
 	
-	"We should not handle metaclasses if their mcDefinition is nil.
-	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
-	
-	aMCPatcher
-		modifyDefinition: anIceModification rightDefinition asMCDefinition
-		to: anIceModification leftDefinition asMCDefinition
-]
-
-{ #category : #patching }
-IceClassDefinition >> addToPatcher: aMCPatcher [ 
-	
-	"We should not handle metaclasses if their mcDefinition is nil.
-	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
-	
-	"We should only be in this case if there is not instace-side changes."
-	aMCPatcher addDefinition: self asMCDefinition
+	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
 ]
 
 { #category : #accessing }
 IceClassDefinition >> contents [
-	mcDefinition ifNil: [ ^ '' ].
-	^ self isMeta
-		ifFalse: [ mcDefinition fullDefinitionString ]
-		ifTrue: [ mcDefinition classDefinitionString ]
+	^ mcDefinition fullDefinitionString
 ]
 
 { #category : #testing }
@@ -56,11 +34,29 @@ IceClassDefinition >> isClassDefinition [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
+	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
+]
+
 { #category : #patching }
-IceClassDefinition >> removeFromPatcher: aMCPatcher [ 
+IceClassDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
 	
-	"We should not handle metaclasses. They will be removed automatically if the instance side is removed"
-	isMeta ifTrue: [ ^ true ].
+	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
+	
+	"NOTE: MCPatcher is the other kind of visitor"
+	
+	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ 
+							aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition 
+		
+		]
+
+]
+
+{ #category : #patching }
+IceClassDefinition >> removeInPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition 
 ]

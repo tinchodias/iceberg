@@ -14,7 +14,7 @@ IceMCSnapshotPatchVisitor >> patcher: aMCPatcher [
 
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitAddition: anIceAddition [ 
-	anIceAddition definition addToPatcher: patcher.
+	anIceAddition definition addInPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]
 
@@ -30,14 +30,16 @@ IceMCSnapshotPatchVisitor >> visitConflictingOperation: anIceConflictingOperatio
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitModification: anIceModification [
 
-	anIceModification leftDefinition addModification: anIceModification toPatcher: patcher.
+	anIceModification leftDefinition
+		modifyFrom: anIceModification rightDefinition
+		inPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]
 
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitNoModification: anIceNoModification [
 	
-	anIceNoModification definition addToPatcher: patcher.
+	anIceNoModification definition addInPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]
 
@@ -49,6 +51,6 @@ IceMCSnapshotPatchVisitor >> visitNonConflictingOperation: anIceNonConflictingOp
 
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitRemoval: anIceRemoval [ 
-	anIceRemoval definition removeFromPatcher: patcher.
+	anIceRemoval definition removeInPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]

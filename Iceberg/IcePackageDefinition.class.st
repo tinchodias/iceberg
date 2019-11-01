@@ -13,7 +13,7 @@ Class {
 		'categories',
 		'path'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #visiting }
@@ -23,22 +23,9 @@ IcePackageDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IcePackageDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
-
-	"In MC there is no such thing as a MCPackage definition.
-	Instead, we should manage organization definitions.
-	The problem is that they have no identity: they do not know the package they belong to.
-	Then, if we just apply this modification, we end up just adding a new definition (and having both).
-	To solve this, we remove the old organization and add the new one explicitly."
-
-	aMCPatcher removeDefinition: anIceModification rightDefinition asMCDefinition.
-	^ aMCPatcher addDefinition: anIceModification leftDefinition asMCDefinition
-]
-
-{ #category : #patching }
-IcePackageDefinition >> addToPatcher: aPatcher [
+IcePackageDefinition >> addInPatcher: aPatcher [
 	
-	aPatcher addDefinition: (MCOrganizationDefinition categories: categories)
+	aPatcher addDefinition: (MCOrganizationDefinition categories: ({name}, categories))
 ]
 
 { #category : #accessing }
@@ -83,6 +70,19 @@ IcePackageDefinition >> isPackageDefinition [
 	^ true
 ]
 
+{ #category : #patching }
+IcePackageDefinition >> modifyFrom: anotherIceModification inPatcher: aMCPatcher [ 
+
+	"In MC there is no such thing as a MCPackage definition.
+	Instead, we should manage organization definitions.
+	The problem is that they have no identity: they do not know the package they belong to.
+	Then, if we just apply this modification, we end up just adding a new definition (and having both).
+	To solve this, we remove the old organization and add the new one explicitly."
+
+	aMCPatcher removeDefinition: anotherIceModification asMCDefinition.
+	^ aMCPatcher addDefinition: self asMCDefinition
+]
+
 { #category : #accessing }
 IcePackageDefinition >> package [
 	
@@ -106,7 +106,7 @@ IcePackageDefinition >> removeFrom: aVisitor [
 ]
 
 { #category : #patching }
-IcePackageDefinition >> removeFromPatcher: aPatcher [
+IcePackageDefinition >> removeInPatcher: aPatcher [
 	
 	aPatcher removeDefinition: (MCOrganizationDefinition categories: categories)
 ]

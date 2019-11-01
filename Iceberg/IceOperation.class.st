@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'definition'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -51,7 +51,7 @@ IceOperation >> definition: aDefinition [
 { #category : #accessing }
 IceOperation >> description [
 	
-	^ definition name
+	^ definition key
 ]
 
 { #category : #testing }
@@ -159,6 +159,18 @@ IceOperation >> mergeWithOperation: anOperation [
 IceOperation >> name [
 	
 	^ definition name
+]
+
+{ #category : #printing }
+IceOperation >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: definition;
+		nextPut: $)
+
 ]
 
 { #category : #accessing }
