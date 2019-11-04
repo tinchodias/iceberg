@@ -53,6 +53,16 @@ IceDiff >> build [
 ]
 
 { #category : #building }
+IceDiff >> buildForAllFiles [
+
+	| files changes |
+	files := (source fileSystem childNames, target fileSystem childNames) asSet.
+	changes := files collect: [ :each | IceGitChange on: each ].
+	
+	self buildForChanges: changes
+]
+
+{ #category : #building }
 IceDiff >> buildForChanges: aCollection [
 
 	| leftTree rightTree |
