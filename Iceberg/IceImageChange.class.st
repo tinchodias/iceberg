@@ -3,7 +3,7 @@ I represent a change coming from the image (in contrast to a change coming from 
 "
 Class {
 	#name : #IceImageChange,
-	#superclass : #Object,
+	#superclass : #IceChange,
 	#instVars : [
 		'package'
 	],

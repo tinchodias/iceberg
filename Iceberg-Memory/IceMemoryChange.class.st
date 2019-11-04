@@ -1,6 +1,6 @@
 Class {
 	#name : #IceMemoryChange,
-	#superclass : #Object,
+	#superclass : #IceChange,
 	#instVars : [
 		'package'
 	],

@@ -1,6 +1,6 @@
 Class {
 	#name : #IceCypressPropertiesChange,
-	#superclass : #Object,
+	#superclass : #IceChange,
 	#category : #'Iceberg-Changes'
 }
 
@@ -10,7 +10,7 @@ IceCypressPropertiesChange >> accept: anIceChangeImporter [
 	anIceChangeImporter visitCypressPropertiesChange: self
 ]
 
-{ #category : #printing }
+{ #category : #displaying }
 IceCypressPropertiesChange >> displayingProgressString [
 	^ 'Comparing Cypress changes'
 ]

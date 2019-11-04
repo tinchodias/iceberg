@@ -27,7 +27,7 @@ Class {
 		'writerClass',
 		'mergedTree'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
