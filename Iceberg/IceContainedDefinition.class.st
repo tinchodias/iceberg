@@ -100,7 +100,7 @@ IceContainedDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher
 
 { #category : #patching }
 IceContainedDefinition >> removeFrom: aPatcher [
-	(self className, 'removeFrom: ', aPatcher asString) logCr.
+	(self className , 'removeFrom: ' , aPatcher asString) traceCr
 ]
 
 { #category : #patching }

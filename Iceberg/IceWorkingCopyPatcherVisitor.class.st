@@ -84,9 +84,8 @@ IceWorkingCopyPatcherVisitor >> visitClassDefinition: anIceClassDefinition [
 { #category : #'as yet unclassified' }
 IceWorkingCopyPatcherVisitor >> visitContainedDefinition: anIceContainedDefinition [ 
 
-1halt.
-	"repository workingCopy applyDefinition: anIceContainedDefinition containerIceDefinition inNode: currentNode parent.
-	self visitChildrenOf: currentNode."
+	repository workingCopy applyDefinition: anIceContainedDefinition containerIceDefinition inNode: currentNode parent.
+	self visitChildrenOf: currentNode.
 ]
 
 { #category : #visiting }
