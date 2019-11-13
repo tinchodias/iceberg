@@ -12,7 +12,7 @@ Class {
 		'path',
 		'fileReference'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #accessing }
@@ -25,6 +25,13 @@ IceFileSystemDefinition >> fileReference [
 IceFileSystemDefinition >> fileReference: aFileReference [
 
 	fileReference := aFileReference 
+]
+
+{ #category : #testing }
+IceFileSystemDefinition >> isLowImpactAppliedTo: anIceFileDefinition [
+	"May be arbitrary: We assume it doesn't affect behavior of code entities."
+
+	^ true
 ]
 
 { #category : #accessing }
