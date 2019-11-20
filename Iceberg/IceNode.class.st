@@ -103,10 +103,7 @@ IceNode >> allChildrenDo: aBlockClosure [
 
 { #category : #accessing }
 IceNode >> allPathSegments [
-
-	self isRoot ifTrue: [ ^ #() ].
-	self parent isRoot ifTrue: [ ^ { self key } ].
-	^ self parent allPathSegments copyWith: self key
+	^ self withAllParentNodes collect: #key
 ]
 
 { #category : #enumerating }
@@ -516,4 +513,12 @@ IceNode >> value [
 IceNode >> value: aValue [
  
 	value := aValue
+]
+
+{ #category : #accessing }
+IceNode >> withAllParentNodes [
+
+	self isRoot ifTrue: [ ^ #() ].
+	self parent isRoot ifTrue: [ ^ { self } ].
+	^ self parent withAllParentNodes copyWith: self
 ]
