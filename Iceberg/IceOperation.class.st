@@ -90,6 +90,12 @@ IceOperation >> isModification [
 ]
 
 { #category : #testing }
+IceOperation >> isNoModification [
+	
+	^ false
+]
+
+{ #category : #testing }
 IceOperation >> isRemoval [
 	
 	^ false
