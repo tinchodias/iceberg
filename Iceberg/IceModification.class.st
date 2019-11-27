@@ -134,8 +134,3 @@ IceModification >> rightDefinition: aDefinition [
 	
 	oldNode := aDefinition
 ]
-
-{ #category : #'as yet unclassified' }
-IceModification >> ritaColor [
-	^ Color cyan muchDarker mixed: 0.5 with: Color blue
-]
