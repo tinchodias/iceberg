@@ -80,8 +80,6 @@ IceContainedDefinition >> icon [
 
 { #category : #testing }
 IceContainedDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
-	"Container will answer it"
-	
 	^ false
 ]
 

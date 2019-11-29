@@ -52,7 +52,7 @@ IceModification >> isModification [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceModification >> isOnlyLowImpact [
 	^ definition isLowImpactAppliedTo: oldNode 
 ]

@@ -96,6 +96,11 @@ IceOperation >> isNoModification [
 ]
 
 { #category : #testing }
+IceOperation >> isOnlyLowImpact [
+	^ false
+]
+
+{ #category : #testing }
 IceOperation >> isRemoval [
 	
 	^ false

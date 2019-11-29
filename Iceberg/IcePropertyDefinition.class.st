@@ -35,6 +35,11 @@ IcePropertyDefinition >> hash [
 	^ super hash bitXor: self propertyValue hash
 ]
 
+{ #category : #testing }
+IcePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
+	^ #(category comment commentStamp timeStamp) includes: self propertyName
+]
+
 { #category : #accessing }
 IcePropertyDefinition >> key [
 	^ '> ', name
