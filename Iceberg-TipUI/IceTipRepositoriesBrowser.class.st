@@ -149,7 +149,7 @@ IceTipRepositoriesBrowser >> repositorySelected [
 IceTipRepositoriesBrowser >> repositoryStrongSelection: ann [
 	| selection context |
 	selection := repositoryList widget dataSource
-		elementAt: ann selectedRowIndex.
+		elementAt: ann selectedIndex.
 	context := self newContextWithSelection: selection.
 	IceTipCommandStrongSelectionActivation
 		activateAllInContext: context
