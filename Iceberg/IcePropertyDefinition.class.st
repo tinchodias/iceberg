@@ -36,6 +36,25 @@ IcePropertyDefinition >> hash [
 ]
 
 { #category : #testing }
+IcePropertyDefinition >> isDefaultValue [
+	name = #superclassName ifTrue: [ 
+		^ self propertyValue = #Object ].
+
+	name = #type ifTrue: [ 
+		^ self propertyValue = #normal ].
+
+	name = #comment ifTrue: [ 
+		^ self propertyValue isNil or: [ self propertyValue isEmpty ] ].
+
+	(name = #traitComposition or: [ name = #classTraitComposition ]) ifTrue: [ 
+		^ self propertyValue = '{}' ].
+	
+"	(#(category source) includes: name) ifTrue: [ ^ false ]."
+	
+	^ false.
+]
+
+{ #category : #testing }
 IcePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ #(category comment commentStamp timeStamp) includes: self propertyName
 ]

@@ -59,7 +59,9 @@ IceCodeDefinition >> propertyDefinitions [
 				name: each;
 				containerIceDefinition: self;
 				yourself.
-			 ].
+			 ]
+		thenReject: [ :each |
+			each isDefaultValue ].
 
 ]
 
