@@ -41,7 +41,6 @@ IceTipAskForPlaintextCredentialsModel >> okAction [
 	self storeCredentials ifTrue: [credentialStore storeCredential: cred forHostname: remoteHostname ].
 	
 	accepted := true.
-	self window close.
 
 	^ cred.
 ]

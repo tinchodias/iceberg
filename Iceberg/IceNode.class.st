@@ -101,6 +101,13 @@ IceNode >> allChildrenDo: aBlockClosure [
 		e allChildrenDo: aBlockClosure ]
 ]
 
+{ #category : #enumerating }
+IceNode >> allLeavesDo: aBlockClosure [
+	^ self allChildrenDo: [ :node | 
+		node isEmpty ifTrue: [ 
+			aBlockClosure value: node ] ]
+]
+
 { #category : #accessing }
 IceNode >> allPathSegments [
 	^ self withAllParentNodes collect: #key
