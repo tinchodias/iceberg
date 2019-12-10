@@ -30,7 +30,7 @@ Class {
 	#instVars : [
 		'repository'
 	],
-	#category : 'Iceberg-Core'
+	#category : #'Iceberg-Core'
 }
 
 { #category : #'instance creation' }
@@ -87,6 +87,12 @@ IceCommitish >> checkoutWithStrategy: aCheckoutStrategy [
 IceCommitish >> commit [
 	
 	self subclassResponsibility
+]
+
+{ #category : #accessing }
+IceCommitish >> commitId [
+
+	^ LGitId fromHexString: self commit id
 ]
 
 { #category : #'API-history' }
