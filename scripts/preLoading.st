@@ -8,48 +8,9 @@ Smalltalk globals at: #IceSystemEventListener ifPresent: #unregisterSystemAnnoun
 
 "Remove iceberg from system (so I can reload it)"
 MetacelloPharoPlatform select.
-#(
-    'BaselineOfTonel'
-    'BaselineOfLibGit'
-    'BaselineOfIceberg'
-    'BaselineOfSpec2'
-    'BaselineOfCommander'
-    'MonticelloTonel-Core'
-    'MonticelloTonel-FileSystem'
-    'MonticelloTonel-Tests'
-    'Iceberg-UI' 
-    'Iceberg-TipUI'
-    'Iceberg-Plugin-Pharo' 
-    'Iceberg-Plugin-Metacello' 
-    'Iceberg-Plugin-GitHub'
-    'Iceberg-Plugin-Migration'
-    'Iceberg-Plugin' 
-    'Iceberg-Metacello-Integration' 
-    'Iceberg-Libgit-Tonel' 
-    'Iceberg-Libgit-Filetree' 
-    'Iceberg-Libgit' 
-    'Iceberg-Tests'
-    'Iceberg-Memory'
-    'Iceberg-UI-Tests'
-    'Iceberg-Core' 
-    'Iceberg-Changes' 
-    'Iceberg-Adapters' 
-    'Iceberg'
-    'Iceberg-GitCommand'
-    'Iceberg-SmartUI'
-    'Iceberg-Pharo6'
-    'LibGit-Core') 
-do: [ :each |
-    (each asPackageIfAbsent: [ 
-        (each , ' not found') traceCr.
-        nil ])
-            ifNotNil: [ :package |
-                ('Removing ', each) traceCr.
-                package removeFromSystem ] ].
 
-"Loading Tonel before trying to load Iceberg.
-This is required to load iceberg packages and dependencies in Tonel format"
-Metacello new
-  baseline: 'Tonel';
-  repository: 'github://pharo-vcs/tonel:v1.0.12';
-  load.
+RPackageOrganizer default packages
+    select: [ :each | each name beginsWith: 'Iceberg' ]
+    thenDo: [ :each |
+        ('Removing ', each name) traceCr.
+        each removeFromSystem ].
