@@ -9,8 +9,9 @@ Smalltalk globals at: #IceSystemEventListener ifPresent: #unregisterSystemAnnoun
 "Remove iceberg from system (so I can reload it)"
 MetacelloPharoPlatform select.
 
-RPackageOrganizer default packages
-    select: [ :each | each name beginsWith: 'Iceberg' ]
+(RPackageOrganizer default packages
+    sorted: [ :a :b | a name > b name ])
+    select: [ :each | each name matchesRegex: 'Iceberg.*|LibGit.*' ]
     thenDo: [ :each |
         ('Removing ', each name) traceCr.
         each removeFromSystem ].
