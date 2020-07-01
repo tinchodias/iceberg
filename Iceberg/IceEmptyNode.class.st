@@ -19,8 +19,13 @@ IceEmptyNode >> addTo: aTree [
 	"I'm empty. I do not add myself to a tree"
 ]
 
-{ #category : #enumeration }
+{ #category : #enumerating }
 IceEmptyNode >> allChildrenDo: aBlockClosure [ 
+	"Nothing to do"
+]
+
+{ #category : #enumerating }
+IceEmptyNode >> allLeavesDo: aBlockClosure [ 
 	"Nothing to do"
 ]
 
@@ -98,7 +103,7 @@ IceEmptyNode >> mergeWith: anotherNode onLeft: leftBlock onRight: rightBlock onM
 	^ anotherNode collect: rightBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IceEmptyNode >> mergedTree [
 	self shouldBeImplemented.
 ]

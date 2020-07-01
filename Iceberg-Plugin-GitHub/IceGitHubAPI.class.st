@@ -9,7 +9,7 @@ Class {
 		'credentials',
 		'isAnonymous'
 	],
-	#category : 'Iceberg-Plugin-GitHub-Model'
+	#category : #'Iceberg-Plugin-GitHub-Model'
 }
 
 { #category : #credentials }
@@ -92,6 +92,16 @@ IceGitHubAPI >> addComment: owner project: projectName number: aNumber data: aDi
 ]
 
 { #category : #requesting }
+IceGitHubAPI >> addCommentOn: owner project: projectName number: aNumber commentId: commentId body: aString [
+	^ self
+		post: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments/', commentId asString, '/replies'
+		with: [ :client |
+			client 
+				entity: (ZnEntity text: (STON toJsonString: { #body -> aString } asDictionary));
+				contentType: ZnMimeType applicationJson ]
+]
+
+{ #category : #requesting }
 IceGitHubAPI >> addPullRequest: owner project: projectName data: aDictionary [
 	^ self 
 		post: 'repos/', owner, '/', projectName, '/pulls'
@@ -169,6 +179,30 @@ IceGitHubAPI >> getBranches: owner project: projectName [
 IceGitHubAPI >> getIssue: owner project: projectName number: issueNumber [
 
 	^ self get: 'repos/', owner,'/', projectName, '/issues/', (issueNumber asString)
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestComments: owner project: projectName [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestComments: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/issues/', aNumber asString, '/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestReviewComments: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestReviews: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/reviews'
 ]
 
 { #category : #'private requesting' }
@@ -256,6 +290,19 @@ IceGitHubAPI >> post: aString with: aBlock [
 	^ self jsonContentsWithValidationDo: [
 		(self newRequestTo: aString)
 			in: aBlock;
+			post;
+			response ]
+]
+
+{ #category : #'private requesting' }
+IceGitHubAPI >> postGraphQL: aGraphQLString [
+	^ self jsonContentsWithValidationDo: [
+		ZnClient new
+			url: 'https://api.github.com/graphql';
+			username: self credentials username 
+				password: self credentials password;
+			entity: (ZnEntity text: ('{ "query" : ', (STON toJsonString: aGraphQLString), ' }'));
+			contentType: ZnMimeType applicationJson;
 			post;
 			response ]
 ]

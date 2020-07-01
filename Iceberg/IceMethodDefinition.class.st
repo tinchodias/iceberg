@@ -55,7 +55,7 @@ IceMethodDefinition >> addInPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IceMethodDefinition >> allPropertyNames [
 	^ #(category source)
 ]
@@ -126,7 +126,7 @@ IceMethodDefinition >> isLoadable [
 	^ self contextClass notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [ 
 
 	^ sourceCode = anotherIceMethodDefinition sourceCode
