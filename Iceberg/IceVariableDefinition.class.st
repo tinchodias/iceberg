@@ -15,6 +15,11 @@ IceVariableDefinition >> = anObject [
 		and: [ mcVariableDefinition = anObject mcVariableDefinition ]
 ]
 
+{ #category : #visiting }
+IceVariableDefinition >> accept: aVisitor [
+	^ aVisitor visitVariableDefinition: self
+]
+
 { #category : #patching }
 IceVariableDefinition >> addedIn: aMCDefinition [
 	^ aMCDefinition copyWithVariable: mcVariableDefinition
@@ -71,16 +76,14 @@ IceVariableDefinition >> printOn: aStream [
 
 { #category : #printing }
 IceVariableDefinition >> removeInPatcher: aMCPatcher [
-
-	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [
-		^ self "containerIceDefinition is just fine" ].
-	
-	
+	(aMCPatcher isKindOf: MCPackageLoader)
+		ifTrue: [ ^ self	"containerIceDefinition is just fine" ].
 	aMCPatcher definitionIndex
 		definitionLike: self containerIceDefinition asMCDefinition
-		ifPresent: [ :currentDefinition | 
-			aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
-		ifAbsent: [" self error" ('do nothing in removeInPatcher: ', self asString) logCr ]
+		ifPresent:
+			[ :currentDefinition | aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
+		ifAbsent:
+			[ " self error" ('do nothing in removeInPatcher: ' , self asString) traceCr ]
 ]
 
 { #category : #patching }

@@ -14,6 +14,11 @@ IcePropertyDefinition >> = anObject [
 	^ super = anObject and: [ self propertyValue = anObject propertyValue ]
 ]
 
+{ #category : #visiting }
+IcePropertyDefinition >> accept: aVisitor [
+	^ aVisitor visitPropertyDefinition: self
+]
+
 { #category : #patching }
 IcePropertyDefinition >> addedIn: aMCDefinition [
 

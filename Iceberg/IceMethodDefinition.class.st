@@ -127,10 +127,9 @@ IceMethodDefinition >> isLoadable [
 ]
 
 { #category : #testing }
-IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [ 
-
+IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [
 	^ sourceCode = anotherIceMethodDefinition sourceCode
-		and: [ self ast = anotherIceMethodDefinition ast ]
+		or: [ self ast = anotherIceMethodDefinition ast ]
 ]
 
 { #category : #testing }

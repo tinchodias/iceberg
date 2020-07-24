@@ -17,7 +17,6 @@ IceContainedDefinition >> = anotherDefinition [
 
 { #category : #visiting }
 IceContainedDefinition >> accept: aVisitor [
-
 	^ aVisitor visitContainedDefinition: self
 ]
 
