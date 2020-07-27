@@ -7,7 +7,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'credentials',
-		'isAnonymous'
+		'isAnonymous',
+		'acceptMediaType'
 	],
 	#category : #'Iceberg-Plugin-GitHub-Model'
 }
@@ -69,6 +70,20 @@ IceGitHubAPI class >> obtainCredentials [
 	provider plaintextCredentials isPresent ifFalse: [^ nil ].
 	^ provider plaintextCredentials.
 
+]
+
+{ #category : #accessing }
+IceGitHubAPI >> acceptMediaType [
+	^ acceptMediaType
+		ifNil: [ acceptMediaType := 'application/vnd.github.v3+json' ]
+]
+
+{ #category : #accessing }
+IceGitHubAPI >> acceptMediaType: aString [
+	"Set the media type to use in the request.
+	See: https://developer.github.com/v3/media/"
+
+	acceptMediaType := aString
 ]
 
 { #category : #requesting }
@@ -269,7 +284,7 @@ IceGitHubAPI >> newRequestTo: aString [
 				this
 					username: self credentials username 
 					password: self credentials password ] ]; 
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
+		headerAt: 'Accept' put: self acceptMediaType;
 		url: 'https://api.github.com/', (aString first = $/
 			ifTrue: [ aString allButFirst ]
 			ifFalse: [ aString ]);
@@ -337,4 +352,9 @@ IceGitHubAPI >> updatePullRequest: owner project: projectName number: aNumber da
 			client 
 				entity: (ZnEntity text: (STON toJsonString: aDictionary));
 				contentType: ZnMimeType applicationJson ]
+]
+
+{ #category : #accessing }
+IceGitHubAPI >> useComfortFadeAcceptMediaType [
+	self acceptMediaType: 'application/vnd.github.comfort-fade-preview+json'
 ]
