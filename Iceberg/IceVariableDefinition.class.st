@@ -45,7 +45,7 @@ IceVariableDefinition >> icon [
 
 { #category : #accessing }
 IceVariableDefinition >> key [
-	^ '> ' , mcVariableDefinition name , ' (', self typeToShow, ')'
+	^ '>Variable (' , self typeToShow, '): ', mcVariableDefinition name
 ]
 
 { #category : #accessing }

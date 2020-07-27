@@ -66,7 +66,7 @@ IcePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [
 
 { #category : #accessing }
 IcePropertyDefinition >> key [
-	^ '> ', name
+	^ '>Property: ', name
 ]
 
 { #category : #printing }

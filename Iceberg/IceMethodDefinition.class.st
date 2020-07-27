@@ -141,8 +141,8 @@ IceMethodDefinition >> isMethodDefinition [
 { #category : #accessing }
 IceMethodDefinition >> key [
 	^ self classIsMeta
-		ifTrue: [ 'class >> ', name ]
-		ifFalse: [ '>> ', name ]
+		ifTrue: [ 'Method (class): ', name ]
+		ifFalse: [ 'Method (inst): ', name ]
 ]
 
 { #category : #patching }
