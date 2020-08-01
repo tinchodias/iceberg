@@ -4,12 +4,18 @@ A credentials provider that retrieves defaults or throws exceptions (but do not 
 Class {
 	#name : #IceNonInteractiveCredentialsProvider,
 	#superclass : #IceCredentialsProvider,
-	#category : 'Iceberg-Security'
+	#category : #'Iceberg-Security'
 }
 
 { #category : #private }
+IceNonInteractiveCredentialsProvider >> obtainCredentials: response [
+	"Maybe I can read a file here?"
+	LGitNoCredentialsProvided signal
+]
+
+{ #category : #private }
 IceNonInteractiveCredentialsProvider >> obtainPlaintextCredentials: response [
-	"Maybe I can read file here?"
+	"Maybe I can read a file here?"
 	LGitNoCredentialsProvided signal
 ]
 

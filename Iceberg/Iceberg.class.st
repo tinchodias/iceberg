@@ -25,7 +25,7 @@ Class {
 	#classInstVars : [
 		'icebergAnnouncer'
 	],
-	#category : 'Iceberg-Core'
+	#category : #'Iceberg-Core'
 }
 
 { #category : #accessing }
@@ -74,7 +74,7 @@ Iceberg class >> enableMetacelloIntegration: anObject [
 	EnableMetacelloIntegration := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Iceberg class >> icebergRepositoriesURLs [
 	^ {
 		'git@github.com:pharo-vcs/iceberg.git'. 
@@ -98,7 +98,7 @@ Iceberg class >> initializeSettings [
 			class updateSettingNodes: nodes ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Iceberg class >> mcRepositoryFor: aLocationString [
 	^ (IceMetacelloRepositoryType for: aLocationString) mcRepository 
 ]
@@ -148,14 +148,17 @@ Iceberg class >> settingsOn: aBuilder [
 		with: [ (aBuilder setting: #enableMetacelloIntegration)
 				target: self;
 				order: 0.1;
+				default: true;
 				label: 'Enable Metacello integration';
 				description: 'If selected, Metacello github:// repositories will be loaded using iceberg';
-				with: [ (aBuilder pickOne: #remoteTypeSelector)
+				with: [ 
+					(aBuilder pickOne: #remoteTypeSelector)
 						label: 'Remote type';
 						description: 'When creating an Iceberg repository out of a github:// URL choose whether you want to user an SCP URL (i.e. with the form ''git@github.com:<username>/<project>.git'') or an HTTPS URL (i.e. with the form ''https://github.com/<username>/<project>.git''';
 						domainValues:
 							{('SCP (git@github.com:<username>/<project>.git)' -> #scpUrl).
-							('HTTPS (https://github.com/<username>/<project>.git)' -> #httpsUrl)} ] ]
+							('HTTPS (https://github.com/<username>/<project>.git)' -> #httpsUrl).
+							('HTTP (http://github.com/<username>/<project>.git)' -> #httpUrl)} ] ]
 ]
 
 { #category : #settings }

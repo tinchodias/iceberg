@@ -1,5 +1,5 @@
 "
-I keep a username and a password for connecting to a repository.
+In addition to my base I have a one time token as well.
 "
 Class {
 	#name : #IcePlaintextCredentials,
@@ -8,7 +8,7 @@ Class {
 		'username',
 		'password'
 	],
-	#category : 'Iceberg-Security'
+	#category : #'Iceberg-Security'
 }
 
 { #category : #printing }

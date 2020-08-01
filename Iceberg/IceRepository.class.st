@@ -180,6 +180,12 @@ IceRepository class >> registry [
 ]
 
 { #category : #registry }
+IceRepository class >> repositories [
+	
+	^ self registry
+]
+
+{ #category : #registry }
 IceRepository class >> reset [
 	Registry := nil.
 	Iceberg announcer announce: IceRepositoryForgotten new.
@@ -319,6 +325,12 @@ IceRepository >> checkoutBranch: branchName [
 		branchNamed: branchName
 		ifAbsent: [
 			self createBranch: branchName ]) checkout
+]
+
+{ #category : #'API-cherry-picking' }
+IceRepository >> cherryPickFrom: anotherCommit [ 
+
+	^ self head cherryPickFrom: anotherCommit
 ]
 
 { #category : #'API-history' }
