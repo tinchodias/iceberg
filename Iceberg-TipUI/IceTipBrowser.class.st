@@ -9,7 +9,7 @@ Some remarks about design:
 "
 Class {
 	#name : #IceTipBrowser,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'model',
 		'toolbar'
@@ -18,8 +18,20 @@ Class {
 }
 
 { #category : #initialization }
-IceTipBrowser >> addShortcutsTo: aWidget [
-	self enableCommanderShortcutsIn: aWidget
+IceTipBrowser >> addShortcutsTo: aPresenter [
+	| shortcuts |
+	shortcuts := CmdShortcutActivation registeredInstances
+		select: [ :each | each activeContext describes: self newContext ].
+	shortcuts do: [ :shortcut | 
+		aPresenter
+			bindKeyCombination: shortcut keyCombination
+			toAction: [ self executeShortcut: shortcut ] ]
+]
+
+{ #category : #accessing }
+IceTipBrowser >> buildMenu [ 
+	
+	^ (CmdContextMenuActivation buildMenuInContext: self createCommandContext) asSpMenuPresenter
 ]
 
 { #category : #accessing }
@@ -30,6 +42,14 @@ IceTipBrowser >> contextClass [
 { #category : #'private factory' }
 IceTipBrowser >> createCommandContext [
 	^ self newContext
+]
+
+{ #category : #'as yet unclassified' }
+IceTipBrowser >> executeShortcut: aCmdShortcutActivation [ 
+	| context |
+	context := self createCommandContext .
+	(	aCmdShortcutActivation commandClass canBeExecutedInContext: context) 
+			ifTrue: [ aCmdShortcutActivation commandClass new readParametersFromContext: context ; execute  ]
 ]
 
 { #category : #accessing }
@@ -49,15 +69,10 @@ IceTipBrowser >> initialize [
 ]
 
 { #category : #initialization }
-IceTipBrowser >> initializeToolbar [
-	toolbar := self newIceToolbar.
-	self rebuildToolbar
-]
-
-{ #category : #initialization }
 IceTipBrowser >> initializeWidgets [
-	self initializeToolbar.
-	self whenBuiltDo: [ :ann | self addShortcutsTo: ann widget ]
+	toolbar := self newToolbar.
+	self rebuildToolbar.
+	self addShortcutsTo: self
 ]
 
 { #category : #accessing }
@@ -84,8 +99,12 @@ IceTipBrowser >> newContextWithSelection: anObject [
 
 { #category : #accessing }
 IceTipBrowser >> rebuildToolbar [
-	toolbar items: #().
-	toolbar addItemsFromContext: self newContext
+
+	|menu|
+	toolbar removeAllItems.
+	menu := CmdMenu activatedBy: IceTipToolbarActivation.
+	menu buildInContext: self newContext.
+	menu buildIceToolbarOn: toolbar .
 ]
 
 { #category : #accessing }

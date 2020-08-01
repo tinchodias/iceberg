@@ -6,10 +6,11 @@ Class {
 		'projectName',
 		'packageName1',
 		'packageName2',
+		'remoteFileUrl',
 		'remoteRepository',
 		'location'
 	],
-	#category : 'Iceberg-Tests-Common-Fixtures'
+	#category : #'Iceberg-Tests-Common-Fixtures'
 }
 
 { #category : #initialization }

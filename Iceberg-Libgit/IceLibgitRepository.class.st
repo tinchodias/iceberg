@@ -23,7 +23,7 @@ Class {
 
 { #category : #settings }
 IceLibgitRepository class >> defaultCodeSubdirectory [
-	^ DefaultCodeSubdirectory ifNil: [ DefaultCodeSubdirectory := '' ]
+	^ DefaultCodeSubdirectory ifNil: [ DefaultCodeSubdirectory := 'src' ]
 
 ]
 
@@ -94,7 +94,7 @@ IceLibgitRepository class >> libgitRepositoryHandleAccessors [
 
 { #category : #accessing }
 IceLibgitRepository class >> localRepositoriesLocation [
-	^ (FileLocator localDirectory / #iceberg) asFileReference
+	^ FileLocator localDirectory / #iceberg
 ]
 
 { #category : #accessing }
@@ -119,6 +119,7 @@ IceLibgitRepository class >> settingsOn: aBuilder [
 	(aBuilder pickOne: #'defaultFileFormatType')
 		parent: #Iceberg;
 		target: self;
+		default: #IceLibgitTonelWriter;
 		label: 'File format type';
 		description: 'Select your preferred file format.';
 		domainValues: self formatTypeDomainValues.
@@ -127,17 +128,20 @@ IceLibgitRepository class >> settingsOn: aBuilder [
 		parent: #Iceberg;
 		target: self;
 		label: 'Default Code Subdirectory';
+		default: 'src';
 		description: 'Select your preferred source code folder name'.
 
 	(aBuilder setting: #shareRepositoriesBetweenImages)
 		parent: #Iceberg;
 		target: self;
+		default: false;
 		label: 'Share repositories between images';
 		description: 'Check if you want to have your git repositories cloned by default in a single location that is shared between all your Pharo images';
 		with: [
 			(aBuilder setting: #sharedRepositoriesLocationString)
 				target: self;
 				type: #Directory;
+				default: (FileLocator home / #iceberg) asFileReference fullName;
 				label: 'Location for shared repositories';
 				description: 'A directory where you have your git repositories'.
 		].
@@ -494,11 +498,16 @@ IceLibgitRepository >> iceCommitFrom: aGitCommit [
 
 { #category : #'private-initialization' }
 IceLibgitRepository >> init [
-	
 	"Initialize new repository. This is the equivalent to running in the command line:
 	  $ git init
 	"
-	(LGitRepository on: self location) init
+
+	self initBare: false
+]
+
+{ #category : #initialization }
+IceLibgitRepository >> initBare: isBare [
+	(LGitRepository on: self location) initBare: isBare
 ]
 
 { #category : #'private-commits' }
@@ -544,7 +553,7 @@ IceLibgitRepository >> isPackageExported: anIceSavedPackage [
 
 { #category : #testing }
 IceLibgitRepository >> isValid [
-	self flag: #todo. "Make this tests more solid"
+	self flag: #pharoTodo. "Make this tests more solid"
 	^ self isMissing not
 ]
 

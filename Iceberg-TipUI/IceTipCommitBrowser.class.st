@@ -8,7 +8,8 @@ Class {
 	#superclass : #IceTipBrowser,
 	#instVars : [
 		'diffPanel',
-		'commentPanel'
+		'commentPanel',
+		'saveAction'
 	],
 	#category : #'Iceberg-TipUI-View'
 }
@@ -16,17 +17,14 @@ Class {
 { #category : #specs }
 IceTipCommitBrowser class >> defaultSpec [
 	<spec: #default>
-	
-	^ SpecLayout composed
-		newColumn: [ :mainColumn |
-			mainColumn
-				newRow: #toolbar height: IceTipToolbar defaultHeight;
-				newRow: [ :row |
-					row newColumn: [ :column |
-						column 
-							newRow: #diffPanel top: 0.35;
-							addHSplitter;
-							newRow: #commentPanel bottom: 0.65 ] ] ]
+	^ SpBoxLayout newVertical
+		add: #toolbar expand: false fill: true padding: 0;
+		add:
+			(SpPanedLayout newVertical
+				add: #diffPanel;
+				add: #commentPanel;
+				yourself);
+			yourself
 ]
 
 { #category : #'instance creation' }
@@ -66,14 +64,15 @@ IceTipCommitBrowser >> diffPanel: anObject [
 
 { #category : #actions }
 IceTipCommitBrowser >> doCommit [
-	self 
-		doCommit: diffPanel selectedItems 
+	self
+		doCommit: diffPanel selectedItems
 		message: commentPanel message
 		pushing: commentPanel isPushing
+		saving: commentPanel isSaving 
 ]
 
 { #category : #actions }
-IceTipCommitBrowser >> doCommit: aCollection message: aString pushing: aBoolean [
+IceTipCommitBrowser >> doCommit: aCollection message: aString pushing: pushingBoolean saving: savingBoolean [
 	self model
 		commit:
 			(IceTipCommitAction new
@@ -82,13 +81,22 @@ IceTipCommitBrowser >> doCommit: aCollection message: aString pushing: aBoolean 
 				message: aString;
 				yourself)
 		then: [ self verifyNeedsRefreshOrClose.
-			aBoolean
-				ifTrue: [ (IceTipPushAction new repository: self model entity) execute ] ]
+			pushingBoolean
+				ifTrue: [ (IceTipPushAction new repository: self model entity) execute ].
+			savingBoolean
+				ifTrue: [ saveAction execute ] ]
 ]
 
 { #category : #accessing }
 IceTipCommitBrowser >> initialExtent [
 	^ (800@600) scaledByDisplayScaleFactor
+]
+
+{ #category : #accessing }
+IceTipCommitBrowser >> initialize [ 
+
+	super initialize.
+	saveAction := IceTipSaveImageAction new
 ]
 
 { #category : #initialization }
@@ -101,11 +109,9 @@ IceTipCommitBrowser >> initializeWidgets [
 	
 	commentPanel := self instantiate: IceTipCommentPanel on: self model.
 	commentPanel onCommit: [ self doCommit ].
-	"a hack because text comment cannot react to cmd+s 'as usual'."
-	commentPanel commentText whenBuiltDo: [ :ann |  
-		self addShortcutsTo: ann widget textArea ].
-			
-	self whenBuiltDo: [ :ann |  self addShortcutsTo: ann widget ].
+	
+	self addShortcutsTo: commentPanel commentText.
+	self addShortcutsTo: self.
 
 	self focusOrder 
 		add: commentPanel;
@@ -123,6 +129,12 @@ IceTipCommitBrowser >> refreshWhenRepository: ann [
 		ifFalse: [ ^ self ].
 	self model reset.
 	self refresh
+]
+
+{ #category : #accessing }
+IceTipCommitBrowser >> saveAction: anAction [
+
+	saveAction := anAction
 ]
 
 { #category : #initialization }

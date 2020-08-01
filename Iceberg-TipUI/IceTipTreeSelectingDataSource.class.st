@@ -81,7 +81,7 @@ IceTipTreeSelectingDataSource >> selectAllChildrenOf: item [
 
 { #category : #private }
 IceTipTreeSelectingDataSource >> selectedItem [
-	^ self table selectedIndexes
+	^ self table selectedRowIndexes 
 		ifNotEmpty: [ :indexes | self elementAt: indexes first ]
 		ifEmpty: [ nil ]
 ]

@@ -14,5 +14,5 @@ IcePackageDefinition >> canBrowseReferences [
 
 { #category : #'*Iceberg-TipUI' }
 IcePackageDefinition >> icon [
-	^ self iconNamed: #package
+	^ self iconNamed: #dirtyMonticelloPackage
 ]

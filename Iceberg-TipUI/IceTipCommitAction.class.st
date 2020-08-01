@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'diff',
 		'items',
-		'message'
+		'message',
+		'publish'
 	],
 	#category : #'Iceberg-TipUI-Commands'
 }
@@ -22,7 +23,7 @@ IceTipCommitAction >> basicExecute [
 				commitChanges: (diff copyWithOnly: items)
 				withMessage: message ].
 	Iceberg announcer announce: (IceRepositoryModified for: self repository).
-	
+	Iceberg announcer announce: (IceCommited for: self repository).
 ]
 
 { #category : #accessing }
@@ -57,9 +58,7 @@ IceTipCommitAction >> message: anObject [
 
 { #category : #validating }
 IceTipCommitAction >> validateCanCommit [
-	self
-		validateMessageNotEmpty;
-		validateChangeListNotEmpty
+	self validateMessageNotEmpty
 ]
 
 { #category : #validating }

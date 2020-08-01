@@ -6,7 +6,7 @@ IceMethodDefinition >> browse [
 	| owner |
 	owner := Smalltalk globals at: self className.
 	self classIsMeta ifTrue: [ owner := owner classSide ].
-	owner compiledMethodAt: name ifPresent: #browse.
+	(owner >> name) browse
 ]
 
 { #category : #'*Iceberg-TipUI' }
@@ -26,5 +26,5 @@ IceMethodDefinition >> canBrowseReferences [
 { #category : #'*Iceberg-TipUI' }
 IceMethodDefinition >> icon [
 	
-	^ self iconNamed: #tinyMenu
+	^ self iconNamed: #changeUpdate
 ]

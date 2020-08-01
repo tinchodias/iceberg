@@ -5,7 +5,7 @@ Class {
 		'store',
 		'dialog'
 	],
-	#category : 'Iceberg-UI-Tests'
+	#category : #'Iceberg-UI-Tests'
 }
 
 { #category : #running }
@@ -64,25 +64,23 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptEnabledAndDisabled [
 	dialog openNonModal.
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
-	self assert: dialog acceptButton enabled.
+	self assert: dialog okButton isEnabled.
 	dialog passwordInput text: ''.
 	dialog usernameInput text: 'bbb'.
-	self deny: dialog acceptButton enabled.
+	self deny: dialog okButton isEnabled.
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: ''.
-	self deny: dialog acceptButton enabled.
+	self deny: dialog okButton isEnabled.
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
-	self assert: dialog acceptButton enabled
+	self assert: dialog okButton isEnabled
 ]
 
 { #category : #tests }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptIsBlockedInTheBeginning [
-	| okButtons |
 	dialog remoteHostname: 'github.com'.
 	dialog openNonModal.
-	
-	self deny: dialog acceptButton enabled
+	self deny: dialog okButton isEnabled
 ]
 
 { #category : #'tests - storing' }
@@ -97,7 +95,7 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredential [
 	
 	dialog storeCheckbox state: true.
 	
-	dialog window triggerOkAction.
+	dialog window triggerOkAction.	
 
 	cred := store plaintextCredentialForHostname: 'github.com'.
 	self assert: cred username equals: 'bbb'.
@@ -122,7 +120,7 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredentialReplacesO
 	
 	dialog storeCheckbox state: true.
 	
-	dialog window triggerOkAction.
+	dialog window triggerOkAction.	
 
 	cred := store plaintextCredentialForHostname: 'github.com'.
 	self assert: cred username equals: 'bbb'.
@@ -135,7 +133,7 @@ IceTipAskForPlaintextCredentialsModelTest >> testCancelThrowsException [
 	dialog remoteHostname: 'github.com'. 
 	dialog openNonModal. 
 	
-	self should: [ dialog window toolbar cancelButton performAction ] raise: LGitNoCredentialsProvided
+	self should: [ dialog window triggerCancelAction ] raise: LGitNoCredentialsProvided
 ]
 
 { #category : #'tests - cancel' }

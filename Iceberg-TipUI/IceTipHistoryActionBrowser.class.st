@@ -6,7 +6,7 @@ Class {
 	#superclass : #IceTipBrowser,
 	#instVars : [
 		'commitsPanel',
-		'actionPanel',
+		'actionButtonBar',
 		'button'
 	],
 	#category : #'Iceberg-TipUI-View'
@@ -17,14 +17,9 @@ IceTipHistoryActionBrowser >> accept [
 	button performAction
 ]
 
-{ #category : #'accessing ui' }
-IceTipHistoryActionBrowser >> actionPanel [
-	^ actionPanel
-]
-
-{ #category : #'accessing ui' }
-IceTipHistoryActionBrowser >> actionPanel: anObject [
-	actionPanel := anObject
+{ #category : #'as yet unclassified' }
+IceTipHistoryActionBrowser >> actionButtonBar [
+ ^ actionButtonBar 
 ]
 
 { #category : #'accessing ui' }
@@ -45,12 +40,10 @@ IceTipHistoryActionBrowser >> initialExtent [
 { #category : #initialization }
 IceTipHistoryActionBrowser >> initializeWidgets [
 	super initializeWidgets.
-	
 	commitsPanel := self instantiate: IceTipHistoryBrowser on: self model.
-	actionPanel := self newIceActionPanel.
-	actionPanel addAction: (button := self newActionButton).
-	
-	self whenBuiltDo: [ :ann | self addShortcutsTo: ann widget ]
+	actionButtonBar := self newButtonBar.
+	actionButtonBar add: (button := self newActionButton).
+	self addShortcutsTo: self.
 ]
 
 { #category : #actions }

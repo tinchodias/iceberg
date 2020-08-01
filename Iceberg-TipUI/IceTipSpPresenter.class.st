@@ -1,74 +1,71 @@
-"
-I'm a generic presenter of IceTip UI elements.
-"
 Class {
-	#name : #IceTipComposablePresenter,
-	#superclass : #ComposablePresenter,
+	#name : #IceTipSpPresenter,
+	#superclass : #SpPresenter,
 	#category : #'Iceberg-TipUI-View'
 }
 
 { #category : #accessing }
-IceTipComposablePresenter class >> iconNamed: aSymbol [
+IceTipSpPresenter class >> iconNamed: aSymbol [
 	^ Smalltalk ui icons iconNamed: aSymbol
 ]
 
 { #category : #specs }
-IceTipComposablePresenter class >> title [
+IceTipSpPresenter class >> title [
 	^ self subclassResponsibility
 ]
 
 { #category : #adding }
-IceTipComposablePresenter >> addShortcutsTo: aWidget [
+IceTipSpPresenter >> addShortcutsTo: aWidget [
 	self enableCommanderShortcutsIn: aWidget
 ]
 
 { #category : #accessing }
-IceTipComposablePresenter >> contextClass [
+IceTipSpPresenter >> contextClass [
 	"default context. This needs to be overriden for using presenters"
 	^ IceTipContext
 ]
 
 { #category : #accessing }
-IceTipComposablePresenter >> contextSelection [
+IceTipSpPresenter >> contextSelection [
 	"to be overriden by my users"
 	^ nil
 ]
 
 { #category : #'private factory' }
-IceTipComposablePresenter >> createCommandContext [
+IceTipSpPresenter >> createCommandContext [
 	^ self newContextWithSelection: self contextSelection
 ]
 
 { #category : #'private factory' }
-IceTipComposablePresenter >> createCommandContextForSelection: selectedItems [
+IceTipSpPresenter >> createCommandContextForSelection: selectedItems [
 	^ self newContextWithSelection: selectedItems
 ]
 
 { #category : #adding }
-IceTipComposablePresenter >> eventKeyStrokesForNextFocus [
+IceTipSpPresenter >> eventKeyStrokesForNextFocus [
 	"String describing the keystroke to perform to jump to the next widget"	
 		
 	^ { Character tab asKeyCombination }
 ]
 
 { #category : #adding }
-IceTipComposablePresenter >> eventKeyStrokesForPreviousFocus [
+IceTipSpPresenter >> eventKeyStrokesForPreviousFocus [
 	"String describing the keystroke to perform to jump to the previous widget"
 	
 	^ { Character tab shift asKeyCombination }
 ]
 
 { #category : #accessing }
-IceTipComposablePresenter >> iconNamed: aSymbol [
+IceTipSpPresenter >> iconNamed: aSymbol [
 	^ self class iconNamed: aSymbol
 ]
 
 { #category : #'private factory' }
-IceTipComposablePresenter >> newContext [
+IceTipSpPresenter >> newContext [
 	^ self contextClass for: self
 ]
 
 { #category : #'private factory' }
-IceTipComposablePresenter >> newContextWithSelection: anObject [
+IceTipSpPresenter >> newContextWithSelection: anObject [
 	^ self newContext
 ]
