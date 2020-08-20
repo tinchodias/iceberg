@@ -55,11 +55,6 @@ IceMethodDefinition >> addInPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #accessing }
-IceMethodDefinition >> allPropertyNames [
-	^ #(category source)
-]
-
 { #category : #patching }
 IceMethodDefinition >> asMCDefinition [
 
