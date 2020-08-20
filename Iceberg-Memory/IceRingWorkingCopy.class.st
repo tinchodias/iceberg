@@ -7,6 +7,13 @@ Class {
 	#category : #'Iceberg-Memory'
 }
 
+{ #category : #helpers }
+IceRingWorkingCopy >> addClassVariable: aVariableName to: aClassName [
+	| class |
+	class := ringEnvironment ensureClassNamed: aClassName.
+	class addClassVariable: (RG2ClassVariableDefinition named: aVariableName asSymbol parent: class ).
+]
+
 { #category : #'private-impacting-changes' }
 IceRingWorkingCopy >> applyDefinition: anIceDefinition inNode: aNode [
 
@@ -89,6 +96,35 @@ IceRingWorkingCopy >> createMethod: source inClass: aClassName isMeta: aBoolean 
 ]
 
 { #category : #helpers }
+IceRingWorkingCopy >> createMethod: source inClass: aClassName isMeta: aBoolean [
+	
+	| class method package |
+	class := ringEnvironment ensureClassNamed: aClassName.
+	package := class package.
+	aBoolean ifTrue: [ class := class classSide ].
+	method := class ensureLocalMethodNamed: (RBParser parseMethod: source) selector.
+	method sourceCode: source.
+	method package: package.
+	self markAsDirtyPackageNamed: package name.
+]
+
+{ #category : #helpers }
+IceRingWorkingCopy >> createMethod: source tagged: tagName extendingClass: aClassName inPackage: packageName [
+  	| class method package |
+
+  	package := ringEnvironment ensurePackageNamed: packageName.
+ 	class := ringEnvironment ensureClassNamed: aClassName.
+ 	method := class ensureLocalMethodNamed: (RBParser parseMethod: source) selector.
+ 	method protocol: '*', packageName, '-', tagName.
+ 	method sourceCode: source.
+ 	method package: method parent package.
+ 	method package: package.
+
+   	(self includesPackageNamed: packageName) ifFalse: [ ^ self ].
+ 	self markAsDirtyPackageNamed: packageName.  
+]
+
+{ #category : #helpers }
 IceRingWorkingCopy >> createTrait: traitName inPackage: packageName [
 	
 	^ self createTrait: traitName inPackage: packageName with: [ :aTrait |  ]
@@ -148,7 +184,7 @@ IceRingWorkingCopy >> loadPackagesNamed: packageNames fromCommit: aCommit [
 			fromCommit: aCommit
 			package: package)
 				mcSnapshot.
-		snapshot importInto: ringEnvironment asPackageNamed: packageName.
+		snapshot ring2ImportInto: ringEnvironment asPackageNamed: packageName.
 		package beClean.
 	].
 	self referenceCommit: aCommit

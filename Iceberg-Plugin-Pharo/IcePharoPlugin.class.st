@@ -1,7 +1,7 @@
 Class {
 	#name : #IcePharoPlugin,
 	#superclass : #IcePlugin,
-	#category : 'Iceberg-Plugin-Pharo-Core'
+	#category : #'Iceberg-Plugin-Pharo-Core'
 }
 
 { #category : #events }

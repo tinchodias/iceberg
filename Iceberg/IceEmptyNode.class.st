@@ -53,6 +53,12 @@ IceEmptyNode >> collectWithPath: aBlockClosure [
 ]
 
 { #category : #enumerating }
+IceEmptyNode >> do: aBlock [
+
+	"Do nothing"
+]
+
+{ #category : #enumerating }
 IceEmptyNode >> firstNodeSuchThat: conditionBlock [ 
 	
 	^ self firstNodeSuchThat: conditionBlock ifNone: [ NotFound signalFor: conditionBlock ]

@@ -24,6 +24,11 @@ IceClassDefinition >> addInPatcher: aMCPatcher [
 ]
 
 { #category : #accessing }
+IceClassDefinition >> basicName [
+	^ name
+]
+
+{ #category : #accessing }
 IceClassDefinition >> contents [
 	^ mcDefinition fullDefinitionString
 ]

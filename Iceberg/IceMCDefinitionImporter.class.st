@@ -12,31 +12,31 @@ Class {
 }
 
 { #category : #visiting }
-IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait isExtension: isExtension [
-	
-	| newDefinition |	
+IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isMeta: isMeta isTrait: isTrait isExtension: isExtension [
+	| newDefinition |
 	newDefinition := isExtension
-		ifTrue: [ IceExtensionDefinition named: ownerName ]
-		ifFalse: [ 
-			isTrait
-				ifFalse: [ IceClassDefinition named: ownerName ]
-				ifTrue: [ IceTraitDefinition named: ownerName ] ].
-	
-	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ].
+		ifTrue: [ IceExtensionDefinition named: ownerName isMeta: isMeta packageName: packageNode value name]
+		ifFalse: [ isTrait
+				ifFalse: [ IceClassDefinition named: ownerName isMeta: isMeta ]
+				ifTrue: [ IceTraitDefinition named: ownerName isMeta: isMeta ] ].
+
+	^ packageNode
+		childAt: newDefinition key
+		ifAbsentPut: [ newDefinition ]
 ]
 
 { #category : #testing }
-IceMCDefinitionImporter >> isExtension: aString [ 
+IceMCDefinitionImporter >> isExtension: aName [
 	
-	snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ true ].
+	snapshot classDefinitionNamed: aName ifAbsent:  [ ^ true ].
 	^ false
 ]
 
 { #category : #testing }
-IceMCDefinitionImporter >> isTrait: aString [ 
+IceMCDefinitionImporter >> isTrait: aName [ 
 	
 	| definition |
-	definition := snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ false ].
+	definition := snapshot classDefinitionNamed: aName ifAbsent: [ ^ false ].
 	^ definition isTraitDefinition
 ]
 

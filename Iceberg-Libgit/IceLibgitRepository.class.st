@@ -309,7 +309,8 @@ IceLibgitRepository >> commitCache [
 { #category : #'private-commits' }
 IceLibgitRepository >> commitFromGitCommit: aLGitCommit [ 
 	
-	^ self commitCache at: aLGitCommit id hexString ifAbsentPut: [ 
+	^ self commitCache at: aLGitCommit id hexString ifAbsentPut: [
+		
 		IceGitCommit new
 			id: aLGitCommit id hexString;
 			author: aLGitCommit author name;

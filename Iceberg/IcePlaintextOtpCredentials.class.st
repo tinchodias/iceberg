@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'token'
 	],
-	#category : #'Iceberg-Security'
+	#category : 'Iceberg-Security'
 }
 
 { #category : #'as yet unclassified' }

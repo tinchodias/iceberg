@@ -11,6 +11,13 @@ Class {
 	#category : #'Iceberg-Changes'
 }
 
+{ #category : #comparing }
+IceTraitDefinition >> = anotherDefinition [
+	
+	^ super = anotherDefinition
+		and: [ mcDefinition = anotherDefinition asMCDefinition ]
+]
+
 { #category : #visiting }
 IceTraitDefinition >> accept: aVisitor [
 	
@@ -37,6 +44,11 @@ IceTraitDefinition >> contents [
 IceTraitDefinition >> isTraitDefinition [
 
 	^ true
+]
+
+{ #category : #accessing }
+IceTraitDefinition >> name [
+	^ name , (isMeta ifTrue: [ ' classTrait' ] ifFalse: [ '' ])
 ]
 
 { #category : #patching }

@@ -32,7 +32,7 @@ IceNoModification >> isConflict [
 
 { #category : #testing }
 IceNoModification >> isNoModification [
-
+	
 	^ true
 ]
 

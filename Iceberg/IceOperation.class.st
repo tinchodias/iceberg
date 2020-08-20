@@ -5,6 +5,8 @@ Class {
 	#name : #IceOperation,
 	#superclass : #Object,
 	#instVars : [
+		'diff',
+		'modifiedNode',
 		'definition'
 	],
 	#category : #'Iceberg-Changes'
@@ -81,6 +83,11 @@ IceOperation >> inverse [
 IceOperation >> isAddition [
 	
 	^ false
+]
+
+{ #category : #testing }
+IceOperation >> isConflict [
+	^false.
 ]
 
 { #category : #testing }
@@ -182,6 +189,15 @@ IceOperation >> printOn: aStream [
 		print: definition;
 		nextPut: $)
 
+]
+
+{ #category : #accessing }
+IceOperation >> printOn: aStream [
+
+	super printOn: aStream .
+	aStream nextPutAll: '( ';
+	print: definition ;
+	nextPutAll: ' )'.
 ]
 
 { #category : #accessing }

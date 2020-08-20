@@ -36,18 +36,18 @@ MetacelloPharoPlatform select.
     'Iceberg-GitCommand'
     'Iceberg-SmartUI'
     'Iceberg-Pharo6'
-    'LibGit-Core') 
+    'LibGit-Core')
 do: [ :each |
     (each asPackageIfAbsent: [ 
-        (each , ' not found') logCr.
+        (each , ' not found') traceCr.
         nil ])
             ifNotNil: [ :package |
-                ('Removing ', each) logCr.
+                ('Removing ', each) traceCr.
                 package removeFromSystem ] ].
 
 "Loading Tonel before trying to load Iceberg.
 This is required to load iceberg packages and dependencies in Tonel format"
 Metacello new
   baseline: 'Tonel';
-  repository: 'github://pharo-vcs/tonel:v1.0.12';
+  repository: 'github://pharo-vcs/tonel:v1.0.17';
   load.

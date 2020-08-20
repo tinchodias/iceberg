@@ -13,7 +13,7 @@ Class {
 	#instVars : [
 		'mcDefinition'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -37,6 +37,18 @@ IceMethodContainerDefinition >> asMCDefinition [
 { #category : #private }
 IceMethodContainerDefinition >> childrenDefinitions [
 	^ self propertyDefinitions, self variableDefinitions
+{ #category : #converting }
+IceMethodContainerDefinition >> asMCDefinitionWithoutMetaSide [
+	
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+IceMethodContainerDefinition >> contents [
+	mcDefinition ifNil: [ ^ '' ].
+	^ self isMeta
+		ifFalse: [ mcDefinition fullDefinitionString ]
+		ifTrue: [ mcDefinition classDefinitionString ]
 ]
 
 { #category : #patching }
