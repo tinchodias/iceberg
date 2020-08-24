@@ -18,7 +18,23 @@ IceClassDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceClassDefinition >> addInPatcher: aMCPatcher [ 
+IceClassDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+	
+	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
+	
+	"NOTE: MCPatcher is the other kind of visitor"
+	
+	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ 
+							aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition 
+		
+		]
+
+]
+
+{ #category : #patching }
+IceClassDefinition >> addToPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
 ]
@@ -37,22 +53,6 @@ IceClassDefinition >> isClassDefinition [
 { #category : #'as yet unclassified' }
 IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
 	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
-]
-
-{ #category : #patching }
-IceClassDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
-	
-	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
-	
-	"NOTE: MCPatcher is the other kind of visitor"
-	
-	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ 
-							aMCPatcher
-		modifyDefinition: anotherIceDefinition asMCDefinition
-		to: self asMCDefinition 
-		
-		]
-
 ]
 
 { #category : #patching }

@@ -50,7 +50,14 @@ IceMethodDefinition >> actualClass [
 ]
 
 { #category : #patching }
-IceMethodDefinition >> addInPatcher: aMCPatcher [ 
+IceMethodDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+	aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition
+]
+
+{ #category : #patching }
+IceMethodDefinition >> addToPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition
 ]
@@ -138,13 +145,6 @@ IceMethodDefinition >> key [
 	^ self classIsMeta
 		ifTrue: [ 'Method (class): ', name ]
 		ifFalse: [ 'Method (inst): ', name ]
-]
-
-{ #category : #patching }
-IceMethodDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
-	aMCPatcher
-		modifyDefinition: anotherIceDefinition asMCDefinition
-		to: self asMCDefinition
 ]
 
 { #category : #accessing }

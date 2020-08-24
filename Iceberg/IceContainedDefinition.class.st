@@ -21,7 +21,20 @@ IceContainedDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceContainedDefinition >> addInPatcher: aMCPatcher [ 
+IceContainedDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+
+(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ ^self "containerMCDefinition did it" ].
+
+	aMCPatcher definitionIndex
+		definitionLike: anotherIceDefinition containerMCDefinition
+		ifPresent: [ :currentDefinition | 
+			aMCPatcher addDefinition: (self addedIn: currentDefinition) ]
+		ifAbsent: [ self error ].
+
+]
+
+{ #category : #patching }
+IceContainedDefinition >> addToPatcher: aMCPatcher [ 
 
 	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [
 		^ self "containerIceDefinition is just fine" ].
@@ -80,19 +93,6 @@ IceContainedDefinition >> icon [
 { #category : #testing }
 IceContainedDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ false
-]
-
-{ #category : #patching }
-IceContainedDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
-
-(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ ^self "containerMCDefinition did it" ].
-
-	aMCPatcher definitionIndex
-		definitionLike: anotherIceDefinition containerMCDefinition
-		ifPresent: [ :currentDefinition | 
-			aMCPatcher addDefinition: (self addedIn: currentDefinition) ]
-		ifAbsent: [ self error ].
-
 ]
 
 { #category : #patching }

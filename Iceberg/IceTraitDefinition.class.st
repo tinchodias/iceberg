@@ -18,7 +18,15 @@ IceTraitDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceTraitDefinition >> addInPatcher: aMCPatcher [ 
+IceTraitDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+	
+	aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition
+]
+
+{ #category : #patching }
+IceTraitDefinition >> addToPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses if their mcDefinition is nil.
 	They should be added automatically when added the instance side."
@@ -37,14 +45,6 @@ IceTraitDefinition >> contents [
 IceTraitDefinition >> isTraitDefinition [
 
 	^ true
-]
-
-{ #category : #patching }
-IceTraitDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [
-	
-	aMCPatcher
-		modifyDefinition: anotherIceDefinition asMCDefinition
-		to: self asMCDefinition
 ]
 
 { #category : #patching }

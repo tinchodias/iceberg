@@ -25,7 +25,13 @@ IceCodeDefinition >> = anotherDefinition [
 ]
 
 { #category : #patching }
-IceCodeDefinition >> addInPatcher: aMCPatcher [ 
+IceCodeDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [ 
+	
+	self subclassResponsibility
+]
+
+{ #category : #patching }
+IceCodeDefinition >> addToPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
@@ -43,12 +49,6 @@ IceCodeDefinition >> childrenDefinitions [
 { #category : #comparing }
 IceCodeDefinition >> hash [
 	^ super hash bitXor: self contents hash
-]
-
-{ #category : #patching }
-IceCodeDefinition >> modifyFrom: anotherIceDefinition inPatcher: aMCPatcher [ 
-	
-	self subclassResponsibility
 ]
 
 { #category : #properties }
