@@ -101,7 +101,7 @@ IceContainedDefinition >> removeFrom: aPatcher [
 ]
 
 { #category : #patching }
-IceContainedDefinition >> removeInPatcher: aMCPatcher [ 
+IceContainedDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]

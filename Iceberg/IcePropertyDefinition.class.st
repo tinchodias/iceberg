@@ -96,7 +96,7 @@ IcePropertyDefinition >> propertyValue [
 ]
 
 { #category : #patching }
-IcePropertyDefinition >> removeInPatcher: aMCPatcher [
+IcePropertyDefinition >> removeFromPatcher: aMCPatcher [
 	"Cannot remove a property, just change it."
 	"1 halt."
 ]

@@ -170,7 +170,7 @@ IceMethodDefinition >> removeFrom: aPatcher [
 ]
 
 { #category : #patching }
-IceMethodDefinition >> removeInPatcher: aMCPatcher [ 
+IceMethodDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition
 ]

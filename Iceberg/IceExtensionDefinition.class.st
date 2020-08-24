@@ -64,7 +64,7 @@ IceExtensionDefinition >> removeFrom: aPatcher [
 ]
 
 { #category : #patching }
-IceExtensionDefinition >> removeInPatcher: aMCPatcher [ 
+IceExtensionDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	"Monticello does not reify extensions"
 ]

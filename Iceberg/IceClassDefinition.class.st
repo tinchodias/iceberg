@@ -56,7 +56,7 @@ IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [
 ]
 
 { #category : #patching }
-IceClassDefinition >> removeInPatcher: aMCPatcher [ 
+IceClassDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition 
 ]

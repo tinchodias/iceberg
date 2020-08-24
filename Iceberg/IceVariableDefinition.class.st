@@ -75,7 +75,7 @@ IceVariableDefinition >> printOn: aStream [
 ]
 
 { #category : #printing }
-IceVariableDefinition >> removeInPatcher: aMCPatcher [
+IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 	(aMCPatcher isKindOf: MCPackageLoader)
 		ifTrue: [ ^ self	"containerIceDefinition is just fine" ].
 	aMCPatcher definitionIndex

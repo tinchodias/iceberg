@@ -48,7 +48,7 @@ IceTraitDefinition >> isTraitDefinition [
 ]
 
 { #category : #patching }
-IceTraitDefinition >> removeInPatcher: aMCPatcher [ 
+IceTraitDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses. They will be added automatically when added the instance side"
 	mcDefinition ifNil: [ ^ self ].

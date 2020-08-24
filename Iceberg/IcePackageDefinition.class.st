@@ -106,7 +106,7 @@ IcePackageDefinition >> removeFrom: aVisitor [
 ]
 
 { #category : #patching }
-IcePackageDefinition >> removeInPatcher: aPatcher [
+IcePackageDefinition >> removeFromPatcher: aPatcher [
 	
 	aPatcher removeDefinition: (MCOrganizationDefinition categories: categories)
 ]

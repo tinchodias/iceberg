@@ -51,6 +51,6 @@ IceMCSnapshotPatchVisitor >> visitNonConflictingOperation: anIceNonConflictingOp
 
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitRemoval: anIceRemoval [ 
-	anIceRemoval definition removeInPatcher: patcher.
+	anIceRemoval definition removeFromPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]
