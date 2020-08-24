@@ -168,7 +168,7 @@ IceNode >> childAt: aString ifPresent: aBlockClosure [
 { #category : #accessing }
 IceNode >> children [
 	
-	^ childrenDictionary values sorted: [ :a :b | a key < b key ]
+	^ childrenDictionary values
 ]
 
 { #category : #accessing }
@@ -182,12 +182,6 @@ IceNode >> childrenAsSet [
 IceNode >> childrenDo: aBlockClosure [ 
 	
 	self children do: aBlockClosure
-]
-
-{ #category : #accessing }
-IceNode >> childrenPreservingOrder [
-	
-	^ childrenDictionary values
 ]
 
 { #category : #enumerating }
@@ -497,7 +491,7 @@ IceNode >> rootNode [
 IceNode >> select: aBlock [
 
 	| selectedChildren newNode |
-	selectedChildren := self childrenPreservingOrder collect: [ :childNode | 
+	selectedChildren := self children collect: [ :childNode | 
 		childNode select: aBlock ].
 	
 	((selectedChildren anySatisfy: [ :each | each isEmptyNode not ])

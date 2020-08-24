@@ -13,7 +13,7 @@ Class {
 { #category : #visiting }
 IceTreeVisitor >> visitChildrenOf: anIceNode [ 
 	
-	anIceNode childrenPreservingOrder do: [ :each | each accept: self ]
+	anIceNode children do: [ :each | each accept: self ]
 ]
 
 { #category : #visiting }
