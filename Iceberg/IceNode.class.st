@@ -259,7 +259,7 @@ IceNode >> includesKey: anObject [
 IceNode >> initialize [
 
 	super initialize.
-	childrenDictionary := Dictionary new
+	childrenDictionary := SmallDictionary new
 ]
 
 { #category : #testing }

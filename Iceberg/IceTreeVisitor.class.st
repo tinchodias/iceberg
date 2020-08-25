@@ -35,7 +35,7 @@ IceTreeVisitor >> visitEmptyNode: anIceEmptyNode [
 IceTreeVisitor >> visitTreeNode: anIceNode [
 	
 	self withNode: anIceNode do: [ 
-		anIceNode value accept: self ]
+		^ anIceNode value accept: self ]
 ]
 
 { #category : #visiting }

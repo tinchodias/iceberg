@@ -79,6 +79,11 @@ IceClassDefinition >> isClassDefinition [
 	^ true
 ]
 
+{ #category : #testing }
+IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
+	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
+]
+
 { #category : #patching }
 IceClassDefinition >> removeFromPatcher: aMCPatcher [ 
 	

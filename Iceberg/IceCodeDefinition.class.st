@@ -6,7 +6,7 @@ See my sub/superclasses for more information.
 Class {
 	#name : #IceCodeDefinition,
 	#superclass : #IceDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'as yet unclassified' }
@@ -38,6 +38,16 @@ IceCodeDefinition >> addToPatcher: aMCPatcher [
 	self subclassResponsibility
 ]
 
+{ #category : #properties }
+IceCodeDefinition >> allPropertyNames [
+	^ #()
+]
+
+{ #category : #properties }
+IceCodeDefinition >> childrenDefinitions [
+	^ self propertyDefinitions
+]
+
 { #category : #accessing }
 IceCodeDefinition >> contents [
 	
@@ -48,6 +58,20 @@ IceCodeDefinition >> contents [
 IceCodeDefinition >> hash [
 
 	^ self contents hash
+]
+
+{ #category : #properties }
+IceCodeDefinition >> propertyDefinitions [
+	^ self allPropertyNames
+		collect: [ :each | 
+			IcePropertyDefinition new
+				name: each;
+				containerIceDefinition: self;
+				yourself.
+			 ]
+		thenReject: [ :each |
+			each isDefaultValue ].
+
 ]
 
 { #category : #patching }

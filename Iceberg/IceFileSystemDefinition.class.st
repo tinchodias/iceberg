@@ -35,6 +35,13 @@ IceFileSystemDefinition >> fileReference: aFileReference [
 	fileReference := aFileReference 
 ]
 
+{ #category : #testing }
+IceFileSystemDefinition >> isLowImpactAppliedTo: anIceFileDefinition [
+	"May be arbitrary: We assume it doesn't affect behavior of code entities."
+
+	^ true
+]
+
 { #category : #accessing }
 IceFileSystemDefinition >> path [
 	^ path

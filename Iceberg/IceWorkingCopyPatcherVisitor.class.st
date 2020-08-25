@@ -74,7 +74,7 @@ IceWorkingCopyPatcherVisitor >> visitAddition: anIceAddition [
 	repository workingCopy applyDefinition: anIceAddition definition inNode: currentNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitClassDefinition: anIceClassDefinition [ 
 	
 	repository workingCopy applyDefinition: anIceClassDefinition inNode: currentNode.
@@ -82,8 +82,20 @@ IceWorkingCopyPatcherVisitor >> visitClassDefinition: anIceClassDefinition [
 ]
 
 { #category : #visiting }
+IceWorkingCopyPatcherVisitor >> visitContainedDefinition: anIceContainedDefinition [ 
+
+	repository workingCopy applyDefinition: anIceContainedDefinition containerIceDefinition inNode: currentNode parent.
+	self visitChildrenOf: currentNode.
+]
+
+{ #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitDirectoryDefinition: anIceDirectoryDefinition [
 
+	self visitChildrenOf: currentNode
+]
+
+{ #category : #visiting }
+IceWorkingCopyPatcherVisitor >> visitExtensionDefinition: anIceExtensionDefinition [ 
 	self visitChildrenOf: currentNode
 ]
 
@@ -129,6 +141,12 @@ IceWorkingCopyPatcherVisitor >> visitPackage: anIcePackageDefinition [
 ]
 
 { #category : #visiting }
+IceWorkingCopyPatcherVisitor >> visitPropertyDefinition: anIceContainedDefinition [
+
+	^ self visitContainedDefinition: anIceContainedDefinition
+]
+
+{ #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitRemoval: anIceRemoval [ 
 	
 	anIceRemoval definition removeFrom: self.
@@ -139,4 +157,10 @@ IceWorkingCopyPatcherVisitor >> visitRemoval: anIceRemoval [
 IceWorkingCopyPatcherVisitor >> visitRootDefinition: anIceRootDefinition [ 
 	
 	self visitChildrenOf: currentNode
+]
+
+{ #category : #visiting }
+IceWorkingCopyPatcherVisitor >> visitVariableDefinition: anIceContainedDefinition [
+
+	^ self visitContainedDefinition: anIceContainedDefinition
 ]
