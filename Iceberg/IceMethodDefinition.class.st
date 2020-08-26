@@ -14,7 +14,7 @@ Class {
 		'protocol',
 		'sourceCode'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -50,6 +50,13 @@ IceMethodDefinition >> actualClass [
 ]
 
 { #category : #patching }
+IceMethodDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+	aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition
+]
+
+{ #category : #patching }
 IceMethodDefinition >> addToPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition
@@ -65,6 +72,12 @@ IceMethodDefinition >> asMCDefinition [
 		category: self protocol
 		timeStamp: ''
 		source: sourceCode
+]
+
+{ #category : #accessing }
+IceMethodDefinition >> ast [
+
+	^ RBParser parseMethod: sourceCode
 ]
 
 { #category : #accessing }
@@ -116,9 +129,22 @@ IceMethodDefinition >> isLoadable [
 ]
 
 { #category : #testing }
+IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [
+	^ sourceCode = anotherIceMethodDefinition sourceCode
+		or: [ self ast = anotherIceMethodDefinition ast ]
+]
+
+{ #category : #testing }
 IceMethodDefinition >> isMethodDefinition [
 	
 	^ true
+]
+
+{ #category : #accessing }
+IceMethodDefinition >> key [
+	^ self classIsMeta
+		ifTrue: [ 'Method (class): ', name ]
+		ifFalse: [ 'Method (inst): ', name ]
 ]
 
 { #category : #accessing }

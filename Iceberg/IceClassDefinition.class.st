@@ -18,28 +18,25 @@ IceClassDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceClassDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
+IceClassDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 	
-	"We should not handle metaclasses if their mcDefinition is nil.
-	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
+	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
 	
-	aMCPatcher
-		modifyDefinition: anIceModification rightDefinition asMCDefinition
-		to: anIceModification leftDefinition asMCDefinition
+	"NOTE: MCPatcher is the other kind of visitor"
+	
+	(aMCPatcher isKindOf: MCPackageLoader) ifTrue: [ 
+							aMCPatcher
+		modifyDefinition: anotherIceDefinition asMCDefinition
+		to: self asMCDefinition 
+		
+		]
+
 ]
 
 { #category : #patching }
 IceClassDefinition >> addToPatcher: aMCPatcher [ 
 	
-	"We should not handle metaclasses if their mcDefinition is nil.
-	They should be added automatically when added the instance side."
-	(self isMeta and: [ mcDefinition isNil ])
-		ifTrue: [ ^ self ].
-	
-	"We should only be in this case if there is not instace-side changes."
-	aMCPatcher addDefinition: self asMCDefinition
+	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
 ]
 
 { #category : #converting }
@@ -67,10 +64,8 @@ IceClassDefinition >> basicName [
 
 { #category : #accessing }
 IceClassDefinition >> contents [
-	mcDefinition ifNil: [ ^ '' ].
-	^ self isMeta
-		ifFalse: [ mcDefinition fullDefinitionString ]
-		ifTrue: [ mcDefinition classDefinitionString ]
+	mcDefinition ifNil: [ ^'' ].
+	^ mcDefinition fullDefinitionString
 ]
 
 { #category : #testing }
@@ -86,15 +81,6 @@ IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [
 
 { #category : #patching }
 IceClassDefinition >> removeFromPatcher: aMCPatcher [ 
-	
-	"If the meta side is removed, we should modify the class definition to not include the meta-parts such as class-instance-variables"
-	self asMCDefinition ifNil: [ ^ self ].
-	
-	isMeta ifTrue: [ 
-		^ aMCPatcher
-			modifyDefinition: self asMCDefinition
-			to: self asMCDefinitionWithoutMetaSide
-	].
 	
 	aMCPatcher removeDefinition: self asMCDefinition 
 ]

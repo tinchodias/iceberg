@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'oldNode'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -34,8 +34,10 @@ IceModification >> accept: aVisitor [
 
 { #category : #accessing }
 IceModification >> description [
-	
-	^ definition name
+	^ definition key asString,
+			(self isOnlyLowImpact
+				ifTrue: [ ' [low impact] ' ]
+				ifFalse: [ '' ])
 ]
 
 { #category : #operations }
@@ -50,10 +52,9 @@ IceModification >> isModification [
 	^ true
 ]
 
-{ #category : #accessing }
-IceModification >> key [
-	
-	^ definition key
+{ #category : #testing }
+IceModification >> isOnlyLowImpact [
+	^ definition isLowImpactAppliedTo: oldNode 
 ]
 
 { #category : #accessing }

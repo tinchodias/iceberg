@@ -12,31 +12,31 @@ Class {
 }
 
 { #category : #visiting }
-IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isMeta: isMeta isTrait: isTrait isExtension: isExtension [
-	| newDefinition |
+IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait isExtension: isExtension [
+	
+	| newDefinition |	
 	newDefinition := isExtension
-		ifTrue: [ IceExtensionDefinition named: ownerName isMeta: isMeta packageName: packageNode value name]
-		ifFalse: [ isTrait
-				ifFalse: [ IceClassDefinition named: ownerName isMeta: isMeta ]
-				ifTrue: [ IceTraitDefinition named: ownerName isMeta: isMeta ] ].
-
-	^ packageNode
-		childAt: newDefinition key
-		ifAbsentPut: [ newDefinition ]
+		ifTrue: [ IceExtensionDefinition named: ownerName ]
+		ifFalse: [ 
+			isTrait
+				ifFalse: [ IceClassDefinition named: ownerName ]
+				ifTrue: [ IceTraitDefinition named: ownerName ] ].
+	
+	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ].
 ]
 
 { #category : #testing }
-IceMCDefinitionImporter >> isExtension: aName [
+IceMCDefinitionImporter >> isExtension: aString [ 
 	
-	snapshot classDefinitionNamed: aName ifAbsent:  [ ^ true ].
+	snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ true ].
 	^ false
 ]
 
 { #category : #testing }
-IceMCDefinitionImporter >> isTrait: aName [ 
+IceMCDefinitionImporter >> isTrait: aString [ 
 	
 	| definition |
-	definition := snapshot classDefinitionNamed: aName ifAbsent: [ ^ false ].
+	definition := snapshot definitionForMethodContainerNamed: aString ifAbsent: [ ^ false ].
 	^ definition isTraitDefinition
 ]
 
@@ -53,23 +53,17 @@ IceMCDefinitionImporter >> snapshot: aMCSnapshot [
 { #category : #visiting }
 IceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [ 
 	
-	| classDefinitionNode classDefinition |
+	| classDefinitionNode iceDefinition |
 	classDefinitionNode := self
 		ensureMethodOwnerNamed: aMCClassDefinition className
-		isMeta: false
 		isTrait: false
 		isExtension: false.
-	classDefinitionNode value mcDefinition: aMCClassDefinition.
+	iceDefinition := classDefinitionNode value.
+	iceDefinition mcDefinition: aMCClassDefinition.
 	
-	(aMCClassDefinition hasClassInstanceVariables
-		or: [aMCClassDefinition hasClassTraitComposition]) ifTrue: [
-		"We also generate the definition for the metaclass (See visitMetaclassDefinition: comment)"
-		classDefinition := self
-			ensureMethodOwnerNamed: aMCClassDefinition className
-			isMeta: true
-			isTrait: false
-			isExtension: false.
-		classDefinition value mcDefinition: aMCClassDefinition ].
+	iceDefinition childrenDefinitions do: [ :each |
+		classDefinitionNode addChild: each ].
+	
 	^ classDefinitionNode
 ]
 
@@ -79,7 +73,6 @@ IceMCDefinitionImporter >> visitClassTraitDefinition: aMCClassTraitDefinition [
 	| classTraitDefinitionNode |
 	classTraitDefinitionNode := self
 		ensureMethodOwnerNamed: aMCClassTraitDefinition className
-		isMeta: true
 		isTrait: true
 		isExtension: false.
 	classTraitDefinitionNode value mcDefinition: aMCClassTraitDefinition.
@@ -94,13 +87,12 @@ IceMCDefinitionImporter >> visitMetaclassDefinition: aMCClassDefinition [
 	
 	The concrete method it MCClassDefinition>>accept:"
 
-	
 ]
 
 { #category : #visiting }
 IceMCDefinitionImporter >> visitMethodDefinition: aMCMethodDefinition [ 
 	
-	| ownerName isMeta isTrait ownerNode |
+	| ownerName isMeta isTrait ownerNode iceNode iceDefinition |
 	
 	ownerName := aMCMethodDefinition className.
 	isMeta := aMCMethodDefinition classIsMeta.
@@ -108,16 +100,23 @@ IceMCDefinitionImporter >> visitMethodDefinition: aMCMethodDefinition [
 	
 	ownerNode := self
 		ensureMethodOwnerNamed: ownerName
-		isMeta: isMeta
 		isTrait: isTrait
 		isExtension: (self isExtension: aMCMethodDefinition className).
 
-	^ ownerNode addChild: (IceMethodDefinition
-		className: aMCMethodDefinition className
-		classIsMeta: aMCMethodDefinition classIsMeta
-		protocol: aMCMethodDefinition protocol
-		name: aMCMethodDefinition selector
-		sourceCode: aMCMethodDefinition source)
+	iceDefinition :=
+		IceMethodDefinition
+			className: ownerName
+			classIsMeta: isMeta
+			protocol: aMCMethodDefinition protocol
+			name: aMCMethodDefinition selector
+			sourceCode: aMCMethodDefinition source.
+
+	iceNode := ownerNode addChild: iceDefinition.
+
+	iceDefinition childrenDefinitions do: [ :each |
+		iceNode addChild: each ].
+	
+	^ iceNode 
 ]
 
 { #category : #visiting }
@@ -132,7 +131,6 @@ IceMCDefinitionImporter >> visitTraitDefinition: aMCTraitDefinition [
 	| traitDefinitionNode |
 	traitDefinitionNode := self
 		ensureMethodOwnerNamed: aMCTraitDefinition className
-		isMeta: false
 		isTrait: true
 		isExtension: false.
 	traitDefinitionNode value mcDefinition: aMCTraitDefinition.

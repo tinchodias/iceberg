@@ -438,7 +438,7 @@ IceRepository >> delete [
 
 { #category : #printing }
 IceRepository >> description [
-	^ self origin url, '[', self head description, ']'
+	^ self origin url, '[', self headDescription, ']'
 ]
 
 { #category : #'API-changes' }

@@ -53,7 +53,7 @@ IceOperation >> definition: aDefinition [
 { #category : #accessing }
 IceOperation >> description [
 	
-	^ definition name
+	^ definition key
 ]
 
 { #category : #testing }
@@ -99,6 +99,11 @@ IceOperation >> isModification [
 { #category : #testing }
 IceOperation >> isNoModification [
 	
+	^ false
+]
+
+{ #category : #testing }
+IceOperation >> isOnlyLowImpact [
 	^ false
 ]
 
@@ -174,13 +179,16 @@ IceOperation >> name [
 	^ definition name
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 IceOperation >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
 
-	super printOn: aStream .
-	aStream nextPutAll: '( ';
-	print: definition ;
-	nextPutAll: ' )'.
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: definition;
+		nextPut: $)
+
 ]
 
 { #category : #accessing }

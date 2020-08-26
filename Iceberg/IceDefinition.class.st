@@ -18,7 +18,7 @@ Class {
 	#instVars : [
 		'name'
 	],
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #'instance creation' }
@@ -33,7 +33,7 @@ IceDefinition class >> named: aString [
 IceDefinition >> = anotherDefinition [
 
 	^ self species = anotherDefinition species
-		and: [ self name = anotherDefinition name ]
+		and: [ name = anotherDefinition name ]
 ]
 
 { #category : #visiting }
@@ -124,6 +124,17 @@ IceDefinition >> name [
 IceDefinition >> name: aString [ 
 	
 	name := aString
+]
+
+{ #category : #printing }
+IceDefinition >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: name;
+		nextPut: $)
 ]
 
 { #category : #visiting }

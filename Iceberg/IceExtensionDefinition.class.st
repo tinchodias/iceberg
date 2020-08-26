@@ -37,8 +37,8 @@ IceExtensionDefinition >> accept: aVisitor [
 ]
 
 { #category : #patching }
-IceExtensionDefinition >> addModification: anIceModification toPatcher: aMCPatcher [ 
-	
+IceExtensionDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
+
 	"Do nothing. Monticello does not have definitions for extensions"
 ]
 
@@ -48,9 +48,8 @@ IceExtensionDefinition >> addToPatcher: aMCPatcher [
 	"Monticello does not reify extensions"
 ]
 
-{ #category : #visiting }
+{ #category : #accessing }
 IceExtensionDefinition >> contents [
-
 	^ ''
 ]
 
@@ -63,6 +62,11 @@ IceExtensionDefinition >> hash [
 IceExtensionDefinition >> isExtensionDefinition [
 	
 	^ true
+]
+
+{ #category : #comparing }
+IceExtensionDefinition >> key [
+	^ super key, ' (extension)'
 ]
 
 { #category : #accessing }
