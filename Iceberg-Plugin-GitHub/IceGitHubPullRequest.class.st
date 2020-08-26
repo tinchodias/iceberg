@@ -70,6 +70,19 @@ IceGitHubPullRequest >> baseSHA [
 ]
 
 { #category : #accessing }
+IceGitHubPullRequest >> basicBranch [
+	^ branch ifNil: [
+		branch := (self repository
+			remoteNamed: self remote name )
+				remoteBranchNamed: self headRef ]
+]
+
+{ #category : #accessing }
+IceGitHubPullRequest >> basicHeadCommit [
+	^ self basicBranch commit
+]
+
+{ #category : #accessing }
 IceGitHubPullRequest >> body [
 	^ self jsonAt: #body
 ]
@@ -94,9 +107,26 @@ IceGitHubPullRequest >> commits [
 ]
 
 { #category : #accessing }
+IceGitHubPullRequest >> creationDateAndTime [
+	^ (json at: #created_at) asDateAndTime
+]
+
+{ #category : #accessing }
 IceGitHubPullRequest >> detail [
 	^ detail ifNil: [
 		detail := IceGitHubAPI new get: ((self jsonAt: #url) allButFirst: 23) ]
+]
+
+{ #category : #accessing }
+IceGitHubPullRequest >> diffToBase [
+	^ self basicHeadCommit diffTo: self baseCommit
+]
+
+{ #category : #accessing }
+IceGitHubPullRequest >> diffToRepositoryHead [
+	"Inspired on IceMerge>>calculateChanges"
+
+	^ self basicBranch commit diffTo: self repository headCommit
 ]
 
 { #category : #actions }
@@ -123,6 +153,11 @@ IceGitHubPullRequest >> headSHA [
 { #category : #accessing }
 IceGitHubPullRequest >> htmlUrl [
 	^ self jsonAt: #html_url
+]
+
+{ #category : #accessing }
+IceGitHubPullRequest >> id [
+	^ json at: #id
 ]
 
 { #category : #initialization }
