@@ -20,6 +20,16 @@ IceAbstractNode >> addTo: anotherNode [
 ]
 
 { #category : #accessing }
+IceAbstractNode >> allChildren [
+	"Answer a collection with my direct and indirect children."
+
+	^ Array streamContents: [ :stream |
+		self allChildrenDo: [ :each | stream nextPut: each ] ]
+	
+
+]
+
+{ #category : #accessing }
 IceAbstractNode >> allChildrenDo: aBlockClosure [
 	"Evaluate aBlockClosure with my direct and indirect children."
 	
