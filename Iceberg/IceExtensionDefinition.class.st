@@ -15,11 +15,10 @@ Class {
 	#category : #'Iceberg-Changes'
 }
 
-{ #category : #'as yet unclassified' }
-IceExtensionDefinition class >> named: aString isMeta: isMeta packageName: aName [
+{ #category : #'instance creation' }
+IceExtensionDefinition class >> named: aString packageName: aName [
 	^ self new
 		name: aString;
-		isMeta: isMeta;
 		packageName: aName;
 		yourself
 ]

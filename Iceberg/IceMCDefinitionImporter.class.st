@@ -16,13 +16,16 @@ IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait is
 	
 	| newDefinition |	
 	newDefinition := isExtension
-		ifTrue: [ IceExtensionDefinition named: ownerName ]
+		ifTrue: [
+			IceExtensionDefinition
+				named: ownerName
+				packageName: packageNode value name ]
 		ifFalse: [ 
 			isTrait
 				ifFalse: [ IceClassDefinition named: ownerName ]
 				ifTrue: [ IceTraitDefinition named: ownerName ] ].
 	
-	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ].
+	^ packageNode childAt: newDefinition key ifAbsentPut: [ newDefinition ]
 ]
 
 { #category : #testing }
