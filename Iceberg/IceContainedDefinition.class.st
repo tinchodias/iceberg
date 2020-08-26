@@ -1,5 +1,7 @@
 "
-I am an IceDefinition that is contained by another IceDefinition. My instances only have meaning as elements of the container. I am an abstract class.
+I am an abstract class that represents a sub-definition of either a IceClassDefinition or an IceTraitDefinition.
+
+My instances only have meaning as elements of the container. 
 "
 Class {
 	#name : #IceContainedDefinition,

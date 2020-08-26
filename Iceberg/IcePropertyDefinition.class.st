@@ -1,10 +1,7 @@
 "
-I am an IceDefinition that represents a property in another definition. 
+I represent a property of an IceClassDefinition or IceTraitDefinition. For example, the comment.
 
 A property has a name and a value, and only its value can change. Properties cann't be removed from the container.
-
-For example, the comment of an IceClassDefinition.
-
 "
 Class {
 	#name : #IcePropertyDefinition,
@@ -53,16 +50,16 @@ IcePropertyDefinition >> isDefaultValue [
 	name = #superclassName ifTrue: [ 
 		^ self propertyValue = #Object ].
 
-	name = #type ifTrue: [ 
+	name = #type ifTrue: [
 		^ self propertyValue = #normal ].
 
 	name = #comment ifTrue: [ 
 		^ self propertyValue isNil or: [ self propertyValue isEmpty ] ].
 
-	(name = #traitComposition or: [ name = #classTraitComposition ]) ifTrue: [ 
+	(#(traitComposition classTraitComposition) includes: name) ifTrue: [ 
 		^ self propertyValue = '{}' ].
 	
-	^ false.
+	^ false
 ]
 
 { #category : #testing }

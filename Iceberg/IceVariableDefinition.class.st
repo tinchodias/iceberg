@@ -1,5 +1,5 @@
 "
-I represent a variable contained in an IceClassDefinition.
+I represent a variable of an IceClassDefinition or IceTraitDefinition.
 
 Variables have a name, that identify them, and a type. They can be added and removed from the container.
 "
