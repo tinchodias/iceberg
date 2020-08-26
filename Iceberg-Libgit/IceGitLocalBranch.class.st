@@ -65,6 +65,13 @@ IceGitLocalBranch >> commit: anIceGitCommit [
 							yourself) ]]
 ]
 
+{ #category : #accessing }
+IceGitLocalBranch >> commitId [
+	
+	repository handleLibgitError: [
+		^ (self repositoryHandle lookupLocalBranch: self name) targetId ]
+]
+
 { #category : #'API-branches' }
 IceGitLocalBranch >> delete [
 	repository handleLibgitError: [ | found |

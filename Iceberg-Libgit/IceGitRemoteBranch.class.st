@@ -13,6 +13,13 @@ IceGitRemoteBranch >> commit [
 		^ self repository commitFromGitCommit: gitCommit ]
 ]
 
+{ #category : #accessing }
+IceGitRemoteBranch >> commitId [
+	
+	repository handleLibgitError: [
+		^ (self repositoryHandle lookupRemoteBranch: self name) targetId ]
+]
+
 { #category : #'API-branches' }
 IceGitRemoteBranch >> delete [
 	
