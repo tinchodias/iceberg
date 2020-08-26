@@ -1,5 +1,9 @@
 "
-I am an IceDefinition that represents a property in another IceDefinition. For example, the comment of an IceClassDefinition.
+I am an IceDefinition that represents a property in another definition. 
+
+A property has a name and a value, and only its value can change. Properties cann't be removed from the container.
+
+For example, the comment of an IceClassDefinition.
 
 "
 Class {
@@ -58,8 +62,6 @@ IcePropertyDefinition >> isDefaultValue [
 	(name = #traitComposition or: [ name = #classTraitComposition ]) ifTrue: [ 
 		^ self propertyValue = '{}' ].
 	
-"	(#(category source) includes: name) ifTrue: [ ^ false ]."
-	
 	^ false.
 ]
 
@@ -102,5 +104,5 @@ IcePropertyDefinition >> propertyValue [
 { #category : #patching }
 IcePropertyDefinition >> removeFromPatcher: aMCPatcher [
 	"Cannot remove a property, just change it."
-	"1 halt."
+
 ]

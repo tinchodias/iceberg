@@ -1,6 +1,7 @@
 "
 I represent a variable contained in an IceClassDefinition.
 
+Variables have a name, that identify them, and a type. They can be added and removed from the container.
 "
 Class {
 	#name : #IceVariableDefinition,
@@ -69,25 +70,26 @@ IceVariableDefinition >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
-		nextPutAll: '(';
+		nextPut: $(;
 		print: name.
 	aStream
 		nextPutAll: ' -> ';
 		print: self typeToShow;
-		nextPutAll: ')'
+		nextPut: $)
 
 ]
 
 { #category : #printing }
 IceVariableDefinition >> removeFromPatcher: aMCPatcher [
+
+	self flag: #todo. "Check this"
 	(aMCPatcher isKindOf: MCPackageLoader)
 		ifTrue: [ ^ self	"containerIceDefinition is just fine" ].
 	aMCPatcher definitionIndex
 		definitionLike: self containerIceDefinition asMCDefinition
-		ifPresent:
-			[ :currentDefinition | aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
-		ifAbsent:
-			[ " self error" ('do nothing in removeInPatcher: ' , self asString) traceCr ]
+		ifPresent: [ :currentDefinition |
+			aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
+		ifAbsent: [ 1halt ]
 ]
 
 { #category : #patching }
