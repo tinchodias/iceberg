@@ -21,7 +21,9 @@ IceMCSnapshotPatchVisitor >> visitAddition: anIceAddition [
 { #category : #visiting }
 IceMCSnapshotPatchVisitor >> visitModification: anIceModification [
 
-	anIceModification leftDefinition addModification: anIceModification toPatcher: patcher.
+	anIceModification leftDefinition
+		addModification: anIceModification rightDefinition
+		toPatcher: patcher.
 	self visitChildrenOf: currentNode
 ]
 
