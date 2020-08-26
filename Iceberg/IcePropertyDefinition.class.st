@@ -1,3 +1,7 @@
+"
+I am an IceDefinition that represents a property in another IceDefinition. For example, the comment of an IceClassDefinition.
+
+"
 Class {
 	#name : #IcePropertyDefinition,
 	#superclass : #IceContainedDefinition,

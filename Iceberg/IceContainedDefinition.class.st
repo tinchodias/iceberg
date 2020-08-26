@@ -1,3 +1,6 @@
+"
+I am an IceDefinition that is contained by another IceDefinition. My instances only have meaning as elements of the container. I am an abstract class.
+"
 Class {
 	#name : #IceContainedDefinition,
 	#superclass : #IceCodeDefinition,

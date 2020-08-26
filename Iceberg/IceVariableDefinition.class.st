@@ -1,3 +1,7 @@
+"
+I represent a variable contained in an IceClassDefinition.
+
+"
 Class {
 	#name : #IceVariableDefinition,
 	#superclass : #IceContainedDefinition,
