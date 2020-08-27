@@ -39,6 +39,17 @@ IceAbstractNode >> allChildrenDo: aBlockClosure [
 ]
 
 { #category : #accessing }
+IceAbstractNode >> allLeavesDo: aBlockClosure [
+	"Evaluate aBlockClosure with all empty nodes, including self and all (direct and indirect) children."
+
+	self isEmpty
+		ifTrue: [ aBlockClosure value: self ]
+		ifFalse: [ 
+			self childrenDo: [ :each |
+				each allLeavesDo: aBlockClosure ] ]
+]
+
+{ #category : #accessing }
 IceAbstractNode >> anySatisfy: aBlockClosure [
 
 	^ self subclassResponsibility
