@@ -309,7 +309,8 @@ IceGitHubAPI >> newV3Request: relativeUrlString [
 IceGitHubAPI >> newV4Request: aGraphQLString [
 	"Answer a new ZnClient ready to request to the GraphQL API (v4).
 	
-	See: https://developer.github.com/v4/guides/forming-calls/#the-graphql-endpoint"
+	See: https://developer.github.com/v4/guides/forming-calls/#the-graphql-endpoint
+	"
 
 	| queryTextEntity |
 	queryTextEntity := ZnEntity text: '{ "query" : ',
