@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'ringEnvironment'
 	],
-	#category : 'Iceberg-Memory'
+	#category : #'Iceberg-Memory'
 }
 
 { #category : #helpers }
@@ -54,11 +54,21 @@ IceRingWorkingCopy >> createClass: className inPackage: packageName with: aBlock
 
 { #category : #helpers }
 IceRingWorkingCopy >> createMethod: source extendingClass: aClassName inPackage: packageName [
+	self
+		createMethod: source
+		extendingClass: aClassName
+		inPackage: packageName
+		isMeta: false
+]
+
+{ #category : #helpers }
+IceRingWorkingCopy >> createMethod: source extendingClass: aClassName inPackage: packageName isMeta: aBoolean [
 	
 	| class method package |
 	package := ringEnvironment ensurePackageNamed: packageName.
 	class := ringEnvironment ensureClassNamed: aClassName.
-	method := class ensureLocalMethodNamed: (RBParser parseMethod: source) selector.
+	method := (aBoolean ifFalse: [ class ] ifTrue: [ class theMetaClass ]) 
+		ensureLocalMethodNamed: (RBParser parseMethod: source) selector.
 	method protocol: '*', packageName.
 	method sourceCode: source.
 	method package: method parent package.
@@ -70,13 +80,7 @@ IceRingWorkingCopy >> createMethod: source extendingClass: aClassName inPackage:
 
 { #category : #helpers }
 IceRingWorkingCopy >> createMethod: source inClass: aClassName [
-	
-	| class method |
-	class := ringEnvironment ensureClassNamed: aClassName.
-	method := class ensureLocalMethodNamed: (RBParser parseMethod: source) selector.
-	method sourceCode: source.
-	method package: class package.
-	self markAsDirtyPackageNamed: class package name.
+	self createMethod: source inClass: aClassName isMeta: false
 ]
 
 { #category : #helpers }
@@ -172,6 +176,22 @@ IceRingWorkingCopy >> loadPackagesNamed: packageNames fromCommit: aCommit [
 		package beClean.
 	].
 	self referenceCommit: aCommit
+]
+
+{ #category : #helpers }
+IceRingWorkingCopy >> modifyBehavior: className with: aBlock [
+	| behavior |
+	behavior := ringEnvironment ask behaviorNamed: className.
+	aBlock value: behavior.
+	self markAsDirtyPackageNamed: behavior package name
+]
+
+{ #category : #helpers }
+IceRingWorkingCopy >> removeBehavior: aName [
+	| behavior |
+	behavior := ringEnvironment ask behaviorNamed: aName.
+	ringEnvironment removeBehavior: behavior.
+	self markAsDirtyPackageNamed: behavior package name
 ]
 
 { #category : #'private-impacting-changes' }
