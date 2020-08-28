@@ -162,8 +162,9 @@ IceNode >> childAt: aString ifPresent: aBlockClosure [
 
 { #category : #accessing }
 IceNode >> children [
-	
-	^ childrenDictionary values sorted: [ :a :b | a key < b key ]
+	"Answer the children in the order they were added."
+
+	^ childrenDictionary values
 ]
 
 { #category : #enumerating }
