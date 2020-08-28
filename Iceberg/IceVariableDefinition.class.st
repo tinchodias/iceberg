@@ -89,7 +89,7 @@ IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 		definitionLike: self containerIceDefinition asMCDefinition
 		ifPresent: [ :currentDefinition |
 			aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
-		ifAbsent: [ 1halt ]
+		ifAbsent: [ "Nothing to do: the container of this variable was removed." ]
 ]
 
 { #category : #patching }
