@@ -5,7 +5,7 @@ Class {
 	#name : #IceModification,
 	#superclass : #IceOperation,
 	#instVars : [
-		'oldNode'
+		'oldDefinition'
 	],
 	#category : #'Iceberg-Changes'
 }
@@ -54,7 +54,7 @@ IceModification >> isModification [
 
 { #category : #testing }
 IceModification >> isOnlyLowImpact [
-	^ definition isLowImpactAppliedTo: oldNode 
+	^ definition isLowImpactAppliedTo: oldDefinition 
 ]
 
 { #category : #accessing }
@@ -102,35 +102,23 @@ IceModification >> mergeWithOperation: anOperation [
 { #category : #accessing }
 IceModification >> oldDefinition [
 	
-	^ oldNode
-]
-
-{ #category : #accessing }
-IceModification >> oldNode [
-	
-	^ oldNode
-]
-
-{ #category : #accessing }
-IceModification >> oldNode: aNode [
-	
-	oldNode := aNode
+	^ oldDefinition
 ]
 
 { #category : #accessing }
 IceModification >> rightContents [
 	
-	^ oldNode contents
+	^ oldDefinition contents
 ]
 
 { #category : #accessing }
 IceModification >> rightDefinition [
 	
-	^ oldNode
+	^ oldDefinition
 ]
 
 { #category : #accessing }
 IceModification >> rightDefinition: aDefinition [
 	
-	oldNode := aDefinition
+	oldDefinition := aDefinition
 ]

@@ -70,12 +70,9 @@ IceVariableDefinition >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
-		nextPut: $(;
-		print: name.
-	aStream
-		nextPutAll: ' -> ';
+		nextPut: $[;
 		print: self typeToShow;
-		nextPut: $)
+		nextPut: $]
 
 ]
 

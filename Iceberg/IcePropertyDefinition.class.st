@@ -72,21 +72,6 @@ IcePropertyDefinition >> key [
 	^ '>Property: ', name
 ]
 
-{ #category : #printing }
-IcePropertyDefinition >> printOn: aStream [
-	"Append a sequence of characters to aStream that identify the receiver."
-
-	super printOn: aStream.
-	aStream
-		nextPutAll: '(';
-		print: self propertyName.
-	aStream
-		nextPutAll: ' -> ';
-		print: self propertyValue;
-		nextPutAll: ')'
-
-]
-
 { #category : #accessing }
 IcePropertyDefinition >> propertyName [
 	^ name
