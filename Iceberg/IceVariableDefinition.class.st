@@ -33,7 +33,7 @@ IceVariableDefinition >> addedIn: aMCDefinition [
 { #category : #accessing }
 IceVariableDefinition >> contents [
 	
-	^ ''
+	^ 'Variable of type: ', self typeToShow
 ]
 
 { #category : #comparing }
