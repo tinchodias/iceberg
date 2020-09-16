@@ -42,11 +42,14 @@ IceGitHubPullRequest >> acceptMessage: messageString type: typeString [
 
 { #category : #actions }
 IceGitHubPullRequest >> addComment: messageString [
-	IceGitHubAPI new 
+	| aJsonDictionary |
+	aJsonDictionary := IceGitHubAPI new 
 		addComment: self owner 
 			project: self projectName
 			number: self number
-			data: { #body -> messageString } asDictionary
+			data: { #body -> messageString } asDictionary.
+	
+	^ IceGitHubPullRequestComment fromJSON: aJsonDictionary
 ]
 
 { #category : #accessing }
