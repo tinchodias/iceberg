@@ -241,8 +241,8 @@ IceGitHubPullRequest >> repository [
 ]
 
 { #category : #accessing }
-IceGitHubPullRequest >> repository: anObject [
-	repository := anObject
+IceGitHubPullRequest >> repository: anIceRepository [
+	repository := anIceRepository
 ]
 
 { #category : #accessing }
