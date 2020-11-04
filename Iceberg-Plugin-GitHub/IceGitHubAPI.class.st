@@ -7,7 +7,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'credentials',
-		'isAnonymous'
+		'isAnonymous',
+		'acceptMediaType'
 	],
 	#category : #'Iceberg-Plugin-GitHub-Model'
 }
@@ -69,6 +70,21 @@ IceGitHubAPI class >> obtainCredentials [
 
 ]
 
+{ #category : #accessing }
+IceGitHubAPI >> acceptMediaType [
+
+	^ acceptMediaType ifNil: [ 
+		  acceptMediaType := 'application/vnd.github.v3+json' ]
+]
+
+{ #category : #accessing }
+IceGitHubAPI >> acceptMediaType: aString [
+	"Set the media type to use in the request.
+	See: https://developer.github.com/v3/media/"
+
+	acceptMediaType := aString
+]
+
 { #category : #requesting }
 IceGitHubAPI >> acceptPullRequest: owner project: projectName number: aNumber data: aDictionary [
 	^ self 
@@ -86,6 +102,16 @@ IceGitHubAPI >> addComment: owner project: projectName number: aNumber data: aDi
 		with: [ :client |
 			client 
 				entity: (ZnEntity text: (STON toJsonString: aDictionary));
+				contentType: ZnMimeType applicationJson ]
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> addCommentOn: owner project: projectName number: aNumber commentId: commentId body: aString [
+	^ self
+		post: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments/', commentId asString, '/replies'
+		with: [ :client |
+			client 
+				entity: (ZnEntity text: (STON toJsonString: { #body -> aString } asDictionary));
 				contentType: ZnMimeType applicationJson ]
 ]
 
@@ -123,7 +149,7 @@ IceGitHubAPI >> credentials: anObject [
 { #category : #'private requesting' }
 IceGitHubAPI >> delete: aString [ 
 	^ self contentsWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			delete;
 			response ]
 ]
@@ -136,7 +162,7 @@ IceGitHubAPI >> deleteBranch: owner project: projectName name: branchName [
 { #category : #'private requesting' }
 IceGitHubAPI >> get: aString [ 
 	^ self jsonContentsWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			get;
 			response ]
 ]
@@ -144,7 +170,7 @@ IceGitHubAPI >> get: aString [
 { #category : #'private requesting' }
 IceGitHubAPI >> get: aString parameters: aDictionary [
 	^ self jsonContentsWithValidationDo: [
-		(self newRequestTo: aString, (String streamContents: [ :stream |
+		(self newV3Request: aString, (String streamContents: [ :stream |
 				stream << '?'.
 				aDictionary associations 
 					do: [ :keyPair | stream << keyPair key << '=' << keyPair value ]
@@ -169,6 +195,30 @@ IceGitHubAPI >> getIssue: owner project: projectName number: issueNumber [
 	^ self get: 'repos/', owner,'/', projectName, '/issues/', (issueNumber asString)
 ]
 
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestComments: owner project: projectName [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestComments: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/issues/', aNumber asString, '/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestReviewComments: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/comments'
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> getListPullRequestReviews: owner project: projectName number: aNumber [
+	^ self
+		getPaginated: 'repos/', owner, '/', projectName, '/pulls/', aNumber asString, '/reviews'
+]
+
 { #category : #'private requesting' }
 IceGitHubAPI >> getPaginated: aString [ 
 	^ IceGitHubAPIPaginatedResult api: self request: aString
@@ -184,7 +234,7 @@ IceGitHubAPI >> getPullRequests: owner project: projectName [
 { #category : #'private requesting' }
 IceGitHubAPI >> getRaw: aString [ 
 	^ self responseWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			get;
 			response ]
 ]
@@ -229,23 +279,54 @@ IceGitHubAPI >> jsonContentsWithValidationDo: aBlock [
 ]
 
 { #category : #'private factory' }
-IceGitHubAPI >> newRequestTo: aString [
+IceGitHubAPI >> newAuthenticatedRequest [
+	"Answer a new ZnClient to request to any of the APIs, using the common authentication header."
 
-	^ ZnClient new 
-		in: [ :this | 
-			(self credentials notNil and: [ isAnonymous not]) ifTrue: [ 
-				self credentials applyToRequest: this ] ]; 
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-		url: 'https://api.github.com/', (aString first = $/
-			ifTrue: [ aString allButFirst ]
-			ifFalse: [ aString ]);
+	| client |
+	client := ZnClient new.
+
+	(self credentials notNil and: [ isAnonymous not ]) ifTrue: [ 
+		self credentials applyToRequest: client ].
+
+	^ client
+]
+
+{ #category : #'private factory' }
+IceGitHubAPI >> newV3Request: relativeUrlString [
+	"Answer a new ZnClient ready to request to the REST API (v3).
+	
+	See: https://developer.github.com/v3/#root-endpoint"
+
+	^ self newAuthenticatedRequest
+		headerAt: 'Accept' put: self acceptMediaType;
+		url: 'https://api.github.com/', (relativeUrlString first = $/
+			ifTrue: [ relativeUrlString allButFirst ]
+			ifFalse: [ relativeUrlString ]);
 		yourself
+]
+
+{ #category : #requesting }
+IceGitHubAPI >> newV4Request: aGraphQLString [
+	"Answer a new ZnClient ready to request to the GraphQL API (v4).
+	
+	See: https://developer.github.com/v4/guides/forming-calls/#the-graphql-endpoint
+	"
+
+	| queryTextEntity |
+	queryTextEntity := ZnEntity text: '{ "query" : ',
+		(STON toJsonString: aGraphQLString) , ' }'.
+
+	^ self newAuthenticatedRequest
+		  url: 'https://api.github.com/graphql';
+		  entity: queryTextEntity;
+		  contentType: ZnMimeType applicationJson;
+		  yourself
 ]
 
 { #category : #'private requesting' }
 IceGitHubAPI >> patch: aString with: aBlock [  
 	^ self jsonContentsWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			in: aBlock;
 			patch;
 			response ]
@@ -254,8 +335,16 @@ IceGitHubAPI >> patch: aString with: aBlock [
 { #category : #'private requesting' }
 IceGitHubAPI >> post: aString with: aBlock [  
 	^ self jsonContentsWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			in: aBlock;
+			post;
+			response ]
+]
+
+{ #category : #'private requesting' }
+IceGitHubAPI >> postGraphQL: aGraphQLString [
+	^ self jsonContentsWithValidationDo: [
+		(self newV4Request: aGraphQLString)
 			post;
 			response ]
 ]
@@ -263,7 +352,7 @@ IceGitHubAPI >> post: aString with: aBlock [
 { #category : #'private requesting' }
 IceGitHubAPI >> put: aString with: aBlock [  
 	^ self jsonContentsWithValidationDo: [
-		(self newRequestTo: aString)
+		(self newV3Request: aString)
 			in: aBlock;
 			put;
 			response ]

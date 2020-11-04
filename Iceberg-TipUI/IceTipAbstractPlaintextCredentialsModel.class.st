@@ -4,7 +4,7 @@ My subclasses implements the specific behavior for each of the operations.
 "
 Class {
 	#name : #IceTipAbstractPlaintextCredentialsModel,
-	#superclass : #IceTipAbstractAskCredentialsModel,
+	#superclass : #IceTipAbstractCredentialsModel,
 	#instVars : [
 		'usernameLabel',
 		'usernameInput',
@@ -14,35 +14,36 @@ Class {
 	#category : #'Iceberg-TipUI-Credentials'
 }
 
-{ #category : #accessing }
-IceTipAbstractPlaintextCredentialsModel >> credentials [
-	^ IcePlaintextCredentials new 
-		username: self username;
-		password: self password;
-		yourself.
-
-]
-
 { #category : #initialization }
-IceTipAbstractPlaintextCredentialsModel >> initializeWidgets [
-	super initializeWidgets.
+IceTipAbstractPlaintextCredentialsModel >> initializePresenters [
+	super initializePresenters.
 	usernameLabel := self newLabel label: 'Username: '.
 	usernameInput := self newTextInput
 		autoAccept: true;
-		whenTextChanged: [ self updateOkButton ];
+		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
 	passwordLabel := self newLabel label: 'Password: '.
 	passwordInput := self newTextInput
-		beEncrypted;
+		bePassword;
 		autoAccept: true;
-		whenTextChanged: [ self updateOkButton ];
-		yourself
+		whenTextChangedDo: [ self updateOkButton ];
+		yourself.
+
 ]
 
 { #category : #testing }
 IceTipAbstractPlaintextCredentialsModel >> isOkEnabled [
-	
-	^ self username isNotEmpty and: [self password isNotEmpty]
+
+	^ self username isNotEmpty and: [ self password isNotEmpty ]
+]
+
+{ #category : #accessing }
+IceTipAbstractPlaintextCredentialsModel >> newCredentials [
+
+	^ IcePlaintextCredentials new
+		  username: self username;
+		  password: self password;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -56,11 +57,6 @@ IceTipAbstractPlaintextCredentialsModel >> passwordInput [
 ]
 
 { #category : #accessing }
-IceTipAbstractPlaintextCredentialsModel >> passwordLabel [
-	^ passwordLabel
-]
-
-{ #category : #accessing }
 IceTipAbstractPlaintextCredentialsModel >> username [
 	^ usernameInput text
 ]
@@ -68,9 +64,4 @@ IceTipAbstractPlaintextCredentialsModel >> username [
 { #category : #accessing }
 IceTipAbstractPlaintextCredentialsModel >> usernameInput [
 	^ usernameInput
-]
-
-{ #category : #accessing }
-IceTipAbstractPlaintextCredentialsModel >> usernameLabel [
-	^ usernameLabel
 ]

@@ -44,7 +44,7 @@ IceCredentialStore class >> settingsOn: aBuilder [
 		name: #icebergCredentials;
 		noOrdering;
 		target: self current;
-		label: 'Plain Text Credentials';
+		label: 'Credentials';
 		with: [
 			(aBuilder setting: #storeFile)
 				target: self;
@@ -75,7 +75,7 @@ IceCredentialStore >> allCredentials [
 	^ plainCredentials values , sshCredentials values
 ]
 
-{ #category : #'API -  accessing' }
+{ #category : #'API - accessing' }
 IceCredentialStore >> defaultSSHCredential [
 	^ sshCredentials
 		at: #*
@@ -101,7 +101,7 @@ IceCredentialStore >> isCurrent [
 IceCredentialStore >> loadFromStore [
 
 	| array |
-	self flag: #implementAnEncryptedVersion.
+	self flag: #pharoTodo. "implement an encrypted version"
 	
 	"If I don't have a store file I do nothing"
 	storeFile ifNil: [ ^ self ].
@@ -122,7 +122,7 @@ IceCredentialStore >> lookup: aHostName in: dict ifAbsent: aBlock [
 	^ dict at: aHostName ifAbsent: aBlock
 ]
 
-{ #category : #'API -  accessing' }
+{ #category : #'API - accessing' }
 IceCredentialStore >> plaintextCredentialForHostname: aHostname [
  
 	^ self lookup: aHostname in: plainCredentials ifAbsent: [ IcePlaintextCredentials new ]
@@ -152,7 +152,7 @@ IceCredentialStore >> saveIntoStore [
 
 	| serializer |
 	
-	self flag: #implementAnEncryptedVersion.
+	self flag: #pharoTodo. "implement an encrypted version"
 		
 	storeFile ifNotNil: [  	
 		storeFile parent ensureCreateDirectory.	
@@ -163,13 +163,13 @@ IceCredentialStore >> saveIntoStore [
 	]
 ]
 
-{ #category : #'API -  accessing' }
+{ #category : #'API - accessing' }
 IceCredentialStore >> sshCredentialForHostname: aHostname [
  
 	^ self lookup: aHostname in: sshCredentials ifAbsent: [ self defaultSSHCredential ].
 ]
 
-{ #category : #'API -  accessing' }
+{ #category : #'API - accessing' }
 IceCredentialStore >> storeCredential: credential [
  
 	self loadFromStore.
@@ -177,7 +177,7 @@ IceCredentialStore >> storeCredential: credential [
 	self saveIntoStore
 ]
 
-{ #category : #'API -  accessing' }
+{ #category : #'API - accessing' }
 IceCredentialStore >> storeCredential: credential forHostname: aHostname [
  
 	self loadFromStore.

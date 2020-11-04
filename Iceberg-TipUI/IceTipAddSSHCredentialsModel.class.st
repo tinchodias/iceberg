@@ -14,49 +14,39 @@ Class {
 { #category : #specs }
 IceTipAddSSHCredentialsModel class >> defaultSpec [
 	<spec: #default>
-
-	^ SpecLayout composed newColumn: [ :col |
-		col 
-		 	newRow: [:row | row add: #hostLabel width: self iceLabelWidth; add: #hostInput ] height: self inputTextHeight;
-		 	newRow: [:row | row add: #usernameLabel width: self iceLabelWidth; add: #usernameInput ] height: self inputTextHeight;
-			newRow: [:row | row add: #publicKeyInput ] height: self inputTextHeight;
-			newRow: [:row | row add: #privateKeyInput ] height: self inputTextHeight;
-			newRow: [:row | row add: #passphraseLabel width: self iceLabelWidth; add: #passphraseInput ] height: self inputTextHeight;
-			newRow: [:row | ]
-	]
-
+	^ SpBoxLayout newVertical
+		add:
+			(SpBoxLayout newHorizontal
+				add: #hostLabel width: self labelWidth;
+				add: #hostInput;
+				yourself)
+			height: self inputTextHeight;
+		add:
+			(SpBoxLayout newHorizontal
+				add: #usernameLabel width: self labelWidth;
+				add: #usernameInput;
+				yourself)
+			height: self inputTextHeight;
+		add: #publicKeyInput height: self inputTextHeight;
+		add: #privateKeyInput height: self inputTextHeight;
+		add:
+			(SpBoxLayout newHorizontal
+				add: #passphraseLabel width: self labelWidth;
+				add: #passphraseInput;
+				yourself )
+			height: self inputTextHeight
 ]
 
 { #category : #actions }
-IceTipAddSSHCredentialsModel >> cancelAction [
-	" I do nothing on cancel "
+IceTipAddSSHCredentialsModel >> accept [
+
+	self acceptAddAction
 ]
 
 { #category : #accessing }
-IceTipAddSSHCredentialsModel >> credentials [
+IceTipAddSSHCredentialsModel >> hostnameFromInput [
 	
-	^ IceSshCredentials new
-		username: self username;
-		publicKey: self publicKey;
-		privateKey: self privateKey;
-		keyPassphrase: self passphrase;
-		yourself 
-]
-
-{ #category : #accessing }
-IceTipAddSSHCredentialsModel >> host [
-	
-	^ self hostInput text
-]
-
-{ #category : #accessing }
-IceTipAddSSHCredentialsModel >> hostInput [
-	^ hostInput
-]
-
-{ #category : #accessing }
-IceTipAddSSHCredentialsModel >> hostLabel [
-	^ hostLabel
+	^ hostInput text
 ]
 
 { #category : #api }
@@ -65,22 +55,24 @@ IceTipAddSSHCredentialsModel >> initialExtent [
 ]
 
 { #category : #initialization }
-IceTipAddSSHCredentialsModel >> initializeWidgets [
-	super initializeWidgets.
-	
+IceTipAddSSHCredentialsModel >> initializePresenters [
+	super initializePresenters.
 	hostLabel := self newLabel label: 'Host: '.
-	hostInput := self newTextInput 
+	hostInput := self newTextInput
 		autoAccept: true;
-		whenTextChanged: [ self updateOkButton ];
-		yourself.
-
+		whenTextChangedDo: [ self updateOkButton ];
+		yourself
 ]
 
-{ #category : #actions }
-IceTipAddSSHCredentialsModel >> okAction [
+{ #category : #accessing }
+IceTipAddSSHCredentialsModel >> newCredentials [
 	
-	credentialStore storeCredential: self credentials forHostname: self host.
-	tool refresh.
+	^ IceSshCredentials new
+		username: self username;
+		publicKey: self publicKey;
+		privateKey: self privateKey;
+		keyPassphrase: self passphrase;
+		yourself 
 ]
 
 { #category : #initialization }

@@ -4,50 +4,46 @@ My subclasses implements the specific behavior for each of the operations.
 "
 Class {
 	#name : #IceTipAbstractSSHCredentialsModel,
-	#superclass : #IceTipAbstractAskCredentialsModel,
+	#superclass : #IceTipAbstractCredentialsModel,
 	#instVars : [
 		'usernameInput',
 		'usernameLabel',
 		'publicKeyInput',
 		'privateKeyInput',
 		'passphraseInput',
-		'passphraseLabel',
-		'tool'
+		'passphraseLabel'
 	],
 	#category : #'Iceberg-TipUI-Credentials'
 }
 
 { #category : #initialization }
-IceTipAbstractSSHCredentialsModel >> initializeWidgets [
-	super initializeWidgets.
-
+IceTipAbstractSSHCredentialsModel >> initializePresenters [
+	super initializePresenters.
 	usernameLabel := self newLabel label: 'Username: '.
 	usernameInput := self newTextInput
 		text: 'git';
 		autoAccept: true;
-		whenTextChanged: [ self updateOkButton ];
+		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
-
 	passphraseLabel := self newLabel label: 'Key Passphrase: '.
 	passphraseInput := self newTextInput
-		beEncrypted;
+		bePassword;
 		autoAccept: true;
-		whenTextChanged: [ self updateOkButton ];
+		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
-		
-	privateKeyInput := IceTipFilePresenter new 
+	privateKeyInput := IceTipFilePresenter new
 		label: 'Private Key';
 		onChoose: [ self updateOkButton ];
 		chooseTitle: 'Select Private Key';
 		whenTextChanged: [ self updateOkButton ];
 		yourself.
-		
-	publicKeyInput := IceTipFilePresenter new 
+	publicKeyInput := IceTipFilePresenter new
 		label: 'Public Key';
 		onChoose: [ self updateOkButton ];
 		chooseTitle: 'Select Public Key';
-		whenTextChanged: [ self updateOkButton ];		
-		yourself.	
+		whenTextChanged: [ self updateOkButton ];
+		yourself.
+
 ]
 
 { #category : #testing }
@@ -62,23 +58,8 @@ IceTipAbstractSSHCredentialsModel >> passphrase [
 ]
 
 { #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> passphraseInput [
-	^ passphraseInput
-]
-
-{ #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> passphraseLabel [
-	^ passphraseLabel
-]
-
-{ #category : #accessing }
 IceTipAbstractSSHCredentialsModel >> privateKey [
 	^ privateKeyInput location ifNil: [ '' ] ifNotNil: [ :x | x pathString ]
-]
-
-{ #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> privateKeyInput [
-	^ privateKeyInput
 ]
 
 { #category : #accessing }
@@ -87,26 +68,6 @@ IceTipAbstractSSHCredentialsModel >> publicKey [
 ]
 
 { #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> publicKeyInput [
-	^ publicKeyInput
-]
-
-{ #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> tool: aBrowser [ 
-	tool := aBrowser
-]
-
-{ #category : #accessing }
 IceTipAbstractSSHCredentialsModel >> username [
 	^ usernameInput text
-]
-
-{ #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> usernameInput [
-	^ usernameInput
-]
-
-{ #category : #accessing }
-IceTipAbstractSSHCredentialsModel >> usernameLabel [
-	^ usernameLabel
 ]

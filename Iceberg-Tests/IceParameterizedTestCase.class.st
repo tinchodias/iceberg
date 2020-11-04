@@ -10,7 +10,8 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'testParameters',
-		'oldShareRepositoriesBetweenImages'
+		'oldShareRepositoriesBetweenImages',
+		'provider'
 	],
 	#category : #'Iceberg-Tests-Base'
 }
@@ -137,7 +138,9 @@ IceParameterizedTestCase >> setUp [
 	super setUp.
 	oldShareRepositoriesBetweenImages := IceLibgitRepository shareRepositoriesBetweenImages.
 	IceLibgitRepository shareRepositoriesBetweenImages: false.
-	self parameters do: #activate
+	provider := IceCredentialsProvider providerType.
+	IceCredentialsProvider providerType: IceNonInteractiveCredentialsProvider.
+	self parameters do: #activate.
 ]
 
 { #category : #running }
@@ -148,5 +151,6 @@ IceParameterizedTestCase >> tearDown [
 				on: Error
 				do: [ :error | error traceCr ] ].
 	IceLibgitRepository shareRepositoriesBetweenImages: oldShareRepositoriesBetweenImages.
+	IceCredentialsProvider providerType: provider.
 	super tearDown
 ]
