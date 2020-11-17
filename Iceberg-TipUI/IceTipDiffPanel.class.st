@@ -40,11 +40,10 @@ IceTipDiffPanel class >> title [
 { #category : #accessing }
 IceTipDiffPanel >> basicRefresh [
 	self resetDiffContents.
-	changeList roots: self model treeRoots.
-
-	self flag: #fix. "Low level access"
-	self defer: [
-		changeList adapter widget dataSource expandAll ]
+	
+	changeList
+		roots: self model treeRoots;
+		expandAll
 ]
 
 { #category : #accessing }
@@ -119,11 +118,9 @@ IceTipDiffPanel >> initializeChangeList [
 	changeList
 		addColumn: self changeListColumn;
 		children: [ :each | each children ];
-		roots: self model treeRoots;
-		"The inversion below allow to display change properly in the SpDiffPresenter"
-			whenSelectionChangedDo: [ self selectionChanged ];
-			contextMenu: [ self buildMenu ].
-			
+		whenSelectionChangedDo: [ self selectionChanged ];
+		contextMenu: [ self buildMenu ].
+		
 	changeList whenBuiltDo: [ :ann | self basicRefresh ]
 ]
 
