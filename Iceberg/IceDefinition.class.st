@@ -97,6 +97,12 @@ IceDefinition >> isPackageDefinition [
 ]
 
 { #category : #testing }
+IceDefinition >> isPropertyDefinition [
+	
+	^ false
+]
+
+{ #category : #testing }
 IceDefinition >> isRootDefinition [
 	
 	^ false
@@ -108,9 +114,16 @@ IceDefinition >> isTraitDefinition [
 	^ false
 ]
 
+{ #category : #testing }
+IceDefinition >> isVariableDefinition [
+	
+	^ false
+]
+
 { #category : #accessing }
 IceDefinition >> key [
-	
+	"Answer a string that is enough as an identification between my siblings, in the tree node."
+
 	^ name
 ]
 

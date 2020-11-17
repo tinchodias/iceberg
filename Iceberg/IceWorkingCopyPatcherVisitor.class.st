@@ -82,13 +82,6 @@ IceWorkingCopyPatcherVisitor >> visitClassDefinition: anIceClassDefinition [
 ]
 
 { #category : #visiting }
-IceWorkingCopyPatcherVisitor >> visitContainedDefinition: anIceContainedDefinition [ 
-
-	repository workingCopy applyDefinition: anIceContainedDefinition containerIceDefinition inNode: currentNode parent.
-	self visitChildrenOf: currentNode.
-]
-
-{ #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitDirectoryDefinition: anIceDirectoryDefinition [
 
 	self visitChildrenOf: currentNode
@@ -130,6 +123,13 @@ IceWorkingCopyPatcherVisitor >> visitNonConflictingOperation: anIceNonConflictin
 ]
 
 { #category : #visiting }
+IceWorkingCopyPatcherVisitor >> visitOwnedDefinition: anIceContainedDefinition [ 
+
+	repository workingCopy applyDefinition: anIceContainedDefinition ownerIceDefinition inNode: currentNode parent.
+	self visitChildrenOf: currentNode.
+]
+
+{ #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitPackage: anIcePackageDefinition [
 	
 	(self repository packageNamed: anIcePackageDefinition name) isLoaded
@@ -143,7 +143,7 @@ IceWorkingCopyPatcherVisitor >> visitPackage: anIcePackageDefinition [
 { #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitPropertyDefinition: anIceContainedDefinition [
 
-	^ self visitContainedDefinition: anIceContainedDefinition
+	^ self visitOwnedDefinition: anIceContainedDefinition
 ]
 
 { #category : #visiting }
@@ -162,5 +162,5 @@ IceWorkingCopyPatcherVisitor >> visitRootDefinition: anIceRootDefinition [
 { #category : #visiting }
 IceWorkingCopyPatcherVisitor >> visitVariableDefinition: anIceContainedDefinition [
 
-	^ self visitContainedDefinition: anIceContainedDefinition
+	^ self visitOwnedDefinition: anIceContainedDefinition
 ]

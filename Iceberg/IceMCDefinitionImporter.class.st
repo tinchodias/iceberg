@@ -15,6 +15,7 @@ Class {
 IceMCDefinitionImporter >> ensureMethodOwnerNamed: ownerName isTrait: isTrait isExtension: isExtension [
 	
 	| newDefinition |	
+	self flag: #todo. "Avoid eager instantiation"
 	newDefinition := isExtension
 		ifTrue: [
 			IceExtensionDefinition
@@ -64,7 +65,7 @@ IceMCDefinitionImporter >> visitClassDefinition: aMCClassDefinition [
 	iceDefinition := classDefinitionNode value.
 	iceDefinition mcDefinition: aMCClassDefinition.
 	
-	iceDefinition childrenDefinitions do: [ :each |
+	iceDefinition ownedDefinitions do: [ :each |
 		classDefinitionNode addChild: each ].
 	
 	^ classDefinitionNode
@@ -108,15 +109,15 @@ IceMCDefinitionImporter >> visitMethodDefinition: aMCMethodDefinition [
 
 	iceDefinition :=
 		IceMethodDefinition
-			className: ownerName
+			owner: ownerNode value
 			classIsMeta: isMeta
 			protocol: aMCMethodDefinition protocol
-			name: aMCMethodDefinition selector
+			selector: aMCMethodDefinition selector
 			sourceCode: aMCMethodDefinition source.
 
 	iceNode := ownerNode addChild: iceDefinition.
 
-	iceDefinition childrenDefinitions do: [ :each |
+	iceDefinition ownedDefinitions do: [ :each |
 		iceNode addChild: each ].
 	
 	^ iceNode 

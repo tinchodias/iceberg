@@ -41,14 +41,14 @@ IceCodeDefinition >> allPropertyNames [
 	^ #()
 ]
 
-{ #category : #properties }
-IceCodeDefinition >> childrenDefinitions [
-	^ self propertyDefinitions
-]
-
 { #category : #comparing }
 IceCodeDefinition >> hash [
 	^ super hash bitXor: self contents hash
+]
+
+{ #category : #properties }
+IceCodeDefinition >> ownedDefinitions [
+	^ self propertyDefinitions
 ]
 
 { #category : #properties }
@@ -57,7 +57,7 @@ IceCodeDefinition >> propertyDefinitions [
 		collect: [ :each | 
 			IcePropertyDefinition new
 				name: each;
-				containerIceDefinition: self;
+				ownerIceDefinition: self;
 				yourself.
 			 ]
 		thenReject: [ :each |

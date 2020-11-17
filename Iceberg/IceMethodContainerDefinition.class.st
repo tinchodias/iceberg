@@ -26,17 +26,13 @@ IceMethodContainerDefinition class >> named: aString [
 
 { #category : #patching }
 IceMethodContainerDefinition >> allPropertyNames [
-	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp)
+"	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp) "
+	^ #(#superclassName #category #type #comment #traitComposition #classTraitComposition)
 ]
 
 { #category : #patching }
 IceMethodContainerDefinition >> asMCDefinition [
 	^ mcDefinition
-]
-
-{ #category : #private }
-IceMethodContainerDefinition >> childrenDefinitions [
-	^ self propertyDefinitions, self variableDefinitions
 ]
 
 { #category : #patching }
@@ -47,6 +43,11 @@ IceMethodContainerDefinition >> mcDefinition [
 { #category : #patching }
 IceMethodContainerDefinition >> mcDefinition: aMCDefinition [
 	mcDefinition := aMCDefinition
+]
+
+{ #category : #private }
+IceMethodContainerDefinition >> ownedDefinitions [
+	^ self propertyDefinitions, self variableDefinitions
 ]
 
 { #category : #patching }
@@ -61,6 +62,6 @@ IceMethodContainerDefinition >> variableDefinitions [
 		collect: [ :each | 
 			IceVariableDefinition new
 				mcVariableDefinition: each;
-				containerIceDefinition: self;
+				ownerIceDefinition: self;
 				yourself ]
 ]

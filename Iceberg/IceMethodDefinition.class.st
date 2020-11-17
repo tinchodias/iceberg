@@ -7,9 +7,8 @@ See my superclasses for more information.
 "
 Class {
 	#name : #IceMethodDefinition,
-	#superclass : #IceCodeDefinition,
+	#superclass : #IceOwnedDefinition,
 	#instVars : [
-		'className',
 		'classIsMeta',
 		'protocol',
 		'sourceCode'
@@ -18,10 +17,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-IceMethodDefinition class >> className: aClassName classIsMeta: classIsMeta protocol: protocol name: aString sourceCode: source [
+IceMethodDefinition class >> owner: anIceDefinition classIsMeta: classIsMeta protocol: protocol selector: aString sourceCode: source [
 
 	^ (self named: aString)
-		className: aClassName;
+		ownerIceDefinition: anIceDefinition;
 		classIsMeta: classIsMeta;
 		protocol: protocol;
 		sourceCode: source;
@@ -33,8 +32,7 @@ IceMethodDefinition >> = anotherDefinition [
 	"A method can be equal and belong to another class (and be in the other side). 
 	 And yes, even if this usually should not happen, it happens (and not always is incorrect)"
 	^ super = anotherDefinition 
-		and: [ self className = anotherDefinition className 
-		and: [ self classIsMeta = anotherDefinition classIsMeta ] ]
+		and: [ self classIsMeta = anotherDefinition classIsMeta ]
 ]
 
 { #category : #visiting }
@@ -66,7 +64,7 @@ IceMethodDefinition >> addToPatcher: aMCPatcher [
 IceMethodDefinition >> asMCDefinition [
 
 	^ MCMethodDefinition 
-		className: self className
+		className: self ownerName
 		classIsMeta: self classIsMeta
 		selector: self name
 		category: self protocol
@@ -86,19 +84,8 @@ IceMethodDefinition >> classIsMeta [
 ]
 
 { #category : #accessing }
-IceMethodDefinition >> classIsMeta: anObject [
-	classIsMeta := anObject
-]
-
-{ #category : #accessing }
-IceMethodDefinition >> className [
-
-	^ className
-]
-
-{ #category : #accessing }
-IceMethodDefinition >> className: anObject [
-	className := anObject
+IceMethodDefinition >> classIsMeta: aBoolean [
+	classIsMeta := aBoolean
 ]
 
 { #category : #accessing }
@@ -112,7 +99,7 @@ IceMethodDefinition >> contents [
 IceMethodDefinition >> contextClass [
 	
 	| class |
-	class := Smalltalk globals at: self className ifAbsent: [ ^ nil ].
+	class := self class environment at: self ownerName ifAbsent: [ ^ nil ].
 	self classIsMeta ifTrue: [ class := class classSide ].
 	^ class
 ]
@@ -130,6 +117,7 @@ IceMethodDefinition >> isLoadable [
 
 { #category : #testing }
 IceMethodDefinition >> isLowImpactAppliedTo: anotherIceMethodDefinition [
+
 	^ sourceCode = anotherIceMethodDefinition sourceCode
 		or: [ self ast = anotherIceMethodDefinition ast ]
 ]
@@ -141,26 +129,13 @@ IceMethodDefinition >> isMethodDefinition [
 ]
 
 { #category : #accessing }
-IceMethodDefinition >> key [
-	^ self classIsMeta
-		ifTrue: [ 'Method (class): ', name ]
-		ifFalse: [ 'Method (inst): ', name ]
-]
-
-{ #category : #accessing }
-IceMethodDefinition >> ownerName [
-	
-	^ className
-]
-
-{ #category : #accessing }
 IceMethodDefinition >> protocol [
 	^ protocol
 ]
 
 { #category : #accessing }
-IceMethodDefinition >> protocol: anObject [
-	protocol := anObject
+IceMethodDefinition >> protocol: aString [
+	protocol := aString
 ]
 
 { #category : #patching }
@@ -191,4 +166,12 @@ IceMethodDefinition >> sourceCode [
 IceMethodDefinition >> sourceCode: aString [
 
 	sourceCode := aString
+]
+
+{ #category : #accessing }
+IceMethodDefinition >> type [
+
+	^ self classIsMeta
+		ifTrue: [ 'class method' ]
+		ifFalse: [ 'method' ]
 ]

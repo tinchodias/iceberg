@@ -5,7 +5,7 @@ A property has a name and a value, and only its value can change. Properties can
 "
 Class {
 	#name : #IcePropertyDefinition,
-	#superclass : #IceContainedDefinition,
+	#superclass : #IceOwnedDefinition,
 	#instVars : [
 		'propertyValue'
 	],
@@ -67,9 +67,10 @@ IcePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [
 	^ #(category comment commentStamp timeStamp) includes: self propertyName
 ]
 
-{ #category : #accessing }
-IcePropertyDefinition >> key [
-	^ '>Property: ', name
+{ #category : #testing }
+IcePropertyDefinition >> isPropertyDefinition [
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -80,11 +81,17 @@ IcePropertyDefinition >> propertyName [
 { #category : #accessing }
 IcePropertyDefinition >> propertyValue [
 	^ propertyValue ifNil: [
-		propertyValue := containerDefinition asMCDefinition basicAtPropertyNamed: name ]
+		propertyValue := ownerIceDefinition asMCDefinition basicAtPropertyNamed: name ]
 ]
 
 { #category : #patching }
 IcePropertyDefinition >> removeFromPatcher: aMCPatcher [
 	"Cannot remove a property, just change it."
 
+]
+
+{ #category : #accessing }
+IcePropertyDefinition >> type [
+
+	^ 'property'
 ]

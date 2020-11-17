@@ -5,7 +5,7 @@ Variables have a name, that identify them, and a type. They can be added and rem
 "
 Class {
 	#name : #IceVariableDefinition,
-	#superclass : #IceContainedDefinition,
+	#superclass : #IceOwnedDefinition,
 	#instVars : [
 		'mcVariableDefinition'
 	],
@@ -48,9 +48,10 @@ IceVariableDefinition >> icon [
 	^ self iconNamed: #menuPin
 ]
 
-{ #category : #accessing }
-IceVariableDefinition >> key [
-	^ '>Variable (' , self typeToShow, '): ', mcVariableDefinition name
+{ #category : #testing }
+IceVariableDefinition >> isVariableDefinition [
+	
+	^ true
 ]
 
 { #category : #accessing }
@@ -83,7 +84,7 @@ IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 	(aMCPatcher isKindOf: MCPackageLoader)
 		ifTrue: [ ^ self	"containerIceDefinition is just fine" ].
 	aMCPatcher definitionIndex
-		definitionLike: self containerIceDefinition asMCDefinition
+		definitionLike: self ownerIceDefinition asMCDefinition
 		ifPresent: [ :currentDefinition |
 			aMCPatcher addDefinition: (self removedIn: currentDefinition) ]
 		ifAbsent: [ "Nothing to do: the container of this variable was removed." ]
@@ -92,6 +93,12 @@ IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 { #category : #patching }
 IceVariableDefinition >> removedIn: aMCDefinition [
 	^ aMCDefinition copyWithoutVariable: mcVariableDefinition
+]
+
+{ #category : #accessing }
+IceVariableDefinition >> type [
+
+	^ self typeToShow, ' variable'
 ]
 
 { #category : #accessing }

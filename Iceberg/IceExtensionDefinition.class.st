@@ -63,11 +63,6 @@ IceExtensionDefinition >> isExtensionDefinition [
 	^ true
 ]
 
-{ #category : #comparing }
-IceExtensionDefinition >> key [
-	^ super key, ' (extension)'
-]
-
 { #category : #accessing }
 IceExtensionDefinition >> packageName [
 	^ packageName

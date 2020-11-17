@@ -42,7 +42,7 @@ IceNodeCodeDisplayVistor >> visitConflictingOperation: anIceConflictingOperation
 { #category : #visiting }
 IceNodeCodeDisplayVistor >> visitMethodNode: anIceMethodDefinition [ 
 	codePresenter text: anIceMethodDefinition sourceCode;
-	behavior: (anIceMethodDefinition className asClassIfAbsent: [ UndefinedObject  ] ). 
+	behavior: (anIceMethodDefinition ownerName asClassIfAbsent: [ UndefinedObject  ] ). 
 	
 ]
 
