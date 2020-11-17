@@ -4,7 +4,7 @@ Extension { #name : #IceMethodDefinition }
 IceMethodDefinition >> browse [
 	
 	| owner |
-	owner := Smalltalk globals at: self className.
+	owner := self class environment at: self ownerName.
 	self classIsMeta ifTrue: [ owner := owner classSide ].
 	(owner >> name) browse
 ]
@@ -12,7 +12,7 @@ IceMethodDefinition >> browse [
 { #category : #'*Iceberg-TipUI' }
 IceMethodDefinition >> canBeBrowsed [
 	
-	^ Smalltalk globals at: className
+	^ self class environment at: self ownerName
 		ifPresent: [ :class | class includesSelector: name ]
 		ifAbsent: [ false ]
 ]
