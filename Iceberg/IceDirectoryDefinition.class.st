@@ -8,7 +8,7 @@ See my superclasses for more information.
 Class {
 	#name : #IceDirectoryDefinition,
 	#superclass : #IceFileSystemDefinition,
-	#category : 'Iceberg-Changes'
+	#category : #'Iceberg-Changes'
 }
 
 { #category : #visiting }
@@ -27,4 +27,10 @@ IceDirectoryDefinition >> contents [
 IceDirectoryDefinition >> isDirectoryDefinition [
 	
 	^ true
+]
+
+{ #category : #visiting }
+IceDirectoryDefinition >> removeFrom: aVisitor [
+	
+	aVisitor removeFileReferenceInPath: self path
 ]

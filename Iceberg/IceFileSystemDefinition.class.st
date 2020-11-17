@@ -51,9 +51,3 @@ IceFileSystemDefinition >> path [
 IceFileSystemDefinition >> path: anObject [
 	path := anObject
 ]
-
-{ #category : #visiting }
-IceFileSystemDefinition >> removeFrom: aVisitor [
-	
-	aVisitor removeFileReferenceInPath: self path
-]

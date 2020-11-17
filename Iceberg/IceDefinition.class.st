@@ -45,7 +45,7 @@ IceDefinition >> accept: aVisitor [
 { #category : #accessing }
 IceDefinition >> contents [
 	
-	self subclassResponsibility
+	^ self subclassResponsibility
 ]
 
 { #category : #'morphic-compatibility' }

@@ -64,9 +64,3 @@ IceCodeDefinition >> propertyDefinitions [
 			each isDefaultValue ].
 
 ]
-
-{ #category : #patching }
-IceCodeDefinition >> removeFrom: aPatcher [
-	
-	self subclassResponsibility
-]

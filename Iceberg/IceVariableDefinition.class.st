@@ -43,11 +43,6 @@ IceVariableDefinition >> hash [
 	^ super hash bitXor: mcVariableDefinition hash
 ]
 
-{ #category : #accessing }
-IceVariableDefinition >> icon [
-	^ self iconNamed: #menuPin
-]
-
 { #category : #testing }
 IceVariableDefinition >> isVariableDefinition [
 	

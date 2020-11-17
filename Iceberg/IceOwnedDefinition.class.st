@@ -51,7 +51,9 @@ IceOwnedDefinition >> addToPatcher: aMCPatcher [
 
 { #category : #patching }
 IceOwnedDefinition >> addedIn: aMCDefinition [
-	^ self subclassResponsibility
+	"Answer a copy of the argument that includes self."
+
+	^ aMCDefinition copy
 ]
 
 { #category : #accessing }
@@ -67,12 +69,6 @@ IceOwnedDefinition >> className [
 		transformWith: '`@receiver className' -> '`@receiver ownerName'.
 
 	^ self ownerName
-]
-
-{ #category : #accessing }
-IceOwnedDefinition >> contents [
-	
-	^ self subclassResponsibility
 ]
 
 { #category : #comparing }
