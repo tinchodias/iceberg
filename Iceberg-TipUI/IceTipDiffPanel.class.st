@@ -42,8 +42,12 @@ IceTipDiffPanel >> basicRefresh [
 	self resetDiffContents.
 	
 	changeList
-		roots: self model treeRoots;
-		expandAll
+		roots: self model treeRoots.";
+		expandAll "
+
+	self flag: #fix. "Low level access"
+	self defer: [
+		changeList adapter widget dataSource expandAll ]
 ]
 
 { #category : #accessing }
