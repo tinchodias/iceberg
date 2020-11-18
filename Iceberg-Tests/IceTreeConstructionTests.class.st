@@ -1,7 +1,7 @@
 Class {
 	#name : #IceTreeConstructionTests,
 	#superclass : #TestCase,
-	#category : 'Iceberg-Tests-Changes'
+	#category : #'Iceberg-Tests-Changes'
 }
 
 { #category : #helpers }
@@ -52,15 +52,12 @@ IceTreeConstructionTests >> testCreateDirectoryWithPackage [
 	
 	self assert: (tree / 'src' / 'MonticelloMocks') value isPackageDefinition.
 	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA') value isClassDefinition.
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA') value isMeta not.
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA' / 'a') value isMethodDefinition.	
-
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA class') value isClassDefinition.
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA class') value isMeta.
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA class' / 'cVar') value isMethodDefinition.
+	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA' / 'method a') value isMethodDefinition.	
+	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA' / 'slot var') value isVariableDefinition.
+	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCMockClassA' / 'class slot Var') value isMethodDefinition.
 	
 	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCSnapshotTest') value isExtensionDefinition.
-	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCSnapshotTest' / 'mockClassExtension') value isMethodDefinition.
+	self assert: (tree / 'src' / 'MonticelloMocks' / 'MCSnapshotTest' / 'method mockClassExtension') value isMethodDefinition.
 ]
 
 { #category : #tests }
