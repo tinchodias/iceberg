@@ -26,16 +26,7 @@ MetacelloPharoPlatform select.
     'Iceberg-Libgit-Tonel' 
     'Iceberg-Libgit-Filetree' 
     'Iceberg-Libgit' 
-    'Iceberg-Tests'
-    'Iceberg-Memory'
-    'Iceberg-UI-Tests'
-    'Iceberg-Core' 
-    'Iceberg-Changes' 
-    'Iceberg-Adapters' 
     'Iceberg'
-    'Iceberg-GitCommand'
-    'Iceberg-SmartUI'
-    'Iceberg-Pharo6'
     'LibGit-Core')
 do: [ :each |
     (each asPackageIfAbsent: [ 
