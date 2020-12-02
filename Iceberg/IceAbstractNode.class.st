@@ -155,6 +155,13 @@ IceAbstractNode >> select: aBlockClosure [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+IceAbstractNode >> withAllChildren [
+
+	^ OrderedCollection streamContents: [ :stream | 
+		  self withAllChildrenDo: [ :each | stream << each ] ]
+]
+
 { #category : #enumerating }
 IceAbstractNode >> withAllChildrenDo: aBlockClosure [
 
