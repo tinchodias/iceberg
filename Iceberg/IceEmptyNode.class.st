@@ -60,7 +60,7 @@ IceEmptyNode >> hasChanges [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceEmptyNode >> includesKey: aString [ 
 	
 	^ false

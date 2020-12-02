@@ -258,7 +258,7 @@ IceNode >> hash [
 	^ self key hash
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceNode >> includesKey: anObject [
 	
 	^ childrenDictionary includesKey: anObject

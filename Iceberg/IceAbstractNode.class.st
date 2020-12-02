@@ -29,7 +29,7 @@ IceAbstractNode >> allChildren [
 
 ]
 
-{ #category : #accessing }
+{ #category : #enumerating }
 IceAbstractNode >> allChildrenDo: aBlockClosure [
 	"Evaluate aBlockClosure with my direct and indirect children."
 	
@@ -38,7 +38,7 @@ IceAbstractNode >> allChildrenDo: aBlockClosure [
 		each allChildrenDo: aBlockClosure ]
 ]
 
-{ #category : #accessing }
+{ #category : #enumerating }
 IceAbstractNode >> allLeavesDo: aBlockClosure [
 	"Evaluate aBlockClosure with all empty nodes, including self and all (direct and indirect) children."
 
@@ -100,7 +100,7 @@ IceAbstractNode >> firstNodeSuchThat: foundBlock ifNone: noneBlock [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceAbstractNode >> hasChanges [
 
 	^ self subclassResponsibility
@@ -112,13 +112,13 @@ IceAbstractNode >> includesKey: anObject [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceAbstractNode >> isEmpty [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceAbstractNode >> isEmptyNode [
 
 	^ self subclassResponsibility
@@ -130,7 +130,7 @@ IceAbstractNode >> mergeWith: anotherNode onLeft: leftBlock onRight: rightBlock 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 IceAbstractNode >> notEmpty [
 
 	^ self isEmpty not
