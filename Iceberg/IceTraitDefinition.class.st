@@ -36,6 +36,14 @@ IceTraitDefinition >> addToPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
+{ #category : #patching }
+IceTraitDefinition >> allPropertyNames [
+	"Answer the names of the IcePropertyDefinition objects that are owned by this definition. 
+	This is a specialized implementation given there are cases where the mcDefinition is not a MCClassDefinition but a MCClassDefinition."
+
+	^ mcDefinition class instVarNames copyWithoutAll: #(name variables commentStamp baseTrait) 
+]
+
 { #category : #accessing }
 IceTraitDefinition >> contents [
 	^ mcDefinition definitionString

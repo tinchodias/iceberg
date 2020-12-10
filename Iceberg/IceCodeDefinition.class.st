@@ -38,6 +38,8 @@ IceCodeDefinition >> addToPatcher: aMCPatcher [
 
 { #category : #properties }
 IceCodeDefinition >> allPropertyNames [
+	"Answer the names of the IcePropertyDefinition objects that are owned by this definition."
+
 	^ #()
 ]
 

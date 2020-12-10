@@ -39,6 +39,17 @@ IceClassDefinition >> addToPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
 ]
 
+{ #category : #patching }
+IceClassDefinition >> allPropertyNames [
+	"Answer the names of the IcePropertyDefinition objects that are owned by this definition.
+	
+	As an optimization, given that mcDefinition has a MCClassDefinition, this implementation answers the result of this expression:
+	MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp) "
+
+	^ #( #superclassName #category #type #comment #traitComposition
+	     #classTraitComposition )
+]
+
 { #category : #converting }
 IceClassDefinition >> asMCDefinitionWithoutMetaSide [
 	

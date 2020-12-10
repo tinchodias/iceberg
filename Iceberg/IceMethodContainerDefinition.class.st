@@ -25,12 +25,6 @@ IceMethodContainerDefinition class >> named: aString [
 ]
 
 { #category : #patching }
-IceMethodContainerDefinition >> allPropertyNames [
-"	^ MCClassDefinition instVarNames copyWithoutAll: #(name variables commentStamp) "
-	^ #(#superclassName #category #type #comment #traitComposition #classTraitComposition)
-]
-
-{ #category : #patching }
 IceMethodContainerDefinition >> asMCDefinition [
 	^ mcDefinition
 ]
