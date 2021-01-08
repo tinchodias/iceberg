@@ -7,34 +7,32 @@ Class {
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #activation }
-IceTipUnloadPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 40 for: IceTipWorkingCopyContext
+{ #category : #accessing }
+IceTipUnloadPackageCommand class >> defaultDescription [
+
+	^ 'Unload selected package from the system, but keep it in the repository.'
+]
+
+{ #category : #accessing }
+IceTipUnloadPackageCommand class >> defaultName [
+
+	^ 'Unload'
 ]
 
 { #category : #testing }
-IceTipUnloadPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded
-]
+IceTipUnloadPackageCommand >> canBeExecuted [
 
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultHelp [
-	^ 'Unload selected package from the system, but keep it in the repository'
-]
-
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultMenuIconName [
-	^ #smallCancel
-]
-
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultMenuItemName [
-	^ 'Unload'
+	^ self isPackageLoaded
 ]
 
 { #category : #execution }
 IceTipUnloadPackageCommand >> execute [
+
 	self packageModel unload
+]
+
+{ #category : #accessing }
+IceTipUnloadPackageCommand >> iconName [
+
+	^ #smallCancel
 ]

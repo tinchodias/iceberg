@@ -5,87 +5,69 @@ Class {
 	#name : #IceTipActionPanel,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'panel',
-		'actions',
-		'actionMorphPanel',
 		'actionWidth',
-		'actionsButtonBar'
+		'actions',
+		'actionsButtonBar',
+		'panel'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : #'Iceberg-TipUI-Spec2'
 }
-
-{ #category : #accessing }
-IceTipActionPanel class >> defaultActionWidth [
-	^ 100 * self currentWorld displayScaleFactor
-]
-
-{ #category : #accessing }
-IceTipActionPanel class >> defaultHeight [
-	^ 25 * self currentWorld displayScaleFactor
-]
 
 { #category : #specs }
 IceTipActionPanel class >> defaultSpec [
-	<spec: #default>
+
 	^ SpBoxLayout newVertical
-		add: #actionsButtonBar height: self  buttonHeight ;
-		yourself
+		  add: #actionsButtonBar height: self buttonHeight;
+		  yourself
 ]
 
 { #category : #accessing }
 IceTipActionPanel >> actionWidth [
-	^ actionWidth ifNil: [ self class defaultActionWidth ]
+
+	^ actionWidth ifNil: [ self defaultActionWidth ]
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 IceTipActionPanel >> actionWidth: aNumber [
+
 	actionWidth := aNumber
 ]
 
 { #category : #accessing }
 IceTipActionPanel >> addAction: aPresenter [
+
 	actions add: aPresenter.
 	self refresh
 ]
 
+{ #category : #accessing }
+IceTipActionPanel >> defaultActionWidth [
+	^ 100 * self currentWorld displayScaleFactor
+]
+
 { #category : #initialization }
 IceTipActionPanel >> initialize [
+
 	actions := OrderedCollection new.
 	super initialize
 ]
 
 { #category : #initialization }
-IceTipActionPanel >> initializeWidgets [
-	actionsButtonBar := self newButtonBar 
-	"
-		addMorphBack:
-			(actionMorphPanel := PanelMorph new
-				changeTableLayout;
-				listDirection: #rightToLeft;
-				hResizing: #shrinkWrap;
-				vResizing: #spaceFill;
-				yourself)"
-]
+IceTipActionPanel >> initializePresenters [
 
-{ #category : #initialization }
-IceTipActionPanel >> newIcePanel [
-	^ super newIcePanel
-		in: [ :this | this widget listDirection: #rightToLeft];
-		yourself
+	actionsButtonBar := self newButtonBar 
+
 ]
 
 { #category : #'accessing ui' }
 IceTipActionPanel >> panel [
-	^ panel
-]
 
-{ #category : #'accessing ui' }
-IceTipActionPanel >> panel: anObject [
-	panel := anObject
+	^ panel
 ]
 
 { #category : #initialization }
 IceTipActionPanel >> refresh [
-	actionsButtonBar items: OrderedCollection new .
+
+	actionsButtonBar items: OrderedCollection new.
 	actions do: [ :each | actionsButtonBar add: each ]
 ]

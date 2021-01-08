@@ -19,58 +19,47 @@ Class {
 
 { #category : #specs }
 IceTipErrorDialog class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newHorizontal 
-		add: #iconPanel width: 40 * self currentWorld displayScaleFactor;
-		add: #errorLabel;
-		yourself
-]
 
-{ #category : #specs }
-IceTipErrorDialog class >> title [
-	^ 'Error'
+	^ SpBoxLayout newHorizontal
+		  add: #iconPanel width: 40 * self currentWorld displayScaleFactor;
+		  add: #errorLabel;
+		  yourself
 ]
 
 { #category : #initialization }
 IceTipErrorDialog >> accept [
 	
-	self window delete.
+	self closeWindow.
 	exception debug.
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing ui' }
 IceTipErrorDialog >> errorLabel [
+
 	^ errorLabel
 ]
 
 { #category : #accessing }
-IceTipErrorDialog >> errorLabel: anObject [
-	errorLabel := anObject
-]
-
-{ #category : #accessing }
 IceTipErrorDialog >> exception [
+
 	^ exception
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 IceTipErrorDialog >> exception: anException [
 
 	exception := anException freeze
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing ui' }
 IceTipErrorDialog >> iconPanel [
-	^ iconPanel
-]
 
-{ #category : #accessing }
-IceTipErrorDialog >> iconPanel: anObject [
-	iconPanel := anObject
+	^ iconPanel
 ]
 
 { #category : #initialization }
 IceTipErrorDialog >> initialExtent [
+
 	^ (500@(
 		self class inputTextHeight * 2
 		+ self class buttonHeight 
@@ -90,7 +79,7 @@ IceTipErrorDialog >> initializeDialogWindow: aWindow [
 ]
 
 { #category : #initialization }
-IceTipErrorDialog >> initializeWidgets [
+IceTipErrorDialog >> initializePresenters [
 
 	iconPanel := self newImage.
 	iconPanel image: (self iconNamed: #error).
@@ -102,4 +91,9 @@ IceTipErrorDialog >> initializeWidgets [
 IceTipErrorDialog >> setModelBeforeInitialization: aDomainObject [
 
 	self exception: aDomainObject
+]
+
+{ #category : #specs }
+IceTipErrorDialog >> titleForWindow [
+	^ 'Error'
 ]

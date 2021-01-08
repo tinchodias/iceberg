@@ -17,27 +17,24 @@ Class {
 
 { #category : #specs }
 IceTipAddTokenCredentialsModel class >> defaultSpec [
-	<spec: #default>
+
 	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				add: #usernameLabel width: self labelWidth;
-				add: #usernameInput;
-				yourself)
-			height: self inputTextHeight;
-		add:
-			(SpBoxLayout newHorizontal
-				add: #hostLabel width: self labelWidth;
-				add: #hostInput;
-				yourself)
-			height: self inputTextHeight;
-		add:
-			(SpBoxLayout newHorizontal
-				add: #tokenLabel width: self labelWidth;
-				add: #tokenInput;
-				yourself)
-			height: self inputTextHeight;
-		yourself
+		  add: (SpBoxLayout newHorizontal
+				   add: #usernameLabel width: self labelWidth;
+				   add: #usernameInput;
+				   yourself)
+		  height: self inputTextHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: #hostLabel width: self labelWidth;
+				   add: #hostInput;
+				   yourself)
+		  height: self inputTextHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: #tokenLabel width: self labelWidth;
+				   add: #tokenInput;
+				   yourself)
+		  height: self inputTextHeight;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -62,19 +59,28 @@ IceTipAddTokenCredentialsModel >> initialExtent [
 IceTipAddTokenCredentialsModel >> initializePresenters [
 
 	super initializePresenters.
-	usernameLabel := self newLabel label: 'Username: '.
+	usernameLabel := self newLabel
+		label: 'Username: ';
+		yourself.
 	usernameInput := self newTextInput
 		autoAccept: true;
 		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
-	hostLabel := self newLabel label: 'Host: '.
+
+	hostLabel := self newLabel
+		label: 'Host: ';
+		yourself.
 	hostInput := self newTextInput
 		placeholder: 'github.com';
 		autoAccept: true;
 		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
-	tokenLabel := self newLabel label: 'Token: '.
+
+	tokenLabel := self newLabel
+		label: 'Token: ';
+		yourself.
 	tokenInput := self newTextInput
+		bePassword;
 		autoAccept: true;
 		whenTextChangedDo: [ self updateOkButton ];
 		yourself.
@@ -99,17 +105,8 @@ IceTipAddTokenCredentialsModel >> newCredentials [
 		yourself 
 ]
 
-{ #category : #initialization }
-IceTipAddTokenCredentialsModel >> putFocusOrder [
-
-	self focusOrder
-		add: usernameInput;
-		add: hostInput;
-		add: tokenInput
-]
-
 { #category : #accessing }
-IceTipAddTokenCredentialsModel >> title [
+IceTipAddTokenCredentialsModel >> titleForWindow [
 
 	^ 'Add token credentials'
 ]

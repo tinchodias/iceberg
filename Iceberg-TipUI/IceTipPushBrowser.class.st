@@ -8,48 +8,50 @@ Class {
 	#category : #'Iceberg-TipUI-View'
 }
 
+{ #category : #commands }
+IceTipPushBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	"No commands to add."
+]
+
 { #category : #'instance creation' }
 IceTipPushBrowser class >> onRepositoryModel: aModel [
+
 	^ self on: (IceTipPushModel 
 		repositoryModel: aModel 
 		on: aModel entity) 
-		beCached	
-]
+		beCached
 
-{ #category : #accessing }
-IceTipPushBrowser >> contextClass [
-	^ IceTipPushContext
 ]
 
 { #category : #actions }
 IceTipPushBrowser >> doPush [
-	self model pushThen: [ 
-		self window delete ]
+
+	self model pushThen: [ self closeWindow ]
 ]
 
 { #category : #initialization }
-IceTipPushBrowser >> initializeToolbar [
-	"cancel toolbar (for the moment)"
-]
+IceTipPushBrowser >> labelForRemotePanel [
 
-{ #category : #initialization }
-IceTipPushBrowser >> initializeWidgets [
-	super initializeWidgets.
-	remotePanel label: 'Push to remote:'
+	^ 'Push to remote:'
+
 ]
 
 { #category : #'private factory' }
 IceTipPushBrowser >> newActionButton [
-	^ self newButton 
+
+	^ self newButton
 		label: 'Push';
 		icon: (self iconNamed: #up);
 		help: ('Push new commits to {1}' format: { self model remoteName });
 		action: [ self doPush ];
 		yourself
+
 ]
 
 { #category : #accessing }
-IceTipPushBrowser >> title [
+IceTipPushBrowser >> titleForWindow [
+
 	^ 'Push {1}/{2} to {3}' format: { 
 		self model repositoryName.
 		self model branchName. 

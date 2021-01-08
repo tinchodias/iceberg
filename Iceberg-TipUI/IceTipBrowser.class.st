@@ -1,15 +1,16 @@
 "
-I'm a base tool for iceberg Tip-UI. 
-My children will implement real tools, but I provide certain common elements. 
+I'm the superclass of Spec2 browsers in Iceberg Tip-UI. Each concrete subclass has some kind
+of list or table that contain the items that are being browsed.
 
-Some remarks about design: 
+Some design remarks: 
 
-1. Each tool has to have ONE model as entry point for data, and JUST ONE. It will be contained 
-   in #model accessor.
+* Each browser has to have ONE model as entry point for data, and JUST ONE. See #model accessor.
+* Browsers have a toolbar with commands that are applicable for the model.
+* Browsers have a context menu on list or table items, that provide commands that are specific for the selection.
 "
 Class {
 	#name : #IceTipBrowser,
-	#superclass : #SpPresenter,
+	#superclass : #IceTipSpPresenter,
 	#instVars : [
 		'model',
 		'toolbar'
@@ -17,108 +18,195 @@ Class {
 	#category : #'Iceberg-TipUI-View'
 }
 
+{ #category : #commands }
+IceTipBrowser class >> buildCommandsGroupWith: presenter forRoot: aCommandGroup [
+
+	| generalCommandGroup selectionCommandGroup selectionExtraCommandGroup |
+	selectionCommandGroup :=
+		(CmCommandGroup named: self selectionCommandGroupName) asSpecGroup.
+	selectionExtraCommandGroup :=
+		(CmCommandGroup named: self selectionExtraCommandGroupName) asSpecGroup.
+	generalCommandGroup := 
+		(CmCommandGroup named: self generalCommandGroupName) asSpecGroup.
+
+	aCommandGroup
+		register: selectionCommandGroup;
+		register: generalCommandGroup.
+		
+	self
+		buildSelectionCommandGroupWith: presenter for: selectionCommandGroup;
+		buildSelectionExtraCommandGroupWith: presenter for: selectionExtraCommandGroup;
+		buildGeneralCommandGroupWith: presenter for: generalCommandGroup.
+
+	selectionCommandGroup register: selectionExtraCommandGroup.
+
+]
+
+{ #category : #commands }
+IceTipBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	self subclassResponsibility
+]
+
+{ #category : #commands }
+IceTipBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	self subclassResponsibility
+]
+
+{ #category : #commands }
+IceTipBrowser class >> buildSelectionExtraCommandGroupWith: presenter for: aCommandGroup [
+
+	aCommandGroup register: IceTipInspectCommand forSpec
+]
+
+{ #category : #commands }
+IceTipBrowser class >> generalCommandGroupName [
+
+	^ 'General'
+]
+
+{ #category : #commands }
+IceTipBrowser class >> selectionCommandGroupName [
+
+	^ 'Selection'
+]
+
+{ #category : #commands }
+IceTipBrowser class >> selectionExtraCommandGroupName [
+
+	^ 'Extra'
+]
+
 { #category : #initialization }
-IceTipBrowser >> addShortcutsTo: aPresenter [
-	| shortcuts |
-	shortcuts := CmdShortcutActivation registeredInstances
-		select: [ :each | each activeContext describes: self newContext ].
-	shortcuts do: [ :shortcut | 
-		aPresenter
-			bindKeyCombination: shortcut keyCombination
-			toAction: [ self executeShortcut: shortcut ] ]
+IceTipBrowser >> addToolbarIfNotEmptyIn: aSpWindowPresenter [
+
+	aSpWindowPresenter ifNil: [ ^ self ].
+	toolbar := self newToolbarForWindow.
+
+	toolbar isEmpty ifFalse: [ aSpWindowPresenter toolbar: toolbar ]
 ]
 
-{ #category : #accessing }
-IceTipBrowser >> buildMenu [ 
+{ #category : #commands }
+IceTipBrowser >> connectPresenters [
+
+	self mainList whenSelectionChangedDo: [
+		| rootGroup |
+		rootGroup := self rootCommandsGroup.
+		IceTipCleanCommandGroupVisitor new visit: rootGroup.
+
+		rootGroup installShortcutsIn: self.
+		
+		rootGroup
+			commandOrGroupNamed: self class selectionCommandGroupName
+			ifFound: [ :subgroup |
+				self mainList contextMenuFromCommandsGroup: subgroup ]
+		].
+
+
+]
+
+{ #category : #initialization }
+IceTipBrowser >> defaultKeyboardFocus [
+
+	^ self mainList
+]
+
+{ #category : #testing }
+IceTipBrowser >> hasSelectedItem [
 	
-	^ (CmdContextMenuActivation buildMenuInContext: self createCommandContext) asSpMenuPresenter
+	^ self mainList selection isEmpty not
 ]
 
-{ #category : #accessing }
-IceTipBrowser >> contextClass [
-	^ self subclassResponsibility
+{ #category : #initialization }
+IceTipBrowser >> iconForWindow [
+
+	^ self iconNamed: #komitterSmalltalkhubRemote
 ]
 
-{ #category : #'private factory' }
-IceTipBrowser >> createCommandContext [
-	^ self newContext
-]
+{ #category : #initialization }
+IceTipBrowser >> initialExtentForWindow [
 
-{ #category : #'as yet unclassified' }
-IceTipBrowser >> executeShortcut: aCmdShortcutActivation [ 
-	| context |
-	context := self createCommandContext .
-	(	aCmdShortcutActivation commandClass canBeExecutedInContext: context) 
-			ifTrue: [ aCmdShortcutActivation commandClass new readParametersFromContext: context ; execute  ]
-]
-
-{ #category : #accessing }
-IceTipBrowser >> iconNamed: aSymbol [
-	^ Smalltalk ui icons iconNamed: aSymbol
-]
-
-{ #category : #accessing }
-IceTipBrowser >> initialExtent [
-	^ (600@400) scaledByDisplayScaleFactor
+	^ (600 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : #initialization }
 IceTipBrowser >> initialize [
+
 	super initialize.
 	self subscribeToAnnouncements
 ]
 
 { #category : #initialization }
-IceTipBrowser >> initializeWidgets [
-	toolbar := self newToolbar.
-	self rebuildToolbar.
-	self addShortcutsTo: self
+IceTipBrowser >> initializeWindow: aSpWindowPresenter [
+
+	super initializeWindow: aSpWindowPresenter.
+
+	self addToolbarIfNotEmptyIn: aSpWindowPresenter.
+
+	aSpWindowPresenter
+		windowIcon: self iconForWindow;
+		initialExtent: self initialExtentForWindow
+]
+
+{ #category : #'accessing ui' }
+IceTipBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 IceTipBrowser >> model [
+
 	^ model
 ]
 
 { #category : #accessing }
 IceTipBrowser >> model: anObject [
+
 	model := anObject
 ]
 
-{ #category : #'private factory' }
-IceTipBrowser >> newContext [
-	^ (self contextClass for: self)
-		readContextParametersFromModel: self model;
-		yourself
+{ #category : #commands }
+IceTipBrowser >> newToolbarForWindow [
+
+	^ (self rootCommandsGroup / self class generalCommandGroupName)
+		  beRoot;
+		  asToolbarPresenterWith: [ :presenter | 
+			  presenter
+				  displayMode: SpToolbarDisplayMode modeIconAndLabel;
+				  addStyle: 'stToolbar' ]
 ]
 
-{ #category : #'private factory' }
-IceTipBrowser >> newContextWithSelection: anObject [
-	^ self newContext
-]
-
-{ #category : #accessing }
+{ #category : #initialization }
 IceTipBrowser >> rebuildToolbar [
 
-	|menu|
-	toolbar removeAllItems.
-	menu := CmdMenu activatedBy: IceTipToolbarActivation.
-	menu buildInContext: self newContext.
-	menu buildIceToolbarOn: toolbar .
+	self addToolbarIfNotEmptyIn: self window
 ]
 
 { #category : #accessing }
 IceTipBrowser >> refresh [
-	
+	"Update the UI elements given a possible update in the model."
 ]
 
 { #category : #accessing }
-IceTipBrowser >> refreshToolbar [
-	toolbar refresh
+IceTipBrowser >> repositoryModel [
+	"Answer the IceTipRepositoryModel associated to this presenter."
+
+	^ self model repositoryModel
+]
+
+{ #category : #commands }
+IceTipBrowser >> selectedItem [
+	"Answer the object selected in the main list of this browser. The answer is nil when there isn't a selection."
+
+	^ self mainList selection selectedItem
 ]
 
 { #category : #initialization }
 IceTipBrowser >> setModelBeforeInitialization: anObject [
+
 	model := anObject
 ]
 
@@ -126,17 +214,16 @@ IceTipBrowser >> setModelBeforeInitialization: anObject [
 IceTipBrowser >> subscribeToAnnouncements [
 ]
 
+{ #category : #initialization }
+IceTipBrowser >> titleForWindow [
+	"The title to use when the presenter is opened as a window."
+	
+	^ self subclassResponsibility
+
+]
+
 { #category : #'accessing ui' }
 IceTipBrowser >> toolbar [
+
 	^ toolbar
-]
-
-{ #category : #'accessing ui' }
-IceTipBrowser >> toolbar: anObject [
-	toolbar := anObject
-]
-
-{ #category : #accessing }
-IceTipBrowser >> windowIcon [
-	^ self iconNamed: #komitterSmalltalkhubRemote
 ]

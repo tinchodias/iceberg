@@ -7,15 +7,22 @@ Class {
 	#category : #'Iceberg-TipUI-View'
 }
 
+{ #category : #commands }
+IceTipRemoteActionBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	"No commands to add"
+]
+
 { #category : #specs }
 IceTipRemoteActionBrowser class >> defaultSpec [
-	<spec: #default>
-	
-	^ SpBoxLayout newVertical 
-		add: #remotePanel withConstraints: [ :c | c height: self inputTextHeight ];
-		add: #commitsPanel withConstraints: [ :c | c spec: #panelSpec ];
-		add: #actionButtonBar withConstraints: [ :c | c height: self buttonHeight ];
-		yourself
+
+	^ SpBoxLayout newVertical
+		  add: #remotePanel
+		  withConstraints: [ :c | c height: self inputTextHeight ];
+		  add: #commitsPanel withConstraints: [ :c | c spec: #panelSpec ];
+		  add: #actionButtonBar
+		  withConstraints: [ :c | c height: self buttonHeight ];
+		  yourself
 ]
 
 { #category : #'instance creation' }
@@ -24,25 +31,38 @@ IceTipRemoteActionBrowser class >> onRepositoryModel: aRepository [
 ]
 
 { #category : #initialization }
-IceTipRemoteActionBrowser >> initializeWidgets [
-	super initializeWidgets.
+IceTipRemoteActionBrowser >> initializePresenters [
+
+	super initializePresenters.
 	remotePanel := self
 		instantiate: IceTipSelectRemotePresenter
 		on: self model.
+	remotePanel label: self labelForRemotePanel.
 	remotePanel remoteList
 		whenSelectedItemChangedDo: [ :remoteModel | self moveToRemote: remoteModel ].
-	self focusOrder
-		add: self commitsPanel;
-		add: self actionButtonBar;
-		add: self remotePanel
+
+]
+
+{ #category : #initialization }
+IceTipRemoteActionBrowser >> labelForRemotePanel [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'accessing ui' }
+IceTipRemoteActionBrowser >> mainList [
+
+	^ commitsPanel commitList
 ]
 
 { #category : #'accessing ui' }
 IceTipRemoteActionBrowser >> remotePanel [
+
 	^ remotePanel
 ]
 
 { #category : #'accessing ui' }
-IceTipRemoteActionBrowser >> remotePanel: anObject [
-	remotePanel := anObject
+IceTipRemoteActionBrowser >> remotePanel: aSpPresenter [
+
+	remotePanel := aSpPresenter
 ]

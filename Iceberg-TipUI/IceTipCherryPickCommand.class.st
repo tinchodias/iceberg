@@ -1,22 +1,30 @@
 Class {
 	#name : #IceTipCherryPickCommand,
-	#superclass : #CmCommand,
+	#superclass : #IceTipCommand,
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #hooks }
-IceTipCherryPickCommand >> execute [
-	"Execute the actions that should be done by the command.
-	 This method expect that the context has been put in #context inst. var. if any context is relevant."
+{ #category : #default }
+IceTipCherryPickCommand class >> defaultDescription [
 
-(	IceTipCherrypickPreviewBrowser
-		onCommitish: context selectedCommit realObject entity) openWithSpec.
+	^ 'Cherrypick this commit and apply changes to the working copy'
 ]
 
-{ #category : #hooks }
-IceTipCherryPickCommand >> initialize [
-	super initialize.
-	self
-		name: 'Cherrypick';
-		description: 'Cherrypick this commit and apply changes to the working copy'
+{ #category : #default }
+IceTipCherryPickCommand class >> defaultName [
+
+	^ 'Cherrypick'
+]
+
+{ #category : #execution }
+IceTipCherryPickCommand >> execute [
+
+	(IceTipCherrypickPreviewBrowser onCommitish: self selectedCommitish)
+		openWithSpec
+]
+
+{ #category : #execution }
+IceTipCherryPickCommand >> selectedCommitish [
+
+	^ self context selectedCommit realObject entity
 ]

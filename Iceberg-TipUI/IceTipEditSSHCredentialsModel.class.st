@@ -9,15 +9,20 @@ Class {
 
 { #category : #specs }
 IceTipEditSSHCredentialsModel class >> defaultSpec [
-	<spec: #default>
 
-	^ SpBoxLayout newVertical 
-		 	 add: (SpBoxLayout  newHorizontal add: #usernameLabel width: self labelWidth ; add: #usernameInput ) height: self inputTextHeight;
-			add: #publicKeyInput height: self inputTextHeight;
-			add: #privateKeyInput  height: self inputTextHeight;
-			add:( SpBoxLayout newHorizontal add: #passphraseLabel width: self labelWidth; add: #passphraseInput) height: self inputTextHeight
-		
-
+	^ SpBoxLayout newVertical
+		  add: (SpBoxLayout newHorizontal
+				   add: #usernameLabel width: self labelWidth;
+				   add: #usernameInput;
+				   yourself)
+		  height: self inputTextHeight;
+		  add: #publicKeyInput height: self inputTextHeight;
+		  add: #privateKeyInput height: self inputTextHeight;
+		  add: (SpBoxLayout newHorizontal
+				   add: #passphraseLabel width: self labelWidth;
+				   add: #passphraseInput;
+				   yourself)
+		  height: self inputTextHeight
 ]
 
 { #category : #actions }
@@ -32,16 +37,6 @@ IceTipEditSSHCredentialsModel >> initialExtent [
 	^ (350 @ (self class inputTextHeight * 6 + self class buttonHeight)) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
-IceTipEditSSHCredentialsModel >> putFocusOrder [
-	self focusOrder
-		add: usernameInput;
-		add: publicKeyInput locationInput;
-		add: privateKeyInput locationInput;
-		add: passphraseInput;
-		add: storeCheckbox
-]
-
 { #category : #actions }
 IceTipEditSSHCredentialsModel >> refreshCredentialsFromPresenter [
 
@@ -54,6 +49,7 @@ IceTipEditSSHCredentialsModel >> refreshCredentialsFromPresenter [
 
 { #category : #accessing }
 IceTipEditSSHCredentialsModel >> refreshPresenterFromCredentials [
+
 	usernameInput text: credentials username.
 	passphraseInput text: credentials keyPassphrase.
 	privateKeyInput location: credentials privateKey.
@@ -61,6 +57,7 @@ IceTipEditSSHCredentialsModel >> refreshPresenterFromCredentials [
 ]
 
 { #category : #api }
-IceTipEditSSHCredentialsModel >> title [
+IceTipEditSSHCredentialsModel >> titleForWindow [
+
 	^ 'Edit SSH keys for ' , self credentials hostDescription
 ]

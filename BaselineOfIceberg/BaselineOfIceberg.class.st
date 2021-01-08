@@ -18,14 +18,13 @@ BaselineOfIceberg >> baseline: spec [
 		spec
 			"iceberg"
 			package: 'Iceberg';
-			package: 'Iceberg-Spec2-Transition';
 			package: 'Iceberg-Plugin' with: [ spec requires: #('Iceberg' 'Iceberg-TipUI') ];
 			package: 'Iceberg-Plugin-Metacello' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-GitHub' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-Pharo' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-Migration' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Metacello-Integration' with: [ spec requires: #('Iceberg')];
-			package: 'Iceberg-TipUI' with: [ spec requires: #('Iceberg' 'Iceberg-Spec2-Transition') ];
+			package: 'Iceberg-TipUI' with: [ spec requires: #('Iceberg') ];
 			package: 'Iceberg-Memory' with: [ spec requires: #('Iceberg') ];
 			package: 'Iceberg-Tests' with: [ spec requires: #('Iceberg' 'Iceberg-GitCommand' 'Iceberg-Memory' 'Ring2') ];
 			package: 'Iceberg-Tests-MetacelloIntegration' with: [ spec requires: #('Iceberg-Tests') ];
@@ -84,7 +83,7 @@ BaselineOfIceberg >> libgit: spec [
 		baseline: 'LibGit' 
 		with: [ 
 			spec
-				repository: 'github://pharo-vcs/libgit2-pharo-bindings:v2.0.4';
+				repository: 'github://pharo-vcs/libgit2-pharo-bindings:v2.1.1';
   				loads: 'default' ].
 	spec  
 		project: 'LibGit-Tests'
@@ -96,7 +95,7 @@ BaselineOfIceberg >> libgit: spec [
 BaselineOfIceberg >> osSubprocess: spec [
 	spec 
 		baseline: 'OSSubprocess' 
-		with: [ spec repository: 'github://pharo-contributions/OSSubprocess:v1.0.1/repository' ]
+		with: [ spec repository: 'github://pharo-contributions/OSSubprocess:v1.3.0/repository' ]
 
 ]
 

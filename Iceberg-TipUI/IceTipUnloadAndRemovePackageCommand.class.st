@@ -12,35 +12,32 @@ Class {
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #activation }
-IceTipUnloadAndRemovePackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 100 for: IceTipWorkingCopyContext
-]
-
-{ #category : #testing }
-IceTipUnloadAndRemovePackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded
-]
-
 { #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultHelp [
+IceTipUnloadAndRemovePackageCommand class >> defaultDescription [
+
 	^ 'Opens a dialog to choose between unloading from system and/or removing a package from the repository'
 ]
 
 { #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultMenuIconName [
-	^ #glamorousTrash
+IceTipUnloadAndRemovePackageCommand class >> defaultName [
+
+	^ 'Unload and/or remove from repository'
 ]
 
-{ #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultMenuItemName [
-	^ 'Unload and/or remove from repository'
+{ #category : #testing }
+IceTipUnloadAndRemovePackageCommand >> canBeExecuted [
+
+	^ self isPackageLoaded
 ]
 
 { #category : #execution }
 IceTipUnloadAndRemovePackageCommand >> execute [
 
 	(IceTipRemovePackageDialog on: self packageModel) openDialogWithSpec
+]
+
+{ #category : #accessing }
+IceTipUnloadAndRemovePackageCommand >> iconName [
+
+	^ #glamorousTrash
 ]

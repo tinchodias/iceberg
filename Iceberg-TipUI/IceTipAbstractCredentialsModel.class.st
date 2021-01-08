@@ -18,16 +18,6 @@ Class {
 	#category : #'Iceberg-TipUI-Credentials'
 }
 
-{ #category : #specs }
-IceTipAbstractCredentialsModel class >> title [
-	^ 'Default Title'
-]
-
-{ #category : #actions }
-IceTipAbstractCredentialsModel >> accept [
-	^ self subclassResponsibility
-]
-
 { #category : #actions }
 IceTipAbstractCredentialsModel >> acceptAddAction [
 
@@ -81,18 +71,14 @@ IceTipAbstractCredentialsModel >> cancelAction [
 IceTipAbstractCredentialsModel >> cancelAskAction [
 
 	accepted := true.
-	self window close.
+	self closeWindow.
 	LGitNoCredentialsProvided signal
 ]
 
 { #category : #actions }
 IceTipAbstractCredentialsModel >> closeAction [
-	accepted ifFalse: [ self cancelAction ]
-]
 
-{ #category : #initialization }
-IceTipAbstractCredentialsModel >> connectPresenters [
-	self putFocusOrder
+	accepted ifFalse: [ self cancelAction ]
 ]
 
 { #category : #accessing }
@@ -129,7 +115,6 @@ IceTipAbstractCredentialsModel >> initialize [
 IceTipAbstractCredentialsModel >> initializeDialogWindow: aDialogWindowPresenter [
 
 	super initializeDialogWindow: aDialogWindowPresenter.
-	aDialogWindowPresenter title: self title.
 	self updateOkButton
 ]
 
@@ -181,11 +166,6 @@ IceTipAbstractCredentialsModel >> openNonModal [
 		  centered
 ]
 
-{ #category : #initialization }
-IceTipAbstractCredentialsModel >> putFocusOrder [
-	^ self subclassResponsibility 
-]
-
 { #category : #accessing }
 IceTipAbstractCredentialsModel >> refreshCredentialsFromPresenter [
 	"Hook to update the credentials object from the presenter inputs."
@@ -198,21 +178,26 @@ IceTipAbstractCredentialsModel >> refreshPresenterFromCredentials [
 
 { #category : #testing }
 IceTipAbstractCredentialsModel >> shouldStoreCredentials [
-	^ storeCheckbox state 
+
+	^ storeCheckbox state
 ]
 
 { #category : #accessing }
 IceTipAbstractCredentialsModel >> storeCheckbox [
+
 	^ storeCheckbox
 ]
 
 { #category : #accessing }
-IceTipAbstractCredentialsModel >> tool: aBrowser [ 
+IceTipAbstractCredentialsModel >> tool: aBrowser [
+	"Set the tool that triggered this dialog, and therefore might need a #refresh after the users accepts the dialog and it produces an effect on the system."
+
 	tool := aBrowser
 ]
 
 { #category : #updating }
-IceTipAbstractCredentialsModel >> updateOkButton [	
-	self window ifNil: [ ^ self ].	
+IceTipAbstractCredentialsModel >> updateOkButton [
+
+	self window ifNil: [ ^ self ].
 	self okButton enabled: self isOkEnabled
 ]

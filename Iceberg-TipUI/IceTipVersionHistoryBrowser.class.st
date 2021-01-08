@@ -1,7 +1,11 @@
 "
 I'm a browser and panel to show the version history of a method. 
 
+For versions, I show the same commands of a regular history browser, but add some special commands.
+
 (self onRepository: aRepository method: aMethod) openWithSpec.
+
+
 "
 Class {
 	#name : #IceTipVersionHistoryBrowser,
@@ -16,9 +20,23 @@ Class {
 	#category : #'Iceberg-TipUI-View-Versions'
 }
 
+{ #category : #commands }
+IceTipVersionHistoryBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
+]
+
+{ #category : #commands }
+IceTipVersionHistoryBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	{ 	IceTipInstallVersionCommand }
+			do: [ :each |
+				aCommandGroup register: each forSpec ]
+
+]
+
 { #category : #specs }
 IceTipVersionHistoryBrowser class >> defaultSpec [
-	<spec: #default>
 	
 	^ SpPanedLayout newVertical
 		add: #commitList;
@@ -41,45 +59,15 @@ IceTipVersionHistoryBrowser >> commitList [
 	^ commitList
 ]
 
-{ #category : #'accessing ui' }
-IceTipVersionHistoryBrowser >> commitList: anObject [
-	commitList := anObject
-]
-
 { #category : #accessing }
-IceTipVersionHistoryBrowser >> contextClass [
-	"I want to inherit same activations as in a regular history browser, but commit comes from a 
-	 diferent place. And I want some other functions (like a 'install' method)"
-
-	^ IceTipVersionHistoryContext
-]
-
-{ #category : #private }
-IceTipVersionHistoryBrowser >> diff [
-	
-	selectedModel ifNil: [ ^ self ].
-	^ self 
-		newDiffPanelLeft: ((self model commitModelAfter: selectedModel) 
-			ifNotNil: #source
-			ifNil: [ '' ])
-		right: selectedModel source
-]
-
-{ #category : #private }
-IceTipVersionHistoryBrowser >> info [ 
-	
-	selectedModel ifNil: [ ^ self ].
-	^ IceTipReadOnlyForm items: selectedModel info
-]
-
-{ #category : #accessing }
-IceTipVersionHistoryBrowser >> initialExtent [
+IceTipVersionHistoryBrowser >> initialExtentForWindow [
 
 	^ (700@700) scaledByDisplayScaleFactor
 ]
 
 { #category : #initialization }
 IceTipVersionHistoryBrowser >> initializeCommitList [
+
 	commitList
 		beResizable;
 		addColumn:
@@ -104,8 +92,11 @@ IceTipVersionHistoryBrowser >> initializeCommitList [
 			(SpStringTableColumn new
 				title: 'Description';
 				evaluated: #descriptionWithDecoration;
-				yourself);
-		selectIndex: 1
+				yourself).
+				
+	commitList whenSelectionChangedDo: [ :s |
+		self selectionChanged: s ].
+
 ]
 
 { #category : #initialization }
@@ -116,33 +107,28 @@ IceTipVersionHistoryBrowser >> initializeCommitPanel [
 		addPage: (infoPage := self newInfoPage);
 		addPage: (diffPage := self newDiffPage 
 			title: 'Diff from ancestor';
-			presenterProvider: [ self diff ];
+			presenterProvider: [ self newDiffPresenter ];
 			yourself)
 ]
 
 { #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeToolbar [
-	"no toolbar"
-]
+IceTipVersionHistoryBrowser >> initializePresenters [
 
-{ #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeWidgets [
-
-	super initializeWidgets.	
+	super initializePresenters.	
 	commitList := self newTable.
 	commitPanel := self newNotebook.
 	
 	self initializeCommitList.
 	self initializeCommitPanel.
 	
-	commitList whenSelectionChangedDo: [ :s |
-		self selectionChanged: s ].
-	
-	self focusOrder 
-		add: commitList;
-		add: commitPanel.
-		
 	self refresh
+]
+
+{ #category : #'accessing ui' }
+IceTipVersionHistoryBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ commitList
 ]
 
 { #category : #accessing }
@@ -153,56 +139,32 @@ IceTipVersionHistoryBrowser >> model: anObject [
 ]
 
 { #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newCommitsDataSource [
-	^ IceTipDataSource new 
-		tool: self;
-		elements: #(); "It will be set when refreshing"
-		yourself
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newContextWithSelection: anObject [
-
-	^ self newContext 
-		item: anObject;
-		yourself
-]
-
-{ #category : #'private factory' }
 IceTipVersionHistoryBrowser >> newDiffPage [
 
 	^ SpNotebookPage  
 		title: 'Diff'
 		icon: (self iconNamed: #diff)
-		provider: [ self diff ]
+		provider: [ self newDiffPresenter ]
 ]
 
 { #category : #'private factory' }
 IceTipVersionHistoryBrowser >> newDiffPanelLeft: leftString right: rightString [
 
-	^ (self instantiate: DiffPresenter) 
+	^ (self instantiate: SpDiffPresenter) 
 		leftText: leftString;
 		rightText: rightString;
 		showOptions: false
 ]
 
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newDiffTab [
-	^ self newTab 
-		label: 'Diff';
-		icon: (self iconNamed: #diff);
-		closeable: false;
-		yourself
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newEmptyTab [
-	^ self newTab 
-		label: 'Info';
-		icon: (self iconNamed: #smallQuestion);
-		closeable: false;
-		contents: '(No commit selected)' asMorph;
-		yourself
+{ #category : #private }
+IceTipVersionHistoryBrowser >> newDiffPresenter [
+	
+	selectedModel ifNil: [ ^ self ].
+	^ self 
+		newDiffPanelLeft: ((self model commitModelAfter: selectedModel) 
+			ifNotNil: #source
+			ifNil: [ '' ])
+		right: selectedModel source
 ]
 
 { #category : #'private factory' }
@@ -211,17 +173,15 @@ IceTipVersionHistoryBrowser >> newInfoPage [
 	^ SpNotebookPage  
 		title: 'Info'
 		icon: (self iconNamed: #smallQuestion)
-		provider: [ self info ]
+		provider: [ self newVersionInfoPresenter ]
 
 ]
 
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newInfoTab [
-	^ self newTab 
-		label: 'Info';
-		icon: (self iconNamed: #smallQuestion);
-		closeable: false;
-		yourself
+{ #category : #private }
+IceTipVersionHistoryBrowser >> newVersionInfoPresenter [
+	
+	selectedModel ifNil: [ ^ self ].
+	^ IceTipReadOnlyFormBuilder newBuiltFor: selectedModel info
 ]
 
 { #category : #accessing }
@@ -254,7 +214,7 @@ IceTipVersionHistoryBrowser >> selectionChanged: aSelection [
 ]
 
 { #category : #accessing }
-IceTipVersionHistoryBrowser >> title [
+IceTipVersionHistoryBrowser >> titleForWindow [
 
 	^ self model  
 		ifNotNil: [ 'Versions of {1}' format: { self model name } ]

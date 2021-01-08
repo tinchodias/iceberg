@@ -7,50 +7,39 @@ Class {
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #activation }
-IceTipRepairCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 1
-		for: IceTipRepositoryListContext
-]
-
-{ #category : #testing }
-IceTipRepairCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational not
-]
-
 { #category : #accessing }
-IceTipRepairCommand class >> defaultHelp [
+IceTipRepairCommand class >> defaultDescription [
+
 	^ 'Helps you to repair your repository when it is detached.'
 ]
 
 { #category : #accessing }
-IceTipRepairCommand class >> defaultMenuIconName [
-	^ #repair
-]
+IceTipRepairCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipRepairCommand class >> defaultMenuItemName [
 	^ 'Repair repository'
 ]
 
 { #category : #accessing }
 IceTipRepairCommand class >> defaultToolbarItemName [
+
 	^ 'Repair'
 ]
 
-{ #category : #activation }
-IceTipRepairCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 1
+{ #category : #testing }
+IceTipRepairCommand >> canBeExecuted [
+
+	^ self isRepositoryOperational not
 ]
 
 { #category : #execution }
 IceTipRepairCommand >> execute [
-	(IceTipRepairRepositoryDialog on: self repositoryModel) openDialogWithSpec
+
+	(IceTipRepairRepositoryDialog on: self repositoryModel)
+		openDialogWithSpec
+]
+
+{ #category : #accessing }
+IceTipRepairCommand >> iconName [
+
+	^ #repair
 ]

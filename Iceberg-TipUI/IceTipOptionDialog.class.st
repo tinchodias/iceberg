@@ -8,7 +8,7 @@ This is useful to keep a variable number of options.
 "
 Class {
 	#name : #IceTipOptionDialog,
-	#superclass : #SpPresenter,
+	#superclass : #IceTipSpPresenter,
 	#instVars : [
 		'typeList',
 		'type',
@@ -20,153 +20,110 @@ Class {
 
 { #category : #specs }
 IceTipOptionDialog class >> defaultSpec [
-	<spec>
-	^ SpBoxLayout newHorizontal
-		add: #typeList withConstraints: [:constraints | constraints width: 180];
-		add: #contentPanel;
-		yourself
+
+	^ SpPanedLayout newHorizontal
+		  position: 30 percent;
+		  add: #typeList;
+		  add: #contentPanel;
+		  yourself
 ]
 
 { #category : #actions }
 IceTipOptionDialog >> accept [
-	^ [ self doAccept.
-	true ]
-		on: IceError , IceWarning
-		do: [ :e | 
-			e acceptError: IceTipInteractiveErrorVisitor new.
-			false ]
+
+	^ [ 
+	  self doAccept.
+	  true ]
+		  on: IceError , IceWarning
+		  do: [ :e | 
+			  e acceptError: IceTipInteractiveErrorVisitor new.
+			  false ]
 ]
 
 { #category : #accessing }
 IceTipOptionDialog >> allTypes [
-	^ self subclassResponsibility
-]
 
-{ #category : #private }
-IceTipOptionDialog >> basicSelectionChanged: aType [
-	type := aType.
-	aType ifNotNil: [ 	
-		self window title: type title.
-		self replacePanelWith: type ]
+	^ self subclassResponsibility
 ]
 
 { #category : #'accessing ui' }
 IceTipOptionDialog >> contentPanel [
-	^ contentPanel
-]
 
-{ #category : #'accessing ui' }
-IceTipOptionDialog >> contentPanel: anObject [
-	contentPanel := anObject
+	^ contentPanel
 ]
 
 { #category : #accessing }
 IceTipOptionDialog >> contextSelection [
+
 	^ type
 ]
 
 { #category : #actions }
 IceTipOptionDialog >> doAccept [
+
 	self subclassResponsibility
-]
-
-{ #category : #private }
-IceTipOptionDialog >> emptyPanel [
-	^ PanelMorph new
-		changeProportionalLayout;
-		vResizing: #spaceFill;
-		hResizing: #spaceFill;
-		yourself	
-]
-
-{ #category : #initialization }
-IceTipOptionDialog >> giveFocusToNextFrom: aModel [
-
-	super giveFocusToNextFrom: aModel
 ]
 
 { #category : #accessing }
 IceTipOptionDialog >> initialExtent [
-	^ (600@300) scaledByDisplayScaleFactor
+
+	^ (600 @ 300) scaledByDisplayScaleFactor
 ]
 
 { #category : #initialization }
 IceTipOptionDialog >> initializeDialogWindow: aPresenter [
-	super initializeDialogWindow: aPresenter .
+
+	super initializeDialogWindow: aPresenter.
 	aPresenter okAction: [ self doAccept ]
 ]
 
 { #category : #initialization }
-IceTipOptionDialog >> initializeTypeList [
-	typeList
-		addColumn: ((SpImageTableColumn evaluated: #icon) width: 20);
-		addColumn: (SpStringTableColumn evaluated: #title);
-		whenSelectionChangedDo: [ :selection | self basicSelectionChanged: selection selectedItem ]; "replacePanelWith: selection selectedItem" 
-		items: self allTypes
-]
+IceTipOptionDialog >> initializePresenters [
 
-{ #category : #initialization }
-IceTipOptionDialog >> initializeWidgets [
-	firstTimeBuild := true.
+	super initializePresenters.
 	contentPanel := self newNullPresenter.
 	typeList := self newTable.
 	self initializeTypeList.
-	self whenBuiltDo: [ :ann | firstTimeBuild ifTrue: [self selectFirst. firstTimeBuild :=false. ]]
+
 ]
 
-{ #category : #focus }
-IceTipOptionDialog >> refreshFocusOrder [
-	self focusOrder
-		removeAll;
-		add: self typeList;
-		add: self selectedType
-]
+{ #category : #initialization }
+IceTipOptionDialog >> initializeTypeList [
 
-{ #category : #private }
-IceTipOptionDialog >> removeAllPanels [
-	| panelMorph |
-	
-	panelMorph := self contentPanel morph.
-	panelMorph removeAllMorphs
+	typeList
+		hideColumnHeaders;
+		addColumn: ((SpImageTableColumn evaluated: #icon) width: 20);
+		addColumn: (SpStringTableColumn evaluated: #titleForWindow);
+		whenSelectionChangedDo: [ :selection | 
+			self selectionChanged: selection selectedItem ];
+		items: self allTypes
 ]
 
 { #category : #private }
 IceTipOptionDialog >> replacePanelWith: aType [
-	contentPanel = aType
-		ifTrue: [ ^ self ].
+
 	contentPanel := aType.
-	contentPanel owner: self.
 	self needRebuild: false.
 	self buildWithSpec
 ]
 
-{ #category : #private }
-IceTipOptionDialog >> selectFirst [
-	typeList adapter selectIndex: 1.
-	self basicSelectionChanged: self allTypes first
-]
-
 { #category : #accessing }
 IceTipOptionDialog >> selectedType [
+
 	^ type
 ]
 
 { #category : #private }
-IceTipOptionDialog >> selectionChanged: ann [
-	self
-		basicSelectionChanged:
-			(ann newSelectedIndexes
-				ifNotEmpty:
-					[ :indexes | self typeList widget dataSource realElementAt: indexes first ]
-				ifEmpty: [ nil ])
+IceTipOptionDialog >> selectionChanged: aType [
+
+	type := aType.
+	aType ifNotNil: [ 
+		self window title: type titleForWindow.
+		self replacePanelWith: type ]
 ]
 
 { #category : #'accessing ui' }
 IceTipOptionDialog >> typeList [
-	^ typeList
-]
 
-{ #category : #'accessing ui' }
-IceTipOptionDialog >> typeList: anObject [
-	typeList := anObject
+	^ typeList
 ]

@@ -15,84 +15,75 @@ Class {
 
 { #category : #'instance creation' }
 IceTipCheckoutBranchDialog class >> onRepository: aRepository [
-	^ self on: (IceTipRepositoryModel on: aRepository) beCached
-]
 
-{ #category : #specs }
-IceTipCheckoutBranchDialog class >> title [
-	^ 'Checkout branch'
+	^ self on: (IceTipRepositoryModel on: aRepository) beCached
 ]
 
 { #category : #accessing }
 IceTipCheckoutBranchDialog >> allTypes [
-	^ types ifNil: [ types := self createCheckoutBranchTypes ]
-]
 
-{ #category : #accessing }
-IceTipCheckoutBranchDialog >> contextClass [
-	^ IceTipBranchContext
+	^ types ifNil: [ types := self createCheckoutBranchTypes ]
 ]
 
 { #category : #'private factory' }
 IceTipCheckoutBranchDialog >> createCheckoutBranchTypes [
-	| allTypes |
 
+	| allTypes |
 	"Collect types new+local+remotes"	
 	allTypes :=  { 
 		IceTipCheckoutNewBranchPanel on: self model. "New branch"
 	 	(IceTipCheckoutBranchPanel on: self model) 
-			title: 'Local';
+			titleForWindow: 'Local';
 			icon: (self iconNamed: #branch);
 			yourself }, 
 	(self model remoteModels collect: [ :each | 
 		(IceTipCheckoutBranchPanel on: each)
-			title: each name;
+			titleForWindow: each name;
 			icon: (self iconNamed: #remote);
 			yourself ]),
 	(self model entity pluginManager checkoutBranchPanelsOnModel: self model).
 	
 	"Doing this because I can trigger the accept inside the panels."
-	allTypes do: [ :each | each onAccept: [ self window delete ] ].
+	allTypes do: [ :each | each onAccept: [ self closeWindow ] ].
 	
 	^ allTypes
 ]
 
 { #category : #actions }
 IceTipCheckoutBranchDialog >> doAccept [
+
 	self selectedType doAccept
 ]
 
 { #category : #accessing }
 IceTipCheckoutBranchDialog >> initialExtent [
-	^ (600@400) scaledByDisplayScaleFactor
+
+	^ (600 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : #accessing }
 IceTipCheckoutBranchDialog >> model [
+
 	^ model
 ]
 
-{ #category : #accessing }
-IceTipCheckoutBranchDialog >> model: anObject [
-	model := anObject.
-	self allTypes do: [ :each | each model: anObject ]
-]
-
 { #category : #initialization }
-IceTipCheckoutBranchDialog >> setModelBeforeInitialization: anObject [ 
+IceTipCheckoutBranchDialog >> setModelBeforeInitialization: anObject [
+
 	model := anObject
 ]
 
 { #category : #accessing }
-IceTipCheckoutBranchDialog >> title [
-	^ 'Checkout ', super title asLowercase
+IceTipCheckoutBranchDialog >> titleForWindow [
+
+	^ 'Checkout branch'
 ]
 
 { #category : #accessing }
 IceTipCheckoutBranchDialog >> withOnlyNewBranch [
-	types := self allTypes select: #isNewBranch.
-	typeList items: types.
 
+	types := self allTypes select: #isNewBranch.
+	typeList items: types
 ]
 
 { #category : #accessing }

@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'plugins'
 	],
-	#category : 'Iceberg-Plugin-Base'
+	#category : #'Iceberg-Plugin-Base'
 }
 
 { #category : #'instance creation' }
@@ -35,7 +35,7 @@ IcePluginManager >> availablePluginsFor: aRepository [
 		as: Array
 ]
 
-{ #category : #'accessing ui' }
+{ #category : #'accessing-ui' }
 IcePluginManager >> checkoutBranchPanelsOnModel: aModel [ 
 
 	^ self plugins

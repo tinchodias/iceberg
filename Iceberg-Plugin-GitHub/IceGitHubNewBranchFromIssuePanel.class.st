@@ -40,27 +40,17 @@ IceGitHubNewBranchFromIssuePanel class >> defaultSpec [
 ]
 
 { #category : #accessing }
-IceGitHubNewBranchFromIssuePanel class >> icon [
-
-	^ (self iconNamed: #github) scaledToSize: 16@16
-]
-
-{ #category : #accessing }
-IceGitHubNewBranchFromIssuePanel class >> title [
-	^ 'New branch from issue'
-]
-
-{ #category : #accessing }
-IceGitHubNewBranchFromIssuePanel class >> unknownTitle [
-	^ 'INVALID-ISSUE'
-]
-
-{ #category : #accessing }
 IceGitHubNewBranchFromIssuePanel >> branchName [
 	
 	^ '{1}-{2}' format: { 
 		issueNumberText text trim. 
 		issueText text trim }.
+]
+
+{ #category : #accessing }
+IceGitHubNewBranchFromIssuePanel >> icon [
+
+	^ (self iconNamed: #github) scaledToSize: 16@16
 ]
 
 { #category : #api }
@@ -76,17 +66,9 @@ IceGitHubNewBranchFromIssuePanel >> initialize [
 ]
 
 { #category : #initialization }
-IceGitHubNewBranchFromIssuePanel >> initializeFocusOrder [
+IceGitHubNewBranchFromIssuePanel >> initializePresenters [
 
-	self focusOrder
-		add: remotePanel;
-		add: issueNumberText;
-		add: issueText
-]
-
-{ #category : #initialization }
-IceGitHubNewBranchFromIssuePanel >> initializeWidgetsContents [
-	spacePanel := PanelMorph new asSpecAdapter.
+	super initializePresenters.
 	self initializeCurrentBranchLabel.
 	remotePanel := self
 		instantiate: IceTipSelectRemotePresenter
@@ -111,49 +93,33 @@ IceGitHubNewBranchFromIssuePanel >> initializeWidgetsContents [
 
 { #category : #'accessing ui' }
 IceGitHubNewBranchFromIssuePanel >> issueLabel [
+
 	^ issueLabel
 ]
 
 { #category : #'accessing ui' }
-IceGitHubNewBranchFromIssuePanel >> issueLabel: anObject [
-	issueLabel := anObject
-]
-
-{ #category : #'accessing ui' }
 IceGitHubNewBranchFromIssuePanel >> issueNumberText [
+
 	^ issueNumberText
 ]
 
 { #category : #'accessing ui' }
-IceGitHubNewBranchFromIssuePanel >> issueNumberText: anObject [
-	issueNumberText := anObject
-]
-
-{ #category : #'accessing ui' }
 IceGitHubNewBranchFromIssuePanel >> issueText [
+
 	^ issueText
 ]
 
 { #category : #'accessing ui' }
-IceGitHubNewBranchFromIssuePanel >> issueText: anObject [
-	issueText := anObject
-]
-
-{ #category : #'accessing ui' }
 IceGitHubNewBranchFromIssuePanel >> remotePanel [
-	^ remotePanel
-]
 
-{ #category : #'accessing ui' }
-IceGitHubNewBranchFromIssuePanel >> remotePanel: anObject [
-	remotePanel := anObject
+	^ remotePanel
 ]
 
 { #category : #private }
 IceGitHubNewBranchFromIssuePanel >> sanitizeTitle: aString [
 	| separators safeSeparator |
 	
-	aString isEmptyOrNil ifTrue: [ ^ self class unknownTitle ].
+	aString isEmptyOrNil ifTrue: [ ^ self unknownTitle ].
 	
 	safeSeparator := $-.
 	separators := { Character space. Character tab. $_. safeSeparator }.
@@ -170,6 +136,18 @@ IceGitHubNewBranchFromIssuePanel >> selectRemoteModel [
 		selectRemoteModel := IceTipRemoteActionModel 
 			repositoryModel: self model
 			on: self model entity ]
+]
+
+{ #category : #accessing }
+IceGitHubNewBranchFromIssuePanel >> titleForWindow [
+
+	^ 'New branch from issue'
+]
+
+{ #category : #accessing }
+IceGitHubNewBranchFromIssuePanel >> unknownTitle [
+
+	^ 'INVALID-ISSUE'
 ]
 
 { #category : #private }
@@ -191,7 +169,6 @@ IceGitHubNewBranchFromIssuePanel >> validate [
 	self
 		assert: ((issueNumberText text asString notEmpty) and: [ issueNumberText text isAllDigits ])
 		description: 'Please enter a valid issue number'.
-		
 	self
 		assert: fetched
 		description: 'Please fetch a valid issue number'
@@ -199,8 +176,8 @@ IceGitHubNewBranchFromIssuePanel >> validate [
 
 { #category : #private }
 IceGitHubNewBranchFromIssuePanel >> validateIssue: aString [
-	| number remote |
 
+	| number remote |
 	fetched := false.
 	aString trimmed isEmpty ifTrue: [ ^ self ].
 	aString isAllDigits ifFalse: [ ^ self ].
@@ -220,7 +197,7 @@ IceGitHubNewBranchFromIssuePanel >> validateIssue: aString [
 		on: IceGitHubError do: [ :e | 
 			e messageText = 'Not Found' ifFalse: [ e pass ].
 			 UIManager default defer: [ 
-				self updateText: self class unknownTitle ] ] ]
+				self updateText: self unknownTitle ] ] ]
 ]
 
 { #category : #private }

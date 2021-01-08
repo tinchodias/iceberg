@@ -21,11 +21,10 @@ Class {
 
 { #category : #specs }
 IceTipCommitInfoPresenter class >> defaultSpec [
-	<spec: #default>
-	
+
 	^ SpBoxLayout newVertical
-		add: #notebookPanel;
-		yourself
+		  add: #notebookPanel;
+		  yourself
 ]
 
 { #category : #accessing }
@@ -46,7 +45,7 @@ IceTipCommitInfoPresenter >> beForMerge [
 IceTipCommitInfoPresenter >> commitInfo [
 
 	selectedModel ifNil: [ ^ self newEmpty ].
-	^ IceTipReadOnlyForm items: selectedModel info
+	^ IceTipReadOnlyFormBuilder newBuiltFor: selectedModel info
 ]
 
 { #category : #private }
@@ -104,28 +103,11 @@ IceTipCommitInfoPresenter >> newDiffPage [
 ]
 
 { #category : #'private factory' }
-IceTipCommitInfoPresenter >> newDiffTab [
-	^ self newTab 
-		label: 'Diff';
-		icon: (self iconNamed: #diff);
-		closeable: false;
-		yourself
-]
-
-{ #category : #'private factory' }
 IceTipCommitInfoPresenter >> newEmpty [
 
-	^ (self instantiate: LabelPresenter) label: '(No commit selected)'
-]
-
-{ #category : #'private factory' }
-IceTipCommitInfoPresenter >> newEmptyTab [
-	^ self newTab 
-		label: 'Info';
-		icon: (self iconNamed: #smallQuestion);
-		closeable: false;
-		contents: '(No commit selected)' asMorph;
-		yourself
+	^ self newLabel
+		  label: '(No commit selected)';
+		  yourself
 ]
 
 { #category : #'private factory' }

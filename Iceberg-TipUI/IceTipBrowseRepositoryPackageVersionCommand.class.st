@@ -9,24 +9,20 @@ Class {
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #activation }
-IceTipBrowseRepositoryPackageVersionCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 20 for: IceTipWorkingCopyContext
-]
-
 { #category : #accessing }
-IceTipBrowseRepositoryPackageVersionCommand class >> defaultHelp [
+IceTipBrowseRepositoryPackageVersionCommand class >> defaultDescription [
+
 	^ 'Browse the version in the repository'
 ]
 
 { #category : #accessing }
-IceTipBrowseRepositoryPackageVersionCommand class >> defaultMenuItemName [
+IceTipBrowseRepositoryPackageVersionCommand class >> defaultName [
+
 	^ 'Browse repository version'
 ]
 
 { #category : #execution }
 IceTipBrowseRepositoryPackageVersionCommand >> execute [
+
 	self packageModel browseRepositoryVersion
 ]

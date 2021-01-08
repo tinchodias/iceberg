@@ -8,7 +8,7 @@ I can define
 Class {
 	#name : #IcePlugin,
 	#superclass : #Object,
-	#category : 'Iceberg-Plugin-Base'
+	#category : #'Iceberg-Plugin-Base'
 }
 
 { #category : #'as yet unclassified' }

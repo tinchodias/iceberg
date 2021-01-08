@@ -7,34 +7,26 @@ Class {
 	#category : #'Iceberg-TipUI-Commands'
 }
 
-{ #category : #activation }
-IceTipRemoveFromRepositoryPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 110 for: IceTipWorkingCopyContext
-]
-
 { #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ true
-]
+IceTipRemoveFromRepositoryPackageCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultHelp [
 	^ 'Removes the current repository from the repository, without removing it from the system'
 ]
 
 { #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultMenuIconName [
-	^ #glamorousTrash
-]
+IceTipRemoveFromRepositoryPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultMenuItemName [
 	^ 'Remove from repository'
 ]
 
 { #category : #execution }
 IceTipRemoveFromRepositoryPackageCommand >> execute [
+
 	self packageModel remove
+]
+
+{ #category : #accessing }
+IceTipRemoveFromRepositoryPackageCommand >> iconName [
+
+	^ #glamorousTrash
 ]
