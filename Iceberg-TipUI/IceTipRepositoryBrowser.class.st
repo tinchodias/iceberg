@@ -15,7 +15,13 @@ Class {
 { #category : #commands }
 IceTipRepositoryBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
 
-	aCommandGroup register: IceTipAddRemoteCommand forSpec
+	{	IceTipAddRemoteCommand.
+		IceTipPushCommand.
+		IceTipPullCommand.
+		IceTipFetchCommand.
+		IceTipCheckoutBranchCommand.
+		IceTipMergeCommand } do: [ :each | 
+			aCommandGroup register: each forSpec ]
 ]
 
 { #category : #commands }
@@ -93,6 +99,7 @@ IceTipRepositoryBrowser >> initializePresenters [
 IceTipRepositoryBrowser >> initializeSidebarTree [
 
 	sidebarTree
+		hideColumnHeaders;
 		addColumn:
 			(SpCompositeTableColumn new
 				addColumn:

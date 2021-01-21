@@ -1,7 +1,12 @@
+"
+I implement the action of saving the image.
+
+I'm used by the presenter that prepares the commit.
+"
 Class {
 	#name : #IceTipSaveImageAction,
 	#superclass : #Object,
-	#category : #'Iceberg-TipUI-View'
+	#category : #'Iceberg-TipUI-Commands'
 }
 
 { #category : #execution }

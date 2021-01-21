@@ -12,8 +12,7 @@ Class {
 	#instVars : [
 		'typeList',
 		'type',
-		'contentPanel',
-		'firstTimeBuild'
+		'contentPanel'
 	],
 	#category : #'Iceberg-TipUI-View'
 }
@@ -64,8 +63,8 @@ IceTipOptionDialog >> doAccept [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-IceTipOptionDialog >> initialExtent [
+{ #category : #initialization }
+IceTipOptionDialog >> initialExtentForWindow [
 
 	^ (600 @ 300) scaledByDisplayScaleFactor
 ]

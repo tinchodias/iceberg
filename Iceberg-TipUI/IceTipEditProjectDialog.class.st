@@ -149,8 +149,8 @@ IceTipEditProjectDialog >> hasToShowWarning [
 	^ model repository workingCopy packages isNotEmpty
 ]
 
-{ #category : #api }
-IceTipEditProjectDialog >> initialExtent [
+{ #category : #initialization }
+IceTipEditProjectDialog >> initialExtentForWindow [
 
 	^ self hasToShowWarning 
 		ifTrue: [ (475@525) scaledByDisplayScaleFactor ]
@@ -195,10 +195,6 @@ IceTipEditProjectDialog >> initializeDirectoryTree [
 { #category : #initialization }
 IceTipEditProjectDialog >> initializeMessagePanel [
 
-	messageText := self newText.
-	messageIcon := self newImage.
-	messageText disable.
-
 	self hasToShowWarning ifTrue: [ 
 		messageIcon image: (self iconNamed: #warning).
 		messageText text: self warningMessage ]
@@ -222,6 +218,10 @@ IceTipEditProjectDialog >> initializePresenters [
 		label: 'Format';
 		yourself.
 	formatList := self newDropList.
+	messageIcon := self newImage.
+	messageText := self newText
+		beNotEditable;
+		yourself.
 
 	self initializeMessagePanel.
 	self initializeDirectoryTree.
@@ -309,8 +309,9 @@ IceTipEditProjectDialog >> sourceDirectoryTree [
 	^ sourceDirectoryTree
 ]
 
-{ #category : #specs }
+{ #category : #initialization }
 IceTipEditProjectDialog >> titleForWindow [
+
 	^ 'Edit Project'
 ]
 

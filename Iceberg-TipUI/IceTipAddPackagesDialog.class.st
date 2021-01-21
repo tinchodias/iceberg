@@ -21,11 +21,6 @@ IceTipAddPackagesDialog class >> defaultSpec [
 		  add: #packageNameText height: self inputTextHeight
 ]
 
-{ #category : #accessing }
-IceTipAddPackagesDialog class >> icon [
-	^ self iconNamed: #branch
-]
-
 { #category : #actions }
 IceTipAddPackagesDialog >> accept [
 
@@ -52,6 +47,12 @@ IceTipAddPackagesDialog >> allPackagesNotRegistered [
 	currentPackagesNames := self model packages collect: #packageName.
 	^ self allPackages reject: [ :rPackage | 
 		  currentPackagesNames includes: rPackage name ]
+]
+
+{ #category : #initialization }
+IceTipAddPackagesDialog >> iconForWindow [
+
+	^ self iconNamed: #branch
 ]
 
 { #category : #initialization }
@@ -152,8 +153,9 @@ IceTipAddPackagesDialog >> setModelBeforeInitialization: anObject [
 	model := anObject
 ]
 
-{ #category : #specs }
+{ #category : #initialization }
 IceTipAddPackagesDialog >> titleForWindow [
+
 	^ 'Add packages'
 ]
 

@@ -53,13 +53,20 @@ IceTipVersionHistoryBrowser class >> onRepository: aRepository method: aMethod [
 		beCached
 ]
 
+{ #category : #'backward compatibility' }
+IceTipVersionHistoryBrowser class >> repository: repository method: method [ 
+	"The Calypso command uses this selector to instantiate the browser."
+
+	^ self onRepository: repository method: method
+]
+
 { #category : #accessing }
 IceTipVersionHistoryBrowser >> commitList [
 
 	^ commitList
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 IceTipVersionHistoryBrowser >> initialExtentForWindow [
 
 	^ (700@700) scaledByDisplayScaleFactor
@@ -184,6 +191,14 @@ IceTipVersionHistoryBrowser >> newVersionInfoPresenter [
 	^ IceTipReadOnlyFormBuilder newBuiltFor: selectedModel info
 ]
 
+{ #category : #'backward compatibility' }
+IceTipVersionHistoryBrowser >> open [
+	"Calypso's ClyIcebergShowMethodVersionCommand uses this selector to open the browser."
+	<deprecated>
+
+	^ self openWithSpec
+]
+
 { #category : #accessing }
 IceTipVersionHistoryBrowser >> refresh [
 
@@ -213,7 +228,7 @@ IceTipVersionHistoryBrowser >> selectionChanged: aSelection [
 	self refreshCommitTabPanel
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 IceTipVersionHistoryBrowser >> titleForWindow [
 
 	^ self model  

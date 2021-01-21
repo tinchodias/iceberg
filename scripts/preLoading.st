@@ -6,6 +6,9 @@ Otherwise obsolete instances will stay".
 IceMetacelloRepositoryAdapter allInstances do: #unregister.
 Smalltalk globals at: #IceSystemEventListener ifPresent: #unregisterSystemAnnouncements.
 
+"Workaround to avoid keeping an entry in World Menu to the obsolete class."
+(IceTipRepositoriesBrowser class>>#menuCommandOn:) removeFromSystem.
+
 "Remove iceberg from system (so I can reload it)"
 MetacelloPharoPlatform select.
 #(
@@ -43,11 +46,9 @@ Metacello new
     repository: 'github://pharo-vcs/tonel:v1.0.17';
     load.
 
-"Development branch requires latest Spec2"
-Metacello new
-    githubUser: 'pharo-spec' project: 'Spec' commitish: 'master' path: 'src';
-    baseline: 'Spec2';
-    onConflict: [ :e | e useIncoming ];
-    onUpgrade: [ :e | e useIncoming ];
-    ignoreImage;
-    load
+"Until merged into Pharo 9, manually remove 3 Calypso commands that now belong to
+Iceberg-Plugin-Calypso in this repository."
+{ClyBrowseIcebergCommitCommand.
+ClyBrowseIcebergPackageCommand.
+ClyBrowseIcebergRepositoryCommand} do: #removeFromSystem.
+

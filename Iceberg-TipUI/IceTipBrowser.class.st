@@ -144,9 +144,6 @@ IceTipBrowser >> initializeWindow: aSpWindowPresenter [
 
 	self addToolbarIfNotEmptyIn: aSpWindowPresenter.
 
-	aSpWindowPresenter
-		windowIcon: self iconForWindow;
-		initialExtent: self initialExtentForWindow
 ]
 
 { #category : #'accessing ui' }
@@ -212,14 +209,6 @@ IceTipBrowser >> setModelBeforeInitialization: anObject [
 
 { #category : #initialization }
 IceTipBrowser >> subscribeToAnnouncements [
-]
-
-{ #category : #initialization }
-IceTipBrowser >> titleForWindow [
-	"The title to use when the presenter is opened as a window."
-	
-	^ self subclassResponsibility
-
 ]
 
 { #category : #'accessing ui' }
