@@ -60,6 +60,38 @@ IceGitIndex >> commitWithMessage: message andParents: parentCommits [
 		^ repository commitFromGitCommit: (LGitCommit of: self repositoryHandle fromId: commitId)]
 ]
 
+{ #category : #'API - commiting' }
+IceGitIndex >> commitWithMessage: message andParents: parentCommits author: authorLibgitSignature [
+	
+	| index |
+	repository handleLibgitError: [ | signature commitId indexTreeId |
+		self addToGitIndex.
+		[ signature := self repositoryHandle defaultSignature ]
+			on: LGit_GIT_ENOTFOUND, LGit_GIT_ERROR
+			do: [ :e | IceGitUsernameOrEmailNotFound guessKind: e ifNot: [ e pass ] ].
+		index := self repositoryHandle index.
+		indexTreeId := index writeTreeAndReturnOid.
+		index free.
+		commitId := (LGitCommitBuilder of: self repositoryHandle)
+			tree: (LGitTree of: self repositoryHandle fromId: indexTreeId);
+			message: message withUnixLineEndings utf8Encoded asString "FFI is expecting an string";
+			parents:
+				(self repositoryHandle isUnborn
+					ifTrue: [ #() ]
+					ifFalse: [ self libGitCommitsFrom: self repositoryHandle for: parentCommits ]);
+			"'HEAD' branch could not exist yet. No problem, libgit will create it, 
+				but we have to remember it to notify the frontend."
+				updateReference:
+				([ self repositoryHandle head name ]
+					on: LGit_GIT_EUNBORNBRANCH
+					do: [ repository branch gitRef ]);
+			author: authorLibgitSignature;
+			committer: signature;
+			writeCommit;
+			commitId.
+		^ repository commitFromGitCommit: (LGitCommit of: self repositoryHandle fromId: commitId)]
+]
+
 { #category : #accessing }
 IceGitIndex >> includes: aRelativePath [ 
 	

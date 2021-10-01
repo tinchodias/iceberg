@@ -43,6 +43,14 @@ IceNodeCodeDisplayVisitor >> visitConflictingOperation: anIceConflictingOperatio
 	anIceConflictingOperation chosenOperation definition accept: self
 ]
 
+{ #category : #'as yet unclassified' }
+IceNodeCodeDisplayVisitor >> visitExtensionDefinition: anIceExtensionDefinition [
+
+	codePresenter
+		text: anIceExtensionDefinition contents;
+		behavior: nil
+]
+
 { #category : #visiting }
 IceNodeCodeDisplayVisitor >> visitMethodNode: anIceMethodDefinition [
 
@@ -65,4 +73,11 @@ IceNodeCodeDisplayVisitor >> visitPackage: anIcePackageDefinition [
 	codePresenter
 		text: '';
 		behavior: nil
+]
+
+{ #category : #'as yet unclassified' }
+IceNodeCodeDisplayVisitor >> visitTraitDefinition: anIceTraitDefinition [ 
+
+	codePresenter text: anIceTraitDefinition contents.
+	codePresenter behavior: nil
 ]

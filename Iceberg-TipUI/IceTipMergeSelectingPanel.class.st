@@ -14,11 +14,25 @@ IceTipMergeSelectingPanel class >> defaultSpec [
 	^ SpPanedLayout newLeftToRight
 		  positionOfSlider: 25 percent;
 		  add: #iceNodesTree;
-		  add: (SpBoxLayout newTopToBottom
+		  add: (SpPanedLayout newVertical
+				   positionOfSlider: 50 percent;
 				   add: #diffPanel;
 				   add: #codePanel;
 				   yourself);
 		  yourself
+]
+
+{ #category : #private }
+IceTipMergeSelectingPanel >> activateItem: iceNode [
+
+	iceNode value selectLeft.
+	
+	checkedIceNodes add: iceNode.
+	iceNode children isEmptyOrNil ifTrue: [ ^ self ].
+	iceNode allChildrenDo: [ :child |
+		checkedIceNodes add: child ].
+	self refreshCheckbox
+
 
 ]
 
@@ -37,20 +51,9 @@ IceTipMergeSelectingPanel >> changeListColumn [
 			(SpCheckBoxTableColumn new
 				width: 20;
 				evaluated: [ :iceNode | checkedIceNodes includes: iceNode ];
-				onActivation: [ :iceNode |
-					checkedIceNodes add: iceNode.
-					iceNode value selectLeft.
-					iceNode notEmpty ifTrue: [
-						iceNode allChildrenDo: [ :child | checkedIceNodes add: child ].
-						self basicRefresh ] ];
-				onDeactivation: [ :iceNode |
-					checkedIceNodes remove: iceNode.
-					iceNode value selectRight.
-					iceNode notEmpty ifTrue: [
-						iceNode allChildrenDo: [ :child |
-							checkedIceNodes remove: child ifAbsent: [  ] ].
-						self basicRefresh ].
-					 ]);
+				onActivation: [ :iceNode | self activateItem: iceNode ];
+				onDeactivation: [ :iceNode | self deactivateItem: iceNode ];
+				yourself);
 		addColumn:
 			(SpImageTableColumn new
 				width: 20;
@@ -60,10 +63,17 @@ IceTipMergeSelectingPanel >> changeListColumn [
 		yourself
 ]
 
-{ #category : #accessing }
-IceTipMergeSelectingPanel >> codePanel [
+{ #category : #private }
+IceTipMergeSelectingPanel >> deactivateItem: iceNode [
+		
+	iceNode value selectRight.
 
-	^ codePanel
+	checkedIceNodes remove: iceNode.
+	iceNode children isEmptyOrNil ifTrue: [ ^ self ].
+	iceNode allChildrenDo: [ :child |
+		checkedIceNodes remove: child ifAbsent: [  ] ].
+	self refreshCheckbox.
+
 ]
 
 { #category : #initialization }
@@ -94,6 +104,13 @@ IceTipMergeSelectingPanel >> refresh [
 	self model treeRoots do: [ :root |
 		root withAllChildrenDo: [ :each | checkedIceNodes add: each ] ].
 	self refreshCodePanel 
+]
+
+{ #category : #private }
+IceTipMergeSelectingPanel >> refreshCheckbox [
+	"Refresh after a checkbox state has changed. When a node with children changes this state, all children might change too. That's the reason of this special refresh. When a leave node changed such state, this refresh is redundant."
+
+	iceNodesTree refresh
 ]
 
 { #category : #private }

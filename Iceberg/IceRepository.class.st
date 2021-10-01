@@ -354,6 +354,21 @@ IceRepository >> commitChanges: changes withMessage: message [
 ]
 
 { #category : #'API - commit' }
+IceRepository >> commitChanges: changes withMessage: message author: authorLibgitSignature [
+	"Creates a commit with the given changes using the comment given as argument.
+	
+	NOTICE that commits can only be done if the following is true:
+
+ - HEAD is a branch
+ - the working copy reference commit is the same commit as #headCommit"
+
+	^ self workingCopy
+		commitChanges: changes
+		withMessage: message
+		author: authorLibgitSignature
+]
+
+{ #category : #'API - commit' }
 IceRepository >> commitIndexWithMessage: message andParents: parentCommitishList [
 	"Low level.
 	
@@ -361,6 +376,20 @@ IceRepository >> commitIndexWithMessage: message andParents: parentCommitishList
 	
 	| newCommit |
 	newCommit := index commitWithMessage: message andParents: parentCommitishList.
+	index := self newIndex.
+	self workingCopy referenceCommit: newCommit.
+	self workingCopy refreshDirtyPackages.
+	^ newCommit
+]
+
+{ #category : #'API - commit' }
+IceRepository >> commitIndexWithMessage: message andParents: parentCommitishList author: authorLibgitSignature [
+	"Low level.
+	
+	Commit what is saved in the index"
+	
+	| newCommit |
+	newCommit := index commitWithMessage: message andParents: parentCommitishList author: authorLibgitSignature.
 	index := self newIndex.
 	self workingCopy referenceCommit: newCommit.
 	self workingCopy refreshDirtyPackages.

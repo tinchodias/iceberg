@@ -255,6 +255,33 @@ IceWorkingCopy >> commitChanges: aDiff withMessage: message force: forcing [
 	^ newCommit
 ]
 
+{ #category : #'as yet unclassified' }
+IceWorkingCopy >> commitChanges: aDiff withMessage: message force: forcing  author: authorLibgitSignature [
+
+	"Creates a commit with the given changes using the comment given as argument.
+	The forcing parameter allows to create an empty commit. This is used by the merge.
+	
+	NOTICE that commits can only be done if the following is true:
+
+ - HEAD is a branch
+ - the working copy reference commit is the same commit as #headCommit"
+
+	| newCommit |
+	self validateCanCommit.
+	self repository index
+		updateDiskWorkingCopy: aDiff;
+		updateIndex: aDiff.
+
+	(forcing not and: [repository index isEmpty]) 
+		ifTrue: [ IceNothingToCommit signal ].
+
+	newCommit := self repository
+		commitIndexWithMessage: message
+		andParents: (self workingCopyState referenceCommits reject: [ :each | each isNoCommit ])
+		author: authorLibgitSignature.
+	^ newCommit
+]
+
 { #category : #'API - commits' }
 IceWorkingCopy >> commitWithMessage: aString [ 
 	"Creates a commit with all changed code using the comment given as argument.

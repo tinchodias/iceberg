@@ -166,6 +166,18 @@ IceDiff >> includesPackageNamed: aString [
 		and: [ self codeSubdirectoryNode includesKey: aString ]
 ]
 
+{ #category : #'as yet unclassified' }
+IceDiff >> inspectorForTreeStructure: aBuilder [
+	<inspectorPresentationOrder: 1 title: 'Tree'>
+
+	^ aBuilder newTree
+		  roots: self treeToShow children;
+		  children: [ :iceNode | iceNode children ];
+		  display: [ :each | each definition name ];
+		  displayIcon: [ :each | each value icon ];
+		  yourself
+]
+
 { #category : #testing }
 IceDiff >> isCodeSubdirectory: aNode [
 	

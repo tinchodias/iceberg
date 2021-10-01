@@ -23,13 +23,15 @@ IceTipHistoryBrowser class >> buildGeneralCommandGroupWith: presenter for: aComm
 { #category : #commands }
 IceTipHistoryBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
 
-	{	IceTipAdoptCommitCommand.
+	{	
+		IceTipAdoptCommitCommand.
 		IceTipCheckoutNewBranchCommand.
 		IceTipCheckoutCommitCommand.
 		IceTipCreateTagCommand.
 		IceTipResetBranchToThisCommitCommand.
 		IceTipCopyCommitishCommand.
 		IceTipCherryPickCommand.
+		IceTipPartialLoadCommand.
 		} do: [ :each |
 			aCommandGroup register: each forSpec ]
 
