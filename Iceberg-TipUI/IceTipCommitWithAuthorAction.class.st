@@ -25,7 +25,7 @@ IceTipCommitWithAuthorAction >> basicExecute [
 	UIManager default 
 		informUser: 'Commiting...' 
 		during: [ 
-			self repository
+			self repository workingCopy
 				commitChanges: (diff copyWithOnly: items)
 				withMessage: message
 				force: false
