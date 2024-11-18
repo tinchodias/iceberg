@@ -19,6 +19,17 @@ Class {
 }
 
 { #category : 'commands' }
+IceTipDiffPanel class >> buildCommandsGroupWith: presenter forRoot: aCommandGroup [ 
+    | selectionCommandGroup |
+    selectionCommandGroup := (CmCommandGroup named: self selectionCommandGroupName) asSpecGroup.
+
+    aCommandGroup register: selectionCommandGroup.
+
+    self buildSelectionCommandGroupWith: presenter for: selectionCommandGroup.
+
+]
+
+{ #category : 'commands' }
 IceTipDiffPanel class >> buildGeneralCommandGroupWith: presenter for:  aCommandGroup [
 
 	"Nothing to add"
