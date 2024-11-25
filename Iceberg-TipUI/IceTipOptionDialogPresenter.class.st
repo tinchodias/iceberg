@@ -22,12 +22,22 @@ Class {
 { #category : 'actions' }
 IceTipOptionDialogPresenter >> accept [
 
-	[ 
-	  self doAccept.
-	  self closeWindow ]
-		  on: IceError , IceWarning
-		  do: [ :e | 
-			  e acceptError: (IceTipInteractiveErrorVisitor newContext: self) ]
+	[
+	self selectedType class = IceTipLocalRepositoryPanel
+		ifTrue: [
+			(IceRepositoryCreator isGitRoot: self selectedType location)
+				ifFalse: [
+					self inform: ('"{1}" git repository not found' format:
+							 { self selectedType location fullName }) ]
+				ifTrue: [
+					self doAccept.
+					self closeWindow ] ]
+		ifFalse: [
+			self doAccept.
+			self closeWindow ] ]
+		on: IceError , IceWarning
+		do: [ :e |
+			e acceptError: (IceTipInteractiveErrorVisitor newContext: self) ]
 ]
 
 { #category : 'accessing' }
