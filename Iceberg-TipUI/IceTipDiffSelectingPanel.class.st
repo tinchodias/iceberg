@@ -10,15 +10,30 @@ also #elements answer should be a collection of elements that also understand el
 
 "
 Class {
-	#name : #IceTipDiffSelectingPanel,
-	#superclass : #IceTipDiffPanel,
+	#name : 'IceTipDiffSelectingPanel',
+	#superclass : 'IceTipDiffPanel',
 	#instVars : [
-		'selectedItems'
+		'checkedIceNodes'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #initialization }
+{ #category : 'private' }
+IceTipDiffSelectingPanel >> activateItem: iceNode [
+		
+	checkedIceNodes add: iceNode.
+	iceNode children isEmptyOrNil ifTrue: [ ^ self ].
+
+	iceNode allChildrenDo: [ :child |
+		checkedIceNodes add: child ].
+
+	self refreshCheckbox
+
+]
+
+{ #category : 'initialization' }
 IceTipDiffSelectingPanel >> changeListColumn [
 	^ SpCompositeTableColumn new
 		addColumn:
@@ -45,48 +60,65 @@ IceTipDiffSelectingPanel >> changeListColumn [
 		yourself
 ]
 
-{ #category : #private }
-IceTipDiffSelectingPanel >> entryRemoved: ann [
-	self refresh
+{ #category : 'private' }
+IceTipDiffSelectingPanel >> deactivateItem: iceNode [
+		
+	checkedIceNodes remove: iceNode.
+	iceNode children isEmptyOrNil ifTrue: [ ^ self ].
+
+	iceNode allChildrenDo: [ :child |
+		checkedIceNodes remove: child ifAbsent: [  ] ].
+
+	self refreshCheckbox.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipDiffSelectingPanel >> initialize [
+
 	super initialize.
-	self subscribeToAnnouncements.
-	selectedItems := Set new.
-	self model treeRoots
-		do: [ :root | 
-			selectedItems add: root.
-			root allChildrenDo: [ :child | selectedItems add: child.]]
+	checkedIceNodes := Set new.
+	self model treeRoots do: [ :root |
+		checkedIceNodes add: root.
+		root allChildrenDo: [ :child | checkedIceNodes add: child ] ]
+
 ]
 
-{ #category : #accessing }
+{ #category : 'initialization' }
+IceTipDiffSelectingPanel >> initializeTree [
+
+	super initializeTree.
+	iceNodesTree 
+		bindKeyCombination: Character space asKeyCombination 
+		toAction: [ self toggleActivationItem: iceNodesTree selectedItem ]
+]
+
+{ #category : 'accessing' }
 IceTipDiffSelectingPanel >> refresh [
+
 	super refresh.
-	self model treeRoots
-		do: [ :root | 
-			selectedItems add: root.
-			root allChildrenDo: [ :child | selectedItems add: child ] ]
+	self model treeRoots do: [ :root |
+		root withAllChildrenDo: [ :each | checkedIceNodes add: each ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipDiffSelectingPanel >> refreshCheckbox [
 	"Refresh after a checkbox state has changed. When a node with children changes this state, all children might change too. That's the reason of this special refresh. When a leave node changed such state, this refresh is redundant."
 
-	self flag: #fix. "Low level access"
-	changeList adapter widget refresh
+	iceNodesTree refresh
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipDiffSelectingPanel >> selectedItems [
-	^selectedItems
+
+	^ checkedIceNodes
 ]
 
-{ #category : #initialize }
-IceTipDiffSelectingPanel >> subscribeToAnnouncements [
-	self announcer
-		when: IceTipDiffEntryRemoved 
-		send: #entryRemoved:
-		to: self	
+{ #category : 'private' }
+IceTipDiffSelectingPanel >> toggleActivationItem: iceNode [
+
+	(checkedIceNodes includes: iceNode)
+		ifTrue: [ self deactivateItem: iceNode ]
+		ifFalse: [ self activateItem: iceNode ]
+
+	
 ]

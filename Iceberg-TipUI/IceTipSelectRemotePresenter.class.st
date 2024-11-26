@@ -1,104 +1,107 @@
 Class {
-	#name : #IceTipSelectRemotePresenter,
-	#superclass : #SpPresenter,
+	#name : 'IceTipSelectRemotePresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
-		'remoteLabel',
 		'remoteList',
 		'addButton',
 		'model'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipSelectRemotePresenter class >> defaultSpec [ 
-	<spec>
-	
-	^ SpBoxLayout newHorizontal 
-		add: #remoteLabel width: self labelWidth ; 
-	 	add: #remoteList; 
-		add: #addButton width: self iconWidth.
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipSelectRemotePresenter >> addButton [
+
 	^ addButton
 ]
 
-{ #category : #'accessing ui' }
-IceTipSelectRemotePresenter >> addButton: anObject [
-	addButton := anObject
-]
-
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipSelectRemotePresenter >> addRemote [
-	(IceTipAddRemoteDialog on: self model repositoryModel) 
+
+	((IceTipAddRemoteDialogPresenter 
+		newApplication: self application 
+		model: self model repositoryModel) 
 		onAccept: [ :newRemoteName | 
 			self model reset.
 			self refresh.
-			self selectRemoteNamed: newRemoteName ];
-		openDialogWithSpec.
+			self selectRemoteNamed: newRemoteName ])
+		asDialogWindow 
+			centeredRelativeTo: self window;
+			open
 ]
 
-{ #category : #accessing }
+{ #category : 'layout' }
+IceTipSelectRemotePresenter >> defaultLayout [
+
+	^ SpBoxLayout newLeftToRight
+		spacing: 3;
+		add: remoteList;
+		add: addButton expand: false;
+		yourself
+]
+
+{ #category : 'accessing' }
 IceTipSelectRemotePresenter >> icon [
+
 	^ self iconNamed: #add
 ]
 
-{ #category : #initialization }
-IceTipSelectRemotePresenter >> initializeWidgets [
-	remoteLabel := self newLabel label: 'Remote:'.
-	remoteList := self newDropList.
-	remoteList
-		items: self model remoteModels;
-		display: [ :each | each descriptionWithDecoration ].
-	addButton := self newButton icon: self icon.
-	addButton action: [ self addRemote ].
-	remoteList selectIndex: (self model remoteModels detectIndex: [:each | each realObject name = self model remoteModel name]).
-	self focusOrder add: remoteList
+{ #category : 'initialization' }
+IceTipSelectRemotePresenter >> initializePresenters [
+
+	remoteList := self newDropList
+		display: [ :each | each shortDescription ];
+		yourself.
+
+	addButton := self newButton
+		addStyle: 'small';
+		icon: self icon;
+		action: [ self addRemote ];
+		yourself
 ]
 
-{ #category : #accessing }
-IceTipSelectRemotePresenter >> label: aString [ 
+{ #category : 'accessing' }
+IceTipSelectRemotePresenter >> label: aString [
+
 	self remoteLabel label: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipSelectRemotePresenter >> model [
+
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipSelectRemotePresenter >> refresh [
-	remoteList items: self model remoteModels.
+
+	remoteList items: self model remoteModels
 ]
 
-{ #category : #'accessing ui' }
-IceTipSelectRemotePresenter >> remoteLabel [
-	^ remoteLabel
-]
-
-{ #category : #'accessing ui' }
-IceTipSelectRemotePresenter >> remoteLabel: anObject [
-	remoteLabel := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipSelectRemotePresenter >> remoteList [
+
 	^ remoteList
 ]
 
-{ #category : #'accessing ui' }
-IceTipSelectRemotePresenter >> remoteList: anObject [
-	remoteList := anObject
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipSelectRemotePresenter >> selectRemoteNamed: aString [
-	remoteList selectItem: (self model remoteModels detect: [ :each | each name = aString ])
+
+	remoteList selectItem:
+		(self model remoteModels detect: [ :each | each name = aString ])
 ]
 
-{ #category : #initialization }
-IceTipSelectRemotePresenter >> setModelBeforeInitialization: anObject [ 
+{ #category : 'accessing - model' }
+IceTipSelectRemotePresenter >> setModelBeforeInitialization: anObject [
+
 	model := anObject
+]
+
+{ #category : 'initialization' }
+IceTipSelectRemotePresenter >> updatePresenter [ 
+
+	self refresh.
+	self selectRemoteNamed: self model remoteModel name
 ]

@@ -4,12 +4,14 @@ I am an IceDefinition that have some source code in my contents.
 See my sub/superclasses for more information.
 "
 Class {
-	#name : #IceCodeDefinition,
-	#superclass : #IceDefinition,
-	#category : #'Iceberg-Changes'
+	#name : 'IceCodeDefinition',
+	#superclass : 'IceDefinition',
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'instance creation' }
 IceCodeDefinition class >> named: aName source: aString [
 	
 	^ (super named: aName)
@@ -17,43 +19,43 @@ IceCodeDefinition class >> named: aName source: aString [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceCodeDefinition >> = anotherDefinition [
 
 	^ super = anotherDefinition
 		and: [ self contents = anotherDefinition contents ]
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceCodeDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceCodeDefinition >> addToPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #properties }
+{ #category : 'properties' }
 IceCodeDefinition >> allPropertyNames [
 	"Answer the names of the IcePropertyDefinition objects that are owned by this definition."
 
 	^ #()
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceCodeDefinition >> hash [
 	^ super hash bitXor: self contents hash
 ]
 
-{ #category : #properties }
+{ #category : 'properties' }
 IceCodeDefinition >> ownedDefinitions [
 	^ self propertyDefinitions
 ]
 
-{ #category : #properties }
+{ #category : 'properties' }
 IceCodeDefinition >> propertyDefinitions [
 	^ self allPropertyNames
 		collect: [ :each | 

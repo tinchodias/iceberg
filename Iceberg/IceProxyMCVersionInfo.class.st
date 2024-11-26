@@ -3,8 +3,8 @@ I'm a proxy to keep information on pre-loaded packages when repository is not pr
 This is the case of pharo project, which is distributed without a repository connection, but users may still need to link with it to make contributions.
 "
 Class {
-	#name : #IceProxyMCVersionInfo,
-	#superclass : #ProtoObject,
+	#name : 'IceProxyMCVersionInfo',
+	#superclass : 'ProtoObject',
 	#instVars : [
 		'commitId',
 		'packageName',
@@ -14,15 +14,17 @@ Class {
 	#classVars : [
 		'LastCommitFound'
 	],
-	#category : 'Iceberg-Adapters'
+	#category : 'Iceberg-Adapters',
+	#package : 'Iceberg',
+	#tag : 'Adapters'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 IceProxyMCVersionInfo class >> lastCommitFound [
 	^ LastCommitFound
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceProxyMCVersionInfo class >> lastCommitFound: aCommit [
 	| oldCommit |
 	oldCommit := LastCommitFound.
@@ -30,12 +32,12 @@ IceProxyMCVersionInfo class >> lastCommitFound: aCommit [
 	"This is just a cleanup mechanism... in general iceberg will be scanning 
 	 a full repository and each proxy will be pointing to same commit so no 
 	 point in keep it waiting"
-	(LastCommitFound notNil and: [ oldCommit isNil ]) ifTrue: [ 
+	(LastCommitFound isNotNil and: [ oldCommit isNil ]) ifTrue: [ 
 		[ (Delay forSeconds: 60) wait. 
 		 	LastCommitFound := nil ] fork ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceProxyMCVersionInfo class >> remoteUrl: anUrl packageName: aName commit: aCommit message: aString author: authorString [
 	^ self 
 		remoteUrl: anUrl
@@ -47,11 +49,10 @@ IceProxyMCVersionInfo class >> remoteUrl: anUrl packageName: aName commit: aComm
 			message: aString
 			date: aCommit datetime asDate
 			time: aCommit datetime asTime
-			author: authorString
 			ancestors: #())
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceProxyMCVersionInfo class >> remoteUrl: urlString packageName: nameString commitId: idString [
 	^ self new 
 		remoteUrl: urlString 
@@ -60,7 +61,7 @@ IceProxyMCVersionInfo class >> remoteUrl: urlString packageName: nameString comm
 		stub: nil
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceProxyMCVersionInfo class >> remoteUrl: urlString packageName: nameString commitId: idString stub: aVersionInfo [
 	^ self new 
 		remoteUrl: urlString 
@@ -69,12 +70,7 @@ IceProxyMCVersionInfo class >> remoteUrl: urlString packageName: nameString comm
 		stub: aVersionInfo
 ]
 
-{ #category : #converting }
-IceProxyMCVersionInfo >> asSpotterCandidateLink [
-	^ GTSpotterCandidateLink value: self
-]
-
-{ #category : #'reflective operations' }
+{ #category : 'reflective operations' }
 IceProxyMCVersionInfo >> becomeForward: otherObject copyHash: copyHash [
 	"Primitive. All variables in the entire system that used to point to the receiver now point to the argument.
 	If copyHash is true, the argument's identity hash bits will be set to those of the receiver.
@@ -85,18 +81,18 @@ IceProxyMCVersionInfo >> becomeForward: otherObject copyHash: copyHash [
 		copyHash: copyHash
 ]
 
-{ #category : #'reflective operations' }
+{ #category : 'reflective operations' }
 IceProxyMCVersionInfo >> doesNotUnderstand: aMessage [
 	^ aMessage sendTo: (self findVersionInfo 
 		ifNotNil: [ :versionInfo | self becomeForward: versionInfo copyHash: false ]
 		ifNil: [ self stubVersionInfo ])
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceProxyMCVersionInfo >> findVersionInfo [ 
 	| repo remote commit |
 
-	(self class lastCommitFound notNil 
+	(self class lastCommitFound isNotNil 
 		and: [ self class lastCommitFound id = commitId ])
 		ifTrue: [ 
 			commit := self class lastCommitFound.
@@ -120,46 +116,28 @@ Please fetch from "{1}" and try again.'
 		package: (IcePackage named: packageName repository: repo)
 ]
 
-{ #category : #printing }
-IceProxyMCVersionInfo >> gtDisplayOn: stream [
-	"This offers a means to customize how the object is shown in the inspector"
-	^ self printOn: stream
-]
-
-{ #category : #printing }
-IceProxyMCVersionInfo >> gtDisplayString [
-	"This offers a means to customize how the object is shown in the inspector.
-	Do not override this method. Override gtDisplayOn: instead"
-		
-	| limitedString limit |
-	limit := 1000.
-	limitedString := String streamContents: [:s | self gtDisplayOn: s] limitedTo: limit.
-	limitedString size < limit ifTrue: [^ limitedString].
-	^ limitedString , ' ...'
-]
-
-{ #category : #inspecting }
+{ #category : 'inspecting' }
 IceProxyMCVersionInfo >> inspect [
 	"Create and schedule an Inspector in which the user can examine the receiver's variables."
 	^ Smalltalk tools inspector inspect: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceProxyMCVersionInfo >> lazy [
 	^ self
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceProxyMCVersionInfo >> printOn: aStream [
 	aStream << self class name << '(' << packageName << ')'
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceProxyMCVersionInfo >> printString [
 	^ String streamContents: [ :stream | self printOn: stream ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceProxyMCVersionInfo >> remoteUrl: urlString packageName: nameString commitId: idString stub: aStub [
 	remoteUrl := urlString.
 	packageName := nameString.
@@ -167,7 +145,7 @@ IceProxyMCVersionInfo >> remoteUrl: urlString packageName: nameString commitId: 
 	stubVersionInfo := aStub
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceProxyMCVersionInfo >> stubVersionInfo [ 
 	^ stubVersionInfo ifNil: [ 
 		stubVersionInfo := MCVersionInfo
@@ -176,11 +154,10 @@ IceProxyMCVersionInfo >> stubVersionInfo [
 			message: 'fabricated from a proxy repository'
 			date: nil
 			time: nil
-			author: ''
 			ancestors: #() ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceProxyMCVersionInfo >> stubVersionInfo: aVersionInfo [ 
 	stubVersionInfo := aVersionInfo
 ]

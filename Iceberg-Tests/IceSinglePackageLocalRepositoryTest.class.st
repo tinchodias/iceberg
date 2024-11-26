@@ -1,16 +1,18 @@
 Class {
-	#name : #IceSinglePackageLocalRepositoryTest,
-	#superclass : #IceBornRepositoryTest,
-	#category : 'Iceberg-Tests-Common'
+	#name : 'IceSinglePackageLocalRepositoryTest',
+	#superclass : 'IceBornRepositoryTest',
+	#category : 'Iceberg-Tests-Common',
+	#package : 'Iceberg-Tests',
+	#tag : 'Common'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceSinglePackageLocalRepositoryTest class >> isAbstract [
 
 	^ self == IceSinglePackageLocalRepositoryTest 
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testAddClassInstanceVariableIsExportedInCommit [
 
 	| diff |
@@ -31,12 +33,12 @@ IceSinglePackageLocalRepositoryTest >> testAddClassInstanceVariableIsExportedInC
 	diff := self repository headCommit diffToParent.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
 	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isAddition.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isModification.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testAddClassInstanceVariableIsExportedInCommitSecondVariable [
 
 	| diff |
@@ -69,7 +71,7 @@ IceSinglePackageLocalRepositoryTest >> testAddClassInstanceVariableIsExportedInC
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesChangesContainClassDefinition [
 
 	| diff |
@@ -88,12 +90,12 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesChangesContainCla
 	diff := self repository workingCopyDiff.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
 	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isAddition.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isModification.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesIsExportedInCommit [
 
 	| diff |
@@ -114,12 +116,12 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesIsExportedInCommi
 	diff := self repository headCommit diffToParent.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
 	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isAddition.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isModification.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesIsExportedInCommitSecondVariable [
 
 	| diff |
@@ -152,7 +154,7 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassSideMakesIsExportedInCommi
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsCompositionIsExported [
 
 	| diff |
@@ -163,14 +165,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 	self repository workingCopy
 		createClass: 'IceGeneratedClassForTesting' inPackage: self packageName1 asSymbol with: [ :class | 
 				| composition transformations classSideComposition classSideTransformations| 
-				composition := RG2TraitCompositionDefinition parent: class.
-				transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+				composition := RGTraitComposition parent: class.
+				transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 				class traitComposition: composition.
 				transformations do: [ :each |
 					composition addTransformation: each ].
 			
-				classSideComposition := RG2TraitCompositionDefinition parent: class classSide.
-				classSideTransformations := RG2TraitCompositionVisitor new 
+				classSideComposition := RGTraitComposition parent: class classSide.
+				classSideTransformations := RGTraitCompositionVisitor new 
 					parse: 'T1 classTrait - {#m1}' for: classSideComposition.
 				class classSide traitComposition: classSideComposition.
 				classSideTransformations do: [ :each | 
@@ -180,7 +182,7 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 
 	diff := self repository headCommit diffToParent.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 3.
+	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 4.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isAddition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') 
 					value definition asMCDefinition hasClassTraitComposition.
@@ -190,7 +192,7 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsCompositionIsExportedInSecondCommit [
 
 	| diff |
@@ -201,14 +203,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 	self repository workingCopy
 		createClass: 'IceGeneratedClassForTesting' inPackage: self packageName1 asSymbol with: [ :class | 
 				| composition transformations classSideComposition classSideTransformations| 
-				composition := RG2TraitCompositionDefinition parent: class.
-				transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+				composition := RGTraitComposition parent: class.
+				transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 				class traitComposition: composition.
 				transformations do: [ :each |
 					composition addTransformation: each ].
 			
-				classSideComposition := RG2TraitCompositionDefinition parent: class classSide.
-				classSideTransformations := RG2TraitCompositionVisitor new 
+				classSideComposition := RGTraitComposition parent: class classSide.
+				classSideTransformations := RGTraitCompositionVisitor new 
 					parse: 'T1 classTrait' for: classSideComposition.
 				class classSide traitComposition: classSideComposition.
 				classSideTransformations do: [ :each | 
@@ -219,14 +221,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 	self repository workingCopy
 		createClass: 'IceGeneratedClassForTesting' inPackage: self packageName1 asSymbol with: [ :class | 
 				| composition transformations classSideComposition classSideTransformations| 
-				composition := RG2TraitCompositionDefinition parent: class.
-				transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+				composition := RGTraitComposition parent: class.
+				transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 				class traitComposition: composition.
 				transformations do: [ :each |
 					composition addTransformation: each ].
 			
-				classSideComposition := RG2TraitCompositionDefinition parent: class classSide.
-				classSideTransformations := RG2TraitCompositionVisitor new 
+				classSideComposition := RGTraitComposition parent: class classSide.
+				classSideTransformations := RGTraitCompositionVisitor new 
 					parse: 'T1 classTrait - {#m1}' for: classSideComposition.
 				class classSide traitComposition: classSideComposition.
 				classSideTransformations do: [ :each | 
@@ -247,7 +249,7 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithClassSideTraitsComposi
 
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExportedInCommit [
 
 	| diff |
@@ -258,8 +260,8 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExpor
 	self repository workingCopy
 		createClass: 'IceGeneratedClassForTesting' inPackage: self packageName1 asSymbol with: [ :class | 
 			| composition transformations | 
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 			class traitComposition: composition.
 			transformations do: [ :each |
 				composition addTransformation: each ]
@@ -277,12 +279,12 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExpor
 	diff := self repository headCommit diffToParent.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
 	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isAddition.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isModification.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExportedInCommitSecondVariable [
 
 	| diff |
@@ -293,8 +295,8 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExpor
 	self repository workingCopy
 		createClass: 'IceGeneratedClassForTesting' inPackage: self packageName1 asSymbol with: [ :class | 
 			| composition transformations | 
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 			class traitComposition: composition.
 			transformations do: [ :each |
 				composition addTransformation: each ]
@@ -324,7 +326,7 @@ IceSinglePackageLocalRepositoryTest >> testChangeClassWithTraitsSideMakesIsExpor
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.	
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testChangeTraitWithClassSideTraitsCompositionIsExportedInSecondCommit [
 
 	| diff |
@@ -335,14 +337,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeTraitWithClassSideTraitsComposi
 	self repository workingCopy
 		createTrait: 'T2' inPackage: self packageName1 asSymbol with: [ :class | 
 				| composition transformations classSideComposition classSideTransformations| 
-				composition := RG2TraitCompositionDefinition parent: class.
-				transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+				composition := RGTraitComposition parent: class.
+				transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 				class traitComposition: composition.
 				transformations do: [ :each |
 					composition addTransformation: each ].
 			
-				classSideComposition := RG2TraitCompositionDefinition parent: class classSide.
-				classSideTransformations := RG2TraitCompositionVisitor new 
+				classSideComposition := RGTraitComposition parent: class classSide.
+				classSideTransformations := RGTraitCompositionVisitor new 
 					parse: 'T1 classTrait' for: classSideComposition.
 				class classSide traitComposition: classSideComposition.
 				classSideTransformations do: [ :each | 
@@ -353,14 +355,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeTraitWithClassSideTraitsComposi
 	self repository workingCopy
 		createTrait: 'T2' inPackage: self packageName1 asSymbol with: [ :class | 
 				| composition transformations classSideComposition classSideTransformations| 
-				composition := RG2TraitCompositionDefinition parent: class.
-				transformations := RG2TraitCompositionVisitor new parse: 'T1' for: composition.
+				composition := RGTraitComposition parent: class.
+				transformations := RGTraitCompositionVisitor new parse: 'T1' for: composition.
 				class traitComposition: composition.
 				transformations do: [ :each |
 					composition addTransformation: each ].
 			
-				classSideComposition := RG2TraitCompositionDefinition parent: class classSide.
-				classSideTransformations := RG2TraitCompositionVisitor new 
+				classSideComposition := RGTraitComposition parent: class classSide.
+				classSideTransformations := RGTraitCompositionVisitor new 
 					parse: 'T1 classTrait - {#m1}' for: classSideComposition.
 				class classSide traitComposition: classSideComposition.
 				classSideTransformations do: [ :each | 
@@ -379,14 +381,14 @@ IceSinglePackageLocalRepositoryTest >> testChangeTraitWithClassSideTraitsComposi
 
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutBranchDoesNotLeaveDetachedHead [
 
 	self repository branch checkout.
 	self deny: self repository head isDetached
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutBranchInstallsCodeInImage [
 
 	| message |
@@ -407,42 +409,42 @@ IceSinglePackageLocalRepositoryTest >> testCheckoutBranchInstallsCodeInImage [
 	self assertPackageExists: self packageName1.
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutBranchInstallsPackageInImage [
 
 	self repository branch checkout.
 	self assertPackageExists: self packageName1
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutCodeRepositoryInstallsCodeInImage [
 
 	| message |
 	message := 'Added IceGeneratedClassForTesting'.
-	
+
 	"This is a Ring working copy"
 	self repository workingCopy
-		createClass: 'IceGeneratedClassForTesting' 
+		createClass: 'IceGeneratedClassForTesting'
 		inPackage: self packageName1 asSymbol.
-	
+
 	self repository commitWithMessage: message.
-	
+
 	self repository unload.
-	self deny: (RPackageOrganizer default includesPackageNamed: self packageName1).
-	
+	self deny: (PackageOrganizer default hasPackage: self packageName1).
+
 	self repository head checkoutAllPackages.
 	self assertClassExists: #IceGeneratedClassForTesting.
-	self assertPackageExists: self packageName1.
+	self assertPackageExists: self packageName1
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutCodeRepositoryInstallsPackageInImage [
 
 	self repository checkoutAllPackages.
 	self assertPackageExists: self packageName1
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutCommitInstallsCodeInImage [
 
 	| message |
@@ -450,34 +452,34 @@ IceSinglePackageLocalRepositoryTest >> testCheckoutCommitInstallsCodeInImage [
 
 	"This is a Ring working copy"
 	self repository workingCopy
-		createClass: 'IceGeneratedClassForTesting' 
+		createClass: 'IceGeneratedClassForTesting'
 		inPackage: self packageName1 asSymbol.
 
 	self repository commitWithMessage: message.
-	
+
 	self repository unload.
-	self deny: (RPackageOrganizer default includesPackageNamed: self packageName1).
-	
+	self deny: (PackageOrganizer default hasPackage: self packageName1).
+
 	self repository branch commit checkoutAllPackages.
 	self assertClassExists: #IceGeneratedClassForTesting.
-	self assertPackageExists: self packageName1.
+	self assertPackageExists: self packageName1
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutCommitInstallsPackageInImage [
 
 	self repository branch commit checkout.
 	self assertPackageExists: self packageName1.
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutLatestBranchCommitLeavesDetachedHead [
 
 	self repository branch commit checkout.
 	self assert: self repository head isDetached.
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutOlderCommitLeavesRepositoryInDetachedMode [
 
 	| message |
@@ -502,14 +504,14 @@ IceSinglePackageLocalRepositoryTest >> testCheckoutOlderCommitLeavesRepositoryIn
 	self assert: self repository head isDetached
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testCheckoutRepositoryDoesNotLeaveDetachedHead [
 
 	self repository checkoutAllPackages.
 	self deny: self repository head isDetached
 ]
 
-{ #category : #'tests-commit' }
+{ #category : 'tests-commit' }
 IceSinglePackageLocalRepositoryTest >> testCommitModificationsCreatesNewCommit [
 
 	| message |
@@ -526,7 +528,7 @@ IceSinglePackageLocalRepositoryTest >> testCommitModificationsCreatesNewCommit [
 	self deny: self repository workingCopy isDetached.
 ]
 
-{ #category : #'tests-commit' }
+{ #category : 'tests-commit' }
 IceSinglePackageLocalRepositoryTest >> testCommitModificationsDoNotCreateBranch [
 
 	| message |
@@ -543,7 +545,7 @@ IceSinglePackageLocalRepositoryTest >> testCommitModificationsDoNotCreateBranch 
 	self deny: self repository workingCopy isDetached.
 ]
 
-{ #category : #'tests-commit' }
+{ #category : 'tests-commit' }
 IceSinglePackageLocalRepositoryTest >> testCommitWithDetachedHeadRaisesException [
 
 	| message |
@@ -559,7 +561,7 @@ IceSinglePackageLocalRepositoryTest >> testCommitWithDetachedHeadRaisesException
 	self should: [self repository commitWithMessage: message] raise: IceWorkingCopyDesyncronized.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesChangesContainClassDefinition [
 
 	| diff |
@@ -570,13 +572,13 @@ IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesChangesContain
 
 	diff := self repository workingCopyDiff.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1 "Class and Metaclass".
+	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 2 "Class and Metaclass".
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting') value isAddition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting') value definition name equals: #IceGeneratedClassForTesting.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesChangesNonEmpty [
 
 	"This is a Ring working copy"
@@ -586,7 +588,7 @@ IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesChangesNonEmpt
 	self deny: self repository workingCopyDiff isEmpty
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesRespositoryModifications [
 
 	"This is a Ring working copy"
@@ -596,7 +598,7 @@ IceSinglePackageLocalRepositoryTest >> testCreateClassInImageMakesRespositoryMod
 	self assert: self repository isModified
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testCreateClassWithClassInstanceVariableInImageMakesChangesContainClassAndMetaclassDefinition [
 
 	| diff |
@@ -614,7 +616,7 @@ IceSinglePackageLocalRepositoryTest >> testCreateClassWithClassInstanceVariableI
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting') value definition name equals: #IceGeneratedClassForTesting.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testCreateExtensionMethodMakesExtensionMethodAsAddition [
 
 	| diff |
@@ -634,13 +636,13 @@ IceSinglePackageLocalRepositoryTest >> testCreateExtensionMethodMakesExtensionMe
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'ToBeExtended' / 'method') value definition isMethodDefinition.
 ]
 
-{ #category : #'tests-queries' }
+{ #category : 'tests-queries' }
 IceSinglePackageLocalRepositoryTest >> testCurrentBranchIsDefaultMasterBranch [
 
 	self assert: self repository branch name equals: 'master'
 ]
 
-{ #category : #'tests-commit' }
+{ #category : 'tests-commit' }
 IceSinglePackageLocalRepositoryTest >> testDetachedHeadCannotCommit [
 
 	self repository branch commit checkout.
@@ -648,7 +650,7 @@ IceSinglePackageLocalRepositoryTest >> testDetachedHeadCannotCommit [
 	self should: [self repository validateCanCommit] raise: IceWorkingCopyDesyncronized.
 ]
 
-{ #category : #'tests-queries' }
+{ #category : 'tests-queries' }
 IceSinglePackageLocalRepositoryTest >> testListBranchCommitsListsCommitsInBranch [
 
 	| branches commits |
@@ -659,16 +661,7 @@ IceSinglePackageLocalRepositoryTest >> testListBranchCommitsListsCommitsInBranch
 	self assert: commits first comment equals: 'Initial commit'.
 ]
 
-{ #category : #'tests-queries' }
-IceSinglePackageLocalRepositoryTest >> testListBranchesListsExistingBranches [
-
-	| branches |
-	branches := self repository allBranches.
-	self assert: branches size equals: 1.
-	self assert: branches first name equals: 'master'
-]
-
-{ #category : #'tests-queries' }
+{ #category : 'tests-queries' }
 IceSinglePackageLocalRepositoryTest >> testListPackagesListExistingPackage [
 
 	| packages |
@@ -677,19 +670,19 @@ IceSinglePackageLocalRepositoryTest >> testListPackagesListExistingPackage [
 	self assert: packages first equals: self packageName1
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testNoChangesInImageMakesChangesEmpty [
 
 	self assert: self repository workingCopyDiff isEmpty
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testNoChangesInImageMakesNoModifications [
 
 	self deny: self repository isModified
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testRemoveClassInstanceVariableIsExportedInCommit [
 
 	| diff |
@@ -717,12 +710,12 @@ IceSinglePackageLocalRepositoryTest >> testRemoveClassInstanceVariableIsExported
 	diff := self repository headCommit diffToParent.
 	self assert: diff codeSubdirectoryNode children size equals: 1.
 	self assert: (diff codeSubdirectoryNode / self packageName1) children size equals: 1.
-	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isRemoval.
+	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value isModification.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition isClassDefinition.
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class') value definition name equals: #'IceGeneratedClassForTesting class'.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testRemoveClassWithClassMethodIsExportedInCommit [
 
 	| diff |
@@ -749,7 +742,7 @@ IceSinglePackageLocalRepositoryTest >> testRemoveClassWithClassMethodIsExportedI
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'IceGeneratedClassForTesting class' / 'foo') value isRemoval.
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testRemoveExtensionMethodDoesNotRemoveExtendedClass [
 
 	| commitWithExtension commitWithoutExtension |
@@ -777,7 +770,7 @@ IceSinglePackageLocalRepositoryTest >> testRemoveExtensionMethodDoesNotRemoveExt
 	self assertClassExists: #ToBeExtended
 ]
 
-{ #category : #'tests-changes' }
+{ #category : 'tests-changes' }
 IceSinglePackageLocalRepositoryTest >> testRemoveExtensionMethodMakesExtensionRemoval [
 
 	| diff |
@@ -805,7 +798,7 @@ IceSinglePackageLocalRepositoryTest >> testRemoveExtensionMethodMakesExtensionRe
 	self assert: (diff codeSubdirectoryNode / self packageName1 / 'ToBeExtended' / 'method') value definition isMethodDefinition.
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testRemovePackageRemovesIt [
 
 	| package |
@@ -815,7 +808,7 @@ IceSinglePackageLocalRepositoryTest >> testRemovePackageRemovesIt [
 	self assert: (self repository workingCopyDiff codeSubdirectoryNode / self packageName1) value isRemoval
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassAddition [
 
 	| className |
@@ -831,7 +824,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassAddition [
 	self denyClassExists: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassRemoval [
 
 	| className |
@@ -852,7 +845,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassRemoval [
 	self assertClassExists: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassSlotModification [
 
 	| className class |
@@ -878,7 +871,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsClassSlotModification
 		environment ask behaviorNamed: className) instVarNames includes: #slot).
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodAddition [
 
 	| className |
@@ -899,7 +892,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodAddition [
 	self denyMethodExists: 'method' inClass: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodModification [
 
 	| className |
@@ -929,7 +922,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodModification [
 		equals: 'method'
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodRemoval [
 
 	| className |
@@ -953,7 +946,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertAllRevertsMethodRemoval [
 	self assertMethodExists: 'method' inClass: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassAddition [
 
 	| className |
@@ -969,7 +962,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassAdd
 	self denyClassExists: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassRemoval [
 
 	| className |
@@ -990,7 +983,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassRem
 	self assertClassExists: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassSlotModification [
 
 	| className class |
@@ -1016,7 +1009,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsClassSlo
 		environment ask behaviorNamed: className) instVarNames includes: #slot).
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodAddition [
 
 	| className |
@@ -1037,7 +1030,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodAd
 	self denyMethodExists: 'method' inClass: className.
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodModification [
 
 	| className |
@@ -1067,7 +1060,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodMo
 		equals: 'method'
 ]
 
-{ #category : #'tests-revert' }
+{ #category : 'tests-revert' }
 IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodRemoval [
 
 	| className |
@@ -1091,7 +1084,7 @@ IceSinglePackageLocalRepositoryTest >> testRevertSingleDefinitionRevertsMethodRe
 	self assertMethodExists: 'method' inClass: className.
 ]
 
-{ #category : #'tests-checkout' }
+{ #category : 'tests-checkout' }
 IceSinglePackageLocalRepositoryTest >> testUnloadDoesNotRemovePackage [
 
 	| package |

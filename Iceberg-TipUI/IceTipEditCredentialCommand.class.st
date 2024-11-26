@@ -4,51 +4,45 @@ I colaborate with the credential to know the specific class of the dialog model.
 Check #editModelClass in IceSshCredentials and IcePlaintextCredentials
 "
 Class {
-	#name : #IceTipEditCredentialCommand,
-	#superclass : #IceTipAbstractCredentialCommand,
-	#category : #'Iceberg-TipUI-Credentials'
+	#name : 'IceTipEditCredentialCommand',
+	#superclass : 'IceTipAbstractCredentialCommand',
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #accessing }
-IceTipEditCredentialCommand class >> browserShortcutActivation [
-	<classAnnotation>
-
-	^ CmdShortcutActivation by: $e meta for: IceTipCredentialContext
-]
-
-{ #category : #accessing }
-IceTipEditCredentialCommand class >> credentialsBrowserActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 20 for: IceTipCredentialContext
-
-]
-
-{ #category : #accessing }
-IceTipEditCredentialCommand class >> defaultHelp [
+{ #category : 'accessing - defaults' }
+IceTipEditCredentialCommand class >> defaultDescription [
 
 	^ 'Edits the credential from the store'
 ]
 
-{ #category : #accessing }
-IceTipEditCredentialCommand class >> defaultMenuIconName [
-
-	^ #edit
-]
-
-{ #category : #accessing }
-IceTipEditCredentialCommand class >> defaultMenuItemName [
+{ #category : 'accessing - defaults' }
+IceTipEditCredentialCommand class >> defaultName [
 
 	^ 'Edit'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipEditCredentialCommand >> execute [
 
-	credential editModelClass new
-		credentials: credential;
-		credentialStore: store;
-		tool: tool;
-		openNonModal.
+	((self item editModelClass newApplication: context application)
+		credentials: self item;
+		credentialStore: self store;
+		tool: self tool;
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipEditCredentialCommand >> iconName [
+
+	^ #edit
+]
+
+{ #category : 'accessing' }
+IceTipEditCredentialCommand >> shortcutKey [
+
+	^ $e meta
 ]

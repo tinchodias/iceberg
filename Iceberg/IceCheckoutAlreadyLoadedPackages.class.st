@@ -6,21 +6,29 @@ This strategy is still dangerous bacause packages installed may be incorrectly i
 
 "
 Class {
-	#name : #IceCheckoutAlreadyLoadedPackages,
-	#superclass : #IceCheckoutStrategy,
-	#category : 'Iceberg-Core'
+	#name : 'IceCheckoutAlreadyLoadedPackages',
+	#superclass : 'IceCheckoutStrategy',
+	#category : 'Iceberg-Core',
+	#package : 'Iceberg',
+	#tag : 'Core'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceCheckoutAlreadyLoadedPackages class >> order [
 	^ 10
 ]
 
-{ #category : #checkout }
+{ #category : 'checkout' }
 IceCheckoutAlreadyLoadedPackages >> checkoutOn: anIceWorkingCopy [ 
 	
 	anIceWorkingCopy loadChangesInWorkingCopy: self diff.
 	self repository setHead: committish.
 	anIceWorkingCopy referenceCommit: committish commit.
 	anIceWorkingCopy markAllPackagesAsClean.
+]
+
+{ #category : 'testing' }
+IceCheckoutAlreadyLoadedPackages >> isLoadAlreadyLoadedStrategy [
+	
+	^ true
 ]

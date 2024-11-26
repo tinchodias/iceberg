@@ -2,44 +2,30 @@
 I add a new IceSshCredentials to the store
 "
 Class {
-	#name : #IceTipAddSshCredentialCommand,
-	#superclass : #IceTipAbstractCredentialStoreCommand,
-	#category : #'Iceberg-TipUI-Credentials'
+	#name : 'IceTipAddSshCredentialCommand',
+	#superclass : 'IceTipAbstractCredentialStoreCommand',
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #activation }
-IceTipAddSshCredentialCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipCredentialsStoreContext
-		order: 100
-]
-
-{ #category : #accessing }
-IceTipAddSshCredentialCommand class >> defaultHelp [
+{ #category : 'accessing - defaults' }
+IceTipAddSshCredentialCommand class >> defaultDescription [
 	^ 'Add a SSH pair of credential'
 ]
 
-{ #category : #accessing }
-IceTipAddSshCredentialCommand class >> defaultMenuIconName [
-	^ #add
-]
-
-{ #category : #accessing }
-IceTipAddSshCredentialCommand class >> defaultMenuItemName [
+{ #category : 'accessing - defaults' }
+IceTipAddSshCredentialCommand class >> defaultName [
 	^ 'SSH Pair'
 ]
 
-{ #category : #accessing }
-IceTipAddSshCredentialCommand class >> defaultPosition [
-	^ #right
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipAddSshCredentialCommand >> execute [
-	IceTipAddSSHCredentialsModel new
-		credentialStore: store;
-		tool: tool;
-		openNonModal.
+
+	((IceTipAddSSHCredentialsPresenter newApplication: context application)
+		credentialStore: self store;
+		tool: self tool;
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
 ]

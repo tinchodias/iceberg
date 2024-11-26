@@ -1,64 +1,79 @@
 Class {
-	#name : #IceTipCheckoutModel,
-	#superclass : #IceTipDiffPreviewModel,
+	#name : 'IceTipCheckoutModel',
+	#superclass : 'IceTipDiffPreviewModel',
 	#instVars : [
 		'checkoutStrategy',
 		'checkoutStrategies'
 	],
-	#category : #'Iceberg-TipUI-Model'
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCheckoutModel >> calculateDiff [
 
 	^ commitish entity diffTo: self repository workingCopy
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipCheckoutModel >> checkout [
 
 	checkoutStrategy
 		committish: self commitish;
-		diff: diffModel entity.
+		diff: self diff entity.
 
 	self commitish checkout: checkoutStrategy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCheckoutModel >> checkoutStrategies [
 	
 	^ checkoutStrategies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCheckoutModel >> checkoutStrategy [
 	
 	^ checkoutStrategy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCheckoutModel >> checkoutStrategy: aStrategy [
 	checkoutStrategy := aStrategy
 ]
 
-{ #category : #actions }
-IceTipCheckoutModel >> executeCheckoutActionAndThen: aBlock [ 
+{ #category : 'testing' }
+IceTipCheckoutModel >> hasNewPackages [
 	
-	<noCache>
-	IceTipStandardAction new 
-		repository: self repository;
-		message: ('Checking out {1} from {2}' format: { self targetName. self repositoryName });
-		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self checkout ]
+	^ diffModel tree anySatisfy:[ :aNode | aNode isAddition and: [ aNode definition isPackageDefinition]]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipCheckoutModel >> initialize [
 
 	super initialize.
-	checkoutStrategies := (IceCheckoutStrategy allSubclasses 
-		sorted: [ :a :b | a order < b order ])
-		collect: #new.
+	checkoutStrategies := IceCheckoutStrategy allStrategies.
 	checkoutStrategy := checkoutStrategies first.
+]
+
+{ #category : 'actions' }
+IceTipCheckoutModel >> newCheckoutAction [ 
+
+	^ IceTipStandardAction new 
+		repository: self repository;
+		message: ('Checking out {1} from {2}' format: { self targetName. self repositoryName });
+		onSuccessRepositoryModified;
+		action: [ self checkout ];
+		yourself
+]
+
+{ #category : 'accessing' }
+IceTipCheckoutModel >> newPackages [
+
+	| packageNodes |
+	packageNodes := diffModel tree allChildren select: [ :aNode | 
+		  aNode value isAddition and: [ aNode definition value isPackageDefinition ] ].
+	
+	^ packageNodes collect: [ :aNode | aNode value definition ]
 ]

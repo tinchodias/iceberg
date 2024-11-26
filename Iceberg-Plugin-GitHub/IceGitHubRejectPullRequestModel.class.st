@@ -2,128 +2,124 @@
 I'm a dialog to collect data about a pull request rejection.
 "
 Class {
-	#name : #IceGitHubRejectPullRequestModel,
-	#superclass : #SpPresenter,
+	#name : 'IceGitHubRejectPullRequestModel',
+	#superclass : 'IceTipPresenter',
 	#instVars : [
 		'messageLabel',
 		'messageText',
 		'acceptButton',
 		'acceptBlock'
 	],
-	#category : #'Iceberg-Plugin-GitHub-View'
+	#category : 'Iceberg-Plugin-GitHub-View',
+	#package : 'Iceberg-Plugin-GitHub',
+	#tag : 'View'
 }
 
-{ #category : #accessing }
-IceGitHubRejectPullRequestModel class >> availableTypes [
-	^ #('merge' 'squash' 'rebase')
+{ #category : 'actions' }
+IceGitHubRejectPullRequestModel >> accept [
+
+	acceptBlock ifNotNil: [ acceptBlock cull: self ].
+
+	self closeWindow
 ]
 
-{ #category : #specs }
-IceGitHubRejectPullRequestModel class >> defaultSpec [
-	<spec>
-	^ SpBoxLayout newVertical
-		add:
-			(SpBoxLayout newHorizontal
-				add: #messageLabel
-					withConstraints:
-						[ :constraints | constraints width: 80 currentWorld displayScaleFactor ];
-				add: #messageText;
-				yourself);
-		add: #acceptButton
-			withConstraints:
-			[ :constraints | "		newColumn: [ :col | 
-			col
-				newRow: [ :row | 
-					row
-						add: #messageLabel width: 80 * World displayScaleFactor;
-						add: #messageText ];
-				add: #acceptButton height: self buttonHeight ];
-" constraints height: self buttonHeight ]
-				yourself
+{ #category : 'accessing - ui' }
+IceGitHubRejectPullRequestModel >> acceptButton [
+
+	^ acceptButton
 ]
 
-{ #category : #accessing }
-IceGitHubRejectPullRequestModel class >> defaultType [
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestModel >> availableTypes [
+
+	^ #( 'merge' 'squash' 'rebase' )
+]
+
+{ #category : 'layout' }
+IceGitHubRejectPullRequestModel >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		borderWidth: 5;
+		spacing: 5;
+		add: messageLabel expand: false;
+		add: messageText;
+		yourself
+]
+
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestModel >> defaultType [
+
 	^ 'merge'
 ]
 
-{ #category : #accessing }
-IceGitHubRejectPullRequestModel class >> messageGhostText [
+{ #category : 'api' }
+IceGitHubRejectPullRequestModel >> initialExtentForWindow [
+
+	^ (500 @ 250) scaledByDisplayScaleFactor
+]
+
+{ #category : 'initialization' }
+IceGitHubRejectPullRequestModel >> initializeDialogWindow: aDialogWindowPresenter [
+
+	aDialogWindowPresenter
+		addButton: 'Cancel' do: [ :presenter | 
+			presenter triggerCancelAction.
+			presenter close ];
+		addDefaultButton: 'Reject' do: [ :presenter | 
+			presenter triggerOkAction.
+			presenter close ]
+]
+
+{ #category : 'initialization' }
+IceGitHubRejectPullRequestModel >> initializePresenters [
+
+	super initializePresenters.
+	messageLabel := self newLabel.
+	messageText := self newText autoAccept: true.
+	acceptButton := self newButton.
+
+	messageLabel label: 'Comment'.
+	messageText placeholder: self messageGhostText.
+	acceptButton
+		label: 'Reject pull request';
+		action: [ self accept ].
+
+]
+
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestModel >> message [
+
+	^ self messageText text asString
+]
+
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestModel >> messageGhostText [
+
 	^ 'Commit title
 
 Add an optional extented description'
 ]
 
-{ #category : #specs }
-IceGitHubRejectPullRequestModel class >> title [
-	^ 'Accept pull request'
-]
-
-{ #category : #actions }
-IceGitHubRejectPullRequestModel >> accept [
-	acceptBlock ifNotNil: [ 
-		acceptBlock cull: self ].
-	
-	self window delete
-]
-
-{ #category : #'accessing ui' }
-IceGitHubRejectPullRequestModel >> acceptButton [
-	^ acceptButton
-]
-
-{ #category : #'accessing ui' }
-IceGitHubRejectPullRequestModel >> acceptButton: anObject [
-	acceptButton := anObject
-]
-
-{ #category : #api }
-IceGitHubRejectPullRequestModel >> initialExtent [
-	^ (500@250) scaledByDisplayScaleFactor
-]
-
-{ #category : #initialization }
-IceGitHubRejectPullRequestModel >> initializeWidgets [
-	messageLabel := self newLabel.
-	messageText := self newText autoAccept: true.
-	acceptButton := self newButton.
-		
-	messageLabel label: 'Comment'.
-	messageText 	whenBuiltDo: [ :this | this widget withGhostText: self class messageGhostText ].
-	acceptButton label: 'Reject pull request'.
-	acceptButton action: [ self accept ].
-	
-	self focusOrder 
-		add: messageText;
-		add: acceptButton
-]
-
-{ #category : #accessing }
-IceGitHubRejectPullRequestModel >> message [
-	^ self messageText text asString
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceGitHubRejectPullRequestModel >> messageLabel [
+
 	^ messageLabel
 ]
 
-{ #category : #'accessing ui' }
-IceGitHubRejectPullRequestModel >> messageLabel: anObject [
-	messageLabel := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceGitHubRejectPullRequestModel >> messageText [
+
 	^ messageText
 ]
 
-{ #category : #'accessing ui' }
-IceGitHubRejectPullRequestModel >> messageText: anObject [
-	messageText := anObject
+{ #category : 'events' }
+IceGitHubRejectPullRequestModel >> onAccept: aBlock [
+
+	acceptBlock := aBlock
 ]
 
-{ #category : #events }
-IceGitHubRejectPullRequestModel >> onAccept: aBlock [
-	acceptBlock := aBlock
+{ #category : 'specs' }
+IceGitHubRejectPullRequestModel >> titleForWindow [
+
+	^ 'Reject pull request'
 ]

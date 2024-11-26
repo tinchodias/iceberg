@@ -4,30 +4,25 @@ A remote repository created out of a git  url, such as 'git://localhost/owner/re
 
 "
 Class {
-	#name : #IceGitSshRemote,
-	#superclass : #IceGitNetworkRemote,
-	#category : #'Iceberg-Libgit-Core'
+	#name : 'IceGitSshRemote',
+	#superclass : 'IceGitNetworkRemote',
+	#category : 'Iceberg-Libgit-Core',
+	#package : 'Iceberg-Libgit',
+	#tag : 'Core'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceGitSshRemote class >> canHandleUrl: aRepositoryUrl [
 	^ aRepositoryUrl beginsWith: 'git://'
 ]
 
-{ #category : #defaults }
+{ #category : 'accessing - defaults' }
 IceGitSshRemote class >> defaultPort [
 	^9418
 ]
 
-{ #category : #'private - patches' }
+{ #category : 'private - patches' }
 IceGitSshRemote >> httpsUrl [
 	^ 'https://{1}/{2}.git' format: { self host . self projectPath }
 
-]
-
-{ #category : #testing }
-IceGitSshRemote >> referencesSameRemoteLocationAs: aRemote [
-	^ ((super referencesSameRemoteLocationAs: aRemote)
-		or: [ self httpsUrl sameAs: aRemote httpsUrl ])
-			
 ]

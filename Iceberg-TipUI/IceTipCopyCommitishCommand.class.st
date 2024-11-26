@@ -2,60 +2,39 @@
 Command that copies the selected entity short commit ID to the clipboard
 "
 Class {
-	#name : #IceTipCopyCommitishCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'item'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCopyCommitishCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipCopyCommitishCommand class >> browserHistoryContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byRootGroupItemOrder: 20
-		for: IceTipHistoryContext
-]
+{ #category : 'accessing - defaults' }
+IceTipCopyCommitishCommand class >> defaultDescription [
 
-{ #category : #activation }
-IceTipCopyCommitishCommand class >> browserRepositoryListActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byItemOf: CmdExtraMenuGroup
-		order: 10000
-		for: IceTipRepositoryListContext
-]
-
-{ #category : #testing }
-IceTipCopyCommitishCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext item commitId isNotNil
-]
-
-{ #category : #accessing }
-IceTipCopyCommitishCommand class >> defaultHelp [
 	^ 'Copy the selected short commit ID (7 characters long) to the clipboard'
 ]
 
-{ #category : #accessing }
-IceTipCopyCommitishCommand class >> defaultMenuIconName [
-	^ #book
-]
+{ #category : 'accessing - defaults' }
+IceTipCopyCommitishCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipCopyCommitishCommand class >> defaultMenuItemName [
 	^ 'Copy commitish ID'
 ]
 
-{ #category : #execution }
-IceTipCopyCommitishCommand >> execute [
-	item copyCommitIDToClipboard.
+{ #category : 'testing' }
+IceTipCopyCommitishCommand >> canBeExecuted [
+
+	^ self hasSelectedItem and: [ self item commitId isNotNil ]
 ]
 
-{ #category : #execution }
-IceTipCopyCommitishCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	item := aToolContext item
+{ #category : 'executing' }
+IceTipCopyCommitishCommand >> execute [
+
+	self item copyCommitIDToClipboard
+]
+
+{ #category : 'accessing' }
+IceTipCopyCommitishCommand >> iconName [
+
+	^ #book
 ]

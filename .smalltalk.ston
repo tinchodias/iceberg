@@ -7,16 +7,10 @@ SmalltalkCISpec {
       #baseline : 'Iceberg',
       #platforms : [ #pharo ],
       #ignoreImage : true,
-      #load : [ 'default' ],
       #onConflict : #useIncoming,
       #onUpgrade : #useIncoming,
       #onWarningLog : true,
       #load : [ 'development' ]
      }
-  ],
-  #testing : {
-     #exclude : {
-        #packages : [ 'Iceberg-Tests-MetacelloIntegration' ]
-    }
-  }
+  ]
 }

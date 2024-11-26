@@ -2,28 +2,30 @@
 Adapter to produce an MCVersionInfo that knows how to (lazily) load ancestors from an Iceberg repository.
 "
 Class {
-	#name : #IceMCVersionInfo,
-	#superclass : #MCLazyVersionInfo,
+	#name : 'IceMCVersionInfo',
+	#superclass : 'MCLazyVersionInfo',
 	#instVars : [
 		'commit',
 		'package'
 	],
-	#category : #'Iceberg-Adapters'
+	#category : 'Iceberg-Adapters',
+	#package : 'Iceberg',
+	#tag : 'Adapters'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceMCVersionInfo class >> package: package message: commitMessage [
 	^ self new fromPackage: package message: commitMessage
 
 ]
 
-{ #category : #utilities }
-IceMCVersionInfo class >> uuidFromCommit: aCommit package: aPackage [.
+{ #category : 'utilities' }
+IceMCVersionInfo class >> uuidFromCommit: aCommit package: aPackage [
 	^ self uuidFromSHA: (SHA1 new hashStream: (ReadStream on: aCommit id, aPackage name))
 
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 IceMCVersionInfo class >> uuidFromSHA: cid [
 	"Return an adequate uuid from a git commit ID. Copied from GitFileTree."
 
@@ -35,42 +37,40 @@ IceMCVersionInfo class >> uuidFromSHA: cid [
 			uuid ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceMCVersionInfo >> = anotherIceMCVersionInfo [
 
 	^ super = anotherIceMCVersionInfo
 		and: [ package name = anotherIceMCVersionInfo package name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceMCVersionInfo >> commit [
 	^ commit
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceMCVersionInfo >> fromCommit: aCommit package: aPackage [
 	"This method can be used for first initializing a version info or to update a partially initialized version info."
 	"See #fromPackage:message:"
 	commit := aCommit.
 	package := aPackage.
-	
+
    	date := commit datetime asDate.
    	time := commit datetime asTime.
-	
+
 	name := ('{1}-{2}.{3}' format: {
 		package name. 
 		commit compatibleUsername. 
 		commit datetime asUnixTime 
 	}).
-	
+
 	id := self class uuidFromCommit: aCommit package: aPackage.
 
-   	message := commit comment.
-   	author := commit compatibleUsername
-
+   	message := commit comment
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceMCVersionInfo >> fromPackage: aPackage message: commitMessage [
 	"This creates a partial version info. Full version info can not be created until we commit into a repository, 
 	but current fileout tools require it, so we first create an incomplete info and after committing it will be completed
@@ -78,37 +78,37 @@ IceMCVersionInfo >> fromPackage: aPackage message: commitMessage [
 	
 	To improve this implementation we should review the fileout process."
 
-	name := ('{1}-{2}.{3}' format: {aPackage name. Author fullName. 'unknown'}).
+	name := ('{1}-{2}.{3}' format: {aPackage name. 'CompatibleUserName'. 'unknown'}).
 	package := aPackage.
 	message := commitMessage.
 	id := UUID new
 
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceMCVersionInfo >> hash [
 
 	^ super hash << 10 + package hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceMCVersionInfo >> iceVersion [
 	^ commit versionFor: package
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceMCVersionInfo >> initialize [
 	super initialize.
 	date := Date today.
 	time := Time now
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceMCVersionInfo >> loadAncestorsAndStepChildren [
 	self shouldBeImplemented 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceMCVersionInfo >> package [
 	^ package
 ]

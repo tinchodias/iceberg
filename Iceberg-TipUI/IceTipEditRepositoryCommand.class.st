@@ -2,41 +2,45 @@
 Command that opens a dialog to edit a repository meta-data
 "
 Class {
-	#name : #IceTipEditRepositoryCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipEditRepositoryCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipEditRepositoryCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 8000
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipEditRepositoryCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipEditRepositoryCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational
-]
-
-{ #category : #accessing }
-IceTipEditRepositoryCommand class >> defaultHelp [
 	^ 'Edit repository data'
 ]
 
-{ #category : #accessing }
-IceTipEditRepositoryCommand class >> defaultMenuIconName [
-	^ #edit
-]
+{ #category : 'accessing - defaults' }
+IceTipEditRepositoryCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipEditRepositoryCommand class >> defaultMenuItemName [
 	^ 'Edit...'
 ]
 
-{ #category : #execution }
+{ #category : 'testing' }
+IceTipEditRepositoryCommand >> canBeExecuted [
+
+	^ super canBeExecuted and: [ self isRepositoryOperational ]
+]
+
+{ #category : 'executing' }
 IceTipEditRepositoryCommand >> execute [
-	self repositoryModel edit
+
+	self flag: #TODO. "Demeter's law"
+	((IceTipEditProjectDialogPresenter 
+		newApplication: context application 
+		model: self repositoryModel entity project) 
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipEditRepositoryCommand >> iconName [
+
+	^ #edit
 ]

@@ -6,18 +6,20 @@ My contents is the class definition code.
 See my superclasses for more information.
 "
 Class {
-	#name : #IceClassDefinition,
-	#superclass : #IceMethodContainerDefinition,
-	#category : #'Iceberg-Changes'
+	#name : 'IceClassDefinition',
+	#superclass : 'IceMethodContainerDefinition',
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceClassDefinition >> accept: aVisitor [ 
 	
 	^ aVisitor visitClassDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceClassDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 	
 	"Let the original MCClassDefinition intact, and give the responsability to modify it to the IceContainedDefinitions."
@@ -33,13 +35,13 @@ IceClassDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatche
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceClassDefinition >> addToPatcher: aMCPatcher [ 
 	
 	aMCPatcher addDefinition: self asMCDefinition "copyWithoutVariables" "Variables will be added by IceVariableDefinitions"
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceClassDefinition >> allPropertyNames [
 	"Answer the names of the IcePropertyDefinition objects that are owned by this definition.
 	
@@ -50,47 +52,31 @@ IceClassDefinition >> allPropertyNames [
 	     #classTraitComposition )
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 IceClassDefinition >> asMCDefinitionWithoutMetaSide [
 	
-	^ MCClassDefinition
-		name: mcDefinition className
-		superclassName: mcDefinition superclassName
-		traitComposition: mcDefinition traitCompositionString
-		classTraitComposition: mcDefinition classTraitCompositionString
-		category: mcDefinition category
-		instVarNames: mcDefinition instanceVariablesString
-		classVarNames: mcDefinition classVariablesString
-		poolDictionaryNames: mcDefinition poolDictionaries
-		classInstVarNames: #()
-		type: mcDefinition type
-		comment: mcDefinition comment
-		commentStamp: mcDefinition commentStamp
+	^ mcDefinition deepCopy removeMetaSideVariables
+
 ]
 
-{ #category : #accessing }
-IceClassDefinition >> basicName [
-	^ name
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceClassDefinition >> contents [
 	mcDefinition ifNil: [ ^'' ].
 	^ mcDefinition fullDefinitionString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceClassDefinition >> isClassDefinition [
 	
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceClassDefinition >> isLowImpactAppliedTo: anIceClassDefinition [ 
 	^ mcDefinition isEqualIgnoringCommentTo: anIceClassDefinition mcDefinition 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceClassDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	aMCPatcher removeDefinition: self asMCDefinition 

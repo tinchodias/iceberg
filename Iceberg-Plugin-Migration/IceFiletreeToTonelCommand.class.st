@@ -4,39 +4,34 @@ I will be active in repository list browser, when repository is in filetree form
 
 "
 Class {
-	#name : #IceFiletreeToTonelCommand,
-	#superclass : #IceTipCommand,
-	#category : 'Iceberg-Plugin-Migration'
+	#name : 'IceFiletreeToTonelCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-Plugin-Migration-Commands',
+	#package : 'Iceberg-Plugin-Migration',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceFiletreeToTonelCommand class >> browserRepositoryListActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byItemOf: CmdExtraMenuGroup
-		order: 100
-		for: IceTipRepositoryListContext
+{ #category : 'accessing - defaults' }
+IceFiletreeToTonelCommand class >> defaultName [
+
+	^ 'Convert repository sources to tonel'
 ]
 
-{ #category : #testing }
-IceFiletreeToTonelCommand class >> canBeExecutedInContext: aToolContext [
-
+{ #category : 'testing' }
+IceFiletreeToTonelCommand >> canBeExecuted [
 	| repository |
-	repository := aToolContext repositoryModel entity.
-	^ repository isMissing not 
+
+	self hasRepository ifFalse: [ ^ false ].
+
+	repository := self repository.
+	^ repository isMissing not
 		and: [ repository workingCopy isDetached not
 			and: [ repository workingCopy writerClass id = #filetree
 				and: [ repository head isUnbornBranch not ] ] ]
 ]
 
-{ #category : #accessing }
-IceFiletreeToTonelCommand >> defaultMenuItemName [
-	^ 'Convert repository sources to tonel'
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceFiletreeToTonelCommand >> execute [
 
-	(IceTipFiletreeToTonelDialog on: self repositoryModel entity) openDialogWithSpec
+	(IceTipFiletreeToTonelDialogPresenter on: self repository) openDialog
 ]

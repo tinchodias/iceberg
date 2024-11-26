@@ -2,31 +2,35 @@
 I'm a tool to ask the full history of a method (based on tonel file format).
 "
 Class {
-	#name : #IceLibgitTonelLog,
-	#superclass : #IceLog,
-	#category : #'Iceberg-Libgit-Tonel'
+	#name : 'IceLibgitTonelLog',
+	#superclass : 'IceLog',
+	#category : 'Iceberg-Libgit-Tonel-Log',
+	#package : 'Iceberg-Libgit-Tonel',
+	#tag : 'Log'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceLibgitTonelLog class >> isAvailableFor: aRepository [
 	^ aRepository writerClass id = #tonel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> basepathOf: aPath [ 
 	^ aPath copyAfterLast: $/
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> definitionFor: aMethod path: aPath commit: aCommit [
 	^ ((IceLibgitTonelLogReader fileName: aPath on: aCommit)
-		package: aMethod package mcPackage; 
+		package: aMethod package mcPackage;
 		packageDirectory: (self repository directoryPathStringForPackage: aMethod package);
 		definitions)
-		detect: [ :each | each isMethodDefinition and: [ each selector = aMethod selector  ] ]
-		ifNone: [ 
-			 "not found, return 'NULL' object: compare will fail anyway"
-			MCMethodDefinition 
+		detect: [ :each | 
+			each isMethodDefinition
+				and: [ each selector = aMethod selector
+						and: [ each method isClassSide = aMethod isClassSide ] ] ]
+		ifNone: [  "not found, return 'NULL' object: compare will fail anyway"
+			MCMethodDefinition
 				className: aMethod origin name
 				selector: aMethod selector
 				category: #''
@@ -34,7 +38,7 @@ IceLibgitTonelLog >> definitionFor: aMethod path: aPath commit: aCommit [
 				source: '' ]
 ]
 
-{ #category : #'path building' }
+{ #category : 'path building' }
 IceLibgitTonelLog >> fileNameForMethod: aMethod [
 	| path |
 	
@@ -48,7 +52,7 @@ IceLibgitTonelLog >> fileNameForMethod: aMethod [
 		path asStringOn: stream delimiter: '/' ]
 ]
 
-{ #category : #'path building' }
+{ #category : 'path building' }
 IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName [
 	"Answer the path string for a package."
 
@@ -59,7 +63,7 @@ IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName [
 		stream nextPutAll: aPackageName ]
 ]
 
-{ #category : #'path building' }
+{ #category : 'path building' }
 IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName classNamed: aName isTrait: isTrait isMeta: isMeta [
 	"Answer the path string for the instance- and class-side definitions of a class or trait. In Tonel, they are all together in the same file."
 
@@ -71,7 +75,7 @@ IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName classNamed: aName isT
 				ifFalse: [ self tonelClassNamed: aName ])}
 ]
 
-{ #category : #'path building' }
+{ #category : 'path building' }
 IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName classNamed: aClassName isTrait: isTrait isMeta: isMeta selector: aSelector [
 		"Answer the path string for a method. In Tonel, methods have the same path as the container (class, trait or extension)."
 
@@ -82,22 +86,22 @@ IceLibgitTonelLog >> fileNameForPackageNamed: aPackageName classNamed: aClassNam
 		isMeta: isMeta
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> toFileName: aMethod [
 	^ self fileNameForMethod: aMethod
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> tonelClassNamed: aString [
 	^ aString, '.class.st'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> tonelExtensionNamed: aString [
 	^ aString, '.extension.st'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> tonelMethodClassOrTraitName: aMethod [
 	| containerName |
 	containerName := aMethod origin instanceSide name.
@@ -108,12 +112,12 @@ IceLibgitTonelLog >> tonelMethodClassOrTraitName: aMethod [
 	^ self tonelClassNamed: containerName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> tonelPackageName: aPackage [
 	^ aPackage name	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceLibgitTonelLog >> tonelTraitNamed: aString [
 	^ aString, '.trait.st'
 ]

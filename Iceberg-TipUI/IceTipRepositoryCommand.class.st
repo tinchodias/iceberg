@@ -1,43 +1,46 @@
 "
-I'm a the abstract superclass of commands that act on repositories. 
+I'm a the abstract superclass of commands that act on repositories.
 "
 Class {
-	#name : #IceTipRepositoryCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'announcer'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipRepositoryCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceTipRepositoryCommand class >> actsOnBranch: aBranchModel [
-	^ false
-]
-
-{ #category : #testing }
-IceTipRepositoryCommand class >> actsOnRemote: aRemoteModel [
-	^ false
-]
-
-{ #category : #testing }
-IceTipRepositoryCommand class >> actsOnTag: aTagModel [
-	^ false
-]
-
-{ #category : #accessing }
+{ #category : 'testing' }
 IceTipRepositoryCommand class >> isAbstract [
 
 	^ self == IceTipRepositoryCommand
 ]
 
-{ #category : #accessing }
-IceTipRepositoryCommand >> announcer [
-	^ announcer ifNotNil: #contents
+{ #category : 'testing' }
+IceTipRepositoryCommand >> actsOnBranch: aBranchModel [
+
+	^ false
 ]
 
-{ #category : #execution }
-IceTipRepositoryCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	announcer := IceTipWeakValueHolder contents: aToolContext toolAnnouncer.
+{ #category : 'testing' }
+IceTipRepositoryCommand >> actsOnRemote: aRemoteModel [
+
+	^ false
+]
+
+{ #category : 'testing' }
+IceTipRepositoryCommand >> actsOnTag: aTagModel [
+
+	^ false
+]
+
+{ #category : 'accessing' }
+IceTipRepositoryCommand >> announcer [
+
+	^ self context toolAnnouncer
+]
+
+{ #category : 'testing' }
+IceTipRepositoryCommand >> canBeExecuted [
+
+	^ self repositoryModel isNotNil
 ]

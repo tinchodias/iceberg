@@ -1,18 +1,11 @@
-Extension { #name : #MCClassDefinition }
+Extension { #name : 'MCClassDefinition' }
 
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> basicVariables: aCollection [
 	variables := aCollection
 ]
 
-{ #category : #'*Iceberg-Adapters' }
-MCClassDefinition >> classCategory [
-	"Avoid direct use of #category, because MCClassDefinitions and 
-	MCMethodDefinition use the same message for different things. "
-	^ self category
-]
-
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> copyWithVariable: aMCVariableDefinition [
 	| copy |
 	copy := self copy.
@@ -21,21 +14,21 @@ MCClassDefinition >> copyWithVariable: aMCVariableDefinition [
 	^ copy
 ]
 
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> copyWithoutVariable: aMCVariableDefinition [
 	^ self copy
 		basicVariables: (variables copyWithout: aMCVariableDefinition);
 		yourself
 ]
 
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> copyWithoutVariables [
 	^ self copy
 		basicVariables: OrderedCollection new;
 		yourself
 ]
 
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> fullDefinitionString [
 	^ String streamContents: [:stream | 
 		self printDefinitionOn: stream.
@@ -45,7 +38,7 @@ MCClassDefinition >> fullDefinitionString [
 		stream << self comment ]
 ]
 
-{ #category : #'*Iceberg' }
+{ #category : '*Iceberg' }
 MCClassDefinition >> isEqualIgnoringCommentTo: aDefinition [ 
 	^(super = aDefinition)
 		and: [superclassName = aDefinition superclassName
@@ -54,4 +47,11 @@ MCClassDefinition >> isEqualIgnoringCommentTo: aDefinition [
 		and: [category = aDefinition category
 		and: [type = aDefinition type
 		and: [self sortedVariables = aDefinition sortedVariables ]]]]]]
+]
+
+{ #category : '*Iceberg-Changes' }
+MCClassDefinition >> removeMetaSideVariables [
+	
+	variables := variables reject: [ :e | e isClassInstanceVariable ].
+
 ]

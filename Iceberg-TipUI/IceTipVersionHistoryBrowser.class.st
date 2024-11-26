@@ -1,11 +1,15 @@
 "
 I'm a browser and panel to show the version history of a method. 
 
+For versions, I show the same commands of a regular history browser, but add some special commands.
+
 (self onRepository: aRepository method: aMethod) openWithSpec.
+
+
 "
 Class {
-	#name : #IceTipVersionHistoryBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipVersionHistoryBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'commitList',
 		'selectedModel',
@@ -13,49 +17,140 @@ Class {
 		'diffPage',
 		'commitPanel'
 	],
-	#category : #'Iceberg-TipUI-View-Versions'
+	#category : 'Iceberg-TipUI-View-Versions',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Versions'
 }
 
-{ #category : #specs }
-IceTipVersionHistoryBrowser class >> defaultSpec [
-	<spec: #default>
-	
-	^ SpPanedLayout newVertical
-		add: #commitList;
-		add: #commitPanel;
-		yourself
+{ #category : 'commands' }
+IceTipVersionHistoryBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'commands' }
+IceTipVersionHistoryBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	{ 	IceTipInstallVersionCommand }
+			do: [ :each |
+				aCommandGroup register: (each forSpecContext: presenter) ]
+
+]
+
+{ #category : 'instance creation' }
 IceTipVersionHistoryBrowser class >> onRepository: aRepository method: aMethod [
-	
-	^ self on: (IceTipVersionHistoryModel 
-		repositoryModel: (IceTipRepositoryModel on: aRepository) beCached 
-		on: aMethod)
-		beCached
+
+	^ self on: (IceTipVersionHistoryModel
+			   repositoryModel: (IceTipRepositoryModel on: aRepository)
+			   on: aMethod)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipVersionHistoryBrowser >> commitList [
 
 	^ commitList
 ]
 
-{ #category : #'accessing ui' }
-IceTipVersionHistoryBrowser >> commitList: anObject [
-	commitList := anObject
+{ #category : 'layout' }
+IceTipVersionHistoryBrowser >> defaultLayout [
+	
+	^ SpPanedLayout newTopToBottom
+		add: commitList;
+		add: commitPanel;
+		yourself
 ]
 
-{ #category : #accessing }
-IceTipVersionHistoryBrowser >> contextClass [
-	"I want to inherit same activations as in a regular history browser, but commit comes from a 
-	 diferent place. And I want some other functions (like a 'install' method)"
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> initialExtentForWindow [
 
-	^ IceTipVersionHistoryContext
+	^ (700@700) scaledByDisplayScaleFactor
 ]
 
-{ #category : #private }
-IceTipVersionHistoryBrowser >> diff [
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> initializeCommitList [
+
+	commitList
+		beResizable;
+		addColumn: (SpStringTableColumn new
+			title: 'Timestamp';
+			evaluated: [ :each | each timeStamp asLocalStringYMDHM ];
+			width: 110;
+			yourself);
+		addColumn: (SpStringTableColumn new
+			title: 'Commit';
+			evaluated: #shortId;
+			width: 60;
+			yourself);
+		addColumn: (SpStringTableColumn new
+			title: 'Author';
+			evaluated: #author;
+			width: 150;
+			yourself);
+		addColumn: (SpStringTableColumn new
+			title: 'Description';
+			evaluated: #shortDescription;
+			yourself).
+				
+	commitList whenSelectionChangedDo: [ :aSelection |
+		self selectionChanged: aSelection selectedItem ]
+]
+
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> initializeCommitPanel [
+	"This will be initialised in fact on the first refresh"
+
+	commitPanel
+		addPage: (infoPage := self newInfoPage);
+		addPage: (diffPage := self newDiffPage 
+			title: 'Diff from ancestor';
+			presenterProvider: [ self newDiffPresenter ];
+			yourself)
+]
+
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> initializePresenters [
+
+	commitList := self newTable.
+	commitPanel := self newNotebook.
+	
+	self initializeCommitList.
+	self initializeCommitPanel
+]
+
+{ #category : 'accessing - ui' }
+IceTipVersionHistoryBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ commitList
+]
+
+{ #category : 'accessing' }
+IceTipVersionHistoryBrowser >> model: anObject [
+
+	super model: anObject.
+	self refresh
+]
+
+{ #category : 'private - factory' }
+IceTipVersionHistoryBrowser >> newDiffPage [
+
+	^ SpNotebookPage  
+		title: 'Diff'
+		icon: (self iconNamed: #diff)
+		provider: [ self newDiffPresenter ]
+]
+
+{ #category : 'private - factory' }
+IceTipVersionHistoryBrowser >> newDiffPanelLeft: leftString right: rightString [
+
+	^ (self instantiate: SpDiffPresenter) 
+		leftText: leftString;
+		rightText: rightString;
+		showOptions: false
+]
+
+{ #category : 'private' }
+IceTipVersionHistoryBrowser >> newDiffPresenter [
 	
 	selectedModel ifNil: [ ^ self ].
 	^ self 
@@ -65,166 +160,24 @@ IceTipVersionHistoryBrowser >> diff [
 		right: selectedModel source
 ]
 
-{ #category : #private }
-IceTipVersionHistoryBrowser >> info [ 
-	
-	selectedModel ifNil: [ ^ self ].
-	^ IceTipReadOnlyForm items: selectedModel info
-]
-
-{ #category : #accessing }
-IceTipVersionHistoryBrowser >> initialExtent [
-
-	^ (700@700) scaledByDisplayScaleFactor
-]
-
-{ #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeCommitList [
-	commitList
-		beResizable;
-		addColumn:
-			(SpStringTableColumn new
-				title: 'Timestamp';
-				evaluated: [ :each | each timeStamp asLocalStringYMDHM ];
-				width: 110 * self currentWorld displayScaleFactor;
-				yourself);
-		addColumn:
-			(SpStringTableColumn new
-				title: 'Commit';
-				evaluated: #shortId;
-				width: 60 * self currentWorld displayScaleFactor;
-				yourself);
-		addColumn:
-			(SpStringTableColumn new
-				title: 'Author';
-				evaluated: #author;
-				width: 150 * self currentWorld displayScaleFactor;
-				yourself);
-		addColumn:
-			(SpStringTableColumn new
-				title: 'Description';
-				evaluated: #descriptionWithDecoration;
-				yourself);
-		selectIndex: 1
-]
-
-{ #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeCommitPanel [
-	"This will be initialised in fact on the first refresh"
-
-	commitPanel
-		addPage: (infoPage := self newInfoPage);
-		addPage: (diffPage := self newDiffPage 
-			title: 'Diff from ancestor';
-			presenterProvider: [ self diff ];
-			yourself)
-]
-
-{ #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeToolbar [
-	"no toolbar"
-]
-
-{ #category : #initialization }
-IceTipVersionHistoryBrowser >> initializeWidgets [
-
-	super initializeWidgets.	
-	commitList := self newTable.
-	commitPanel := self newNotebook.
-	
-	self initializeCommitList.
-	self initializeCommitPanel.
-	
-	commitList whenSelectionChangedDo: [ :s |
-		self selectionChanged: s ].
-	
-	self focusOrder 
-		add: commitList;
-		add: commitPanel.
-		
-	self refresh
-]
-
-{ #category : #accessing }
-IceTipVersionHistoryBrowser >> model: anObject [
-
-	super model: anObject.
-	self refresh
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newCommitsDataSource [
-	^ IceTipDataSource new 
-		tool: self;
-		elements: #(); "It will be set when refreshing"
-		yourself
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newContextWithSelection: anObject [
-
-	^ self newContext 
-		item: anObject;
-		yourself
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newDiffPage [
-
-	^ SpNotebookPage  
-		title: 'Diff'
-		icon: (self iconNamed: #diff)
-		provider: [ self diff ]
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newDiffPanelLeft: leftString right: rightString [
-
-	^ (self instantiate: DiffPresenter) 
-		leftText: leftString;
-		rightText: rightString;
-		showOptions: false
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newDiffTab [
-	^ self newTab 
-		label: 'Diff';
-		icon: (self iconNamed: #diff);
-		closeable: false;
-		yourself
-]
-
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newEmptyTab [
-	^ self newTab 
-		label: 'Info';
-		icon: (self iconNamed: #smallQuestion);
-		closeable: false;
-		contents: '(No commit selected)' asMorph;
-		yourself
-]
-
-{ #category : #'private factory' }
+{ #category : 'private - factory' }
 IceTipVersionHistoryBrowser >> newInfoPage [
 
 	^ SpNotebookPage  
 		title: 'Info'
 		icon: (self iconNamed: #smallQuestion)
-		provider: [ self info ]
+		provider: [ self newVersionInfoPresenter ]
 
 ]
 
-{ #category : #'private factory' }
-IceTipVersionHistoryBrowser >> newInfoTab [
-	^ self newTab 
-		label: 'Info';
-		icon: (self iconNamed: #smallQuestion);
-		closeable: false;
-		yourself
+{ #category : 'private' }
+IceTipVersionHistoryBrowser >> newVersionInfoPresenter [
+	
+	selectedModel ifNil: [ ^ self ].
+	^ IceTipReadOnlyFormBuilder newBuiltFor: selectedModel info application: self application
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipVersionHistoryBrowser >> refresh [
 
 	commitList items: self model commitModels.
@@ -234,7 +187,7 @@ IceTipVersionHistoryBrowser >> refresh [
 	self refreshCommitTabPanel
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipVersionHistoryBrowser >> refreshCommitTabPanel [
 	
 	selectedModel ifNil: [ ^ self ].
@@ -246,17 +199,23 @@ IceTipVersionHistoryBrowser >> refreshCommitTabPanel [
 	commitPanel resetAllPageContents
 ]
 
-{ #category : #'event handling' }
-IceTipVersionHistoryBrowser >> selectionChanged: aSelection [
+{ #category : 'event handling' }
+IceTipVersionHistoryBrowser >> selectionChanged: aSelectedItem [
 
-	selectedModel := aSelection selectedItem.
+	selectedModel := aSelectedItem.
 	self refreshCommitTabPanel
 ]
 
-{ #category : #accessing }
-IceTipVersionHistoryBrowser >> title [
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> titleForWindow [
 
 	^ self model  
 		ifNotNil: [ 'Versions of {1}' format: { self model name } ]
 		ifNil: [ 'Versions' ]
+]
+
+{ #category : 'initialization' }
+IceTipVersionHistoryBrowser >> updatePresenter [
+
+	self refresh
 ]

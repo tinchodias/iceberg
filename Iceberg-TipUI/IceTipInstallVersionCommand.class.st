@@ -3,48 +3,39 @@ Command used in the version browser, inside the code browser.
 This command takes the selected version and installs it (also called revert).
 "
 Class {
-	#name : #IceTipInstallVersionCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'selectedCommit',
-		'version'
-	],
-	#category : 'Iceberg-TipUI-Commands'
+	#name : 'IceTipInstallVersionCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipInstallVersionCommand class >> browserVersionHistoryContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byRootGroupItemOrder: 1
-		for: IceTipVersionHistoryContext
-]
+{ #category : 'accessing - defaults' }
+IceTipInstallVersionCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipInstallVersionCommand class >> defaultHelp [
 	^ 'Revert to the selected version'
 ]
 
-{ #category : #activation }
-IceTipInstallVersionCommand class >> defaultMenuIconName [
-	^ #smallRedo
-]
+{ #category : 'accessing - defaults' }
+IceTipInstallVersionCommand class >> defaultName [
 
-{ #category : #activation }
-IceTipInstallVersionCommand class >> defaultMenuItemName [
 	^ 'Install this version'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipInstallVersionCommand >> execute [
-	
-	version install
+
+	self version newInstallAction executeWithContext: self context
 ]
 
-{ #category : #execution }
-IceTipInstallVersionCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	version := aToolContext version.
-	
+{ #category : 'activation' }
+IceTipInstallVersionCommand >> iconName [
+
+	^ #smallRedo
+]
+
+{ #category : 'execution' }
+IceTipInstallVersionCommand >> version [
+
+	^ self context selectedItem
 ]

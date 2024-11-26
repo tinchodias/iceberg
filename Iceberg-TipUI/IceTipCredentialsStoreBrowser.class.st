@@ -2,58 +2,65 @@
 I am the browser used to show a credentials store.
 "
 Class {
-	#name : #IceTipCredentialsStoreBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipCredentialsStoreBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'credentialsList'
 	],
-	#category : #'Iceberg-TipUI-Credentials'
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #specs }
-IceTipCredentialsStoreBrowser class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-		add: #toolbar expand: false fill: true padding: 0;
-		add: #credentialsList;
-		yourself 
+{ #category : 'commands' }
+IceTipCredentialsStoreBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	{	IceTipAddPlainTextCredentialCommand.
+		IceTipAddSshCredentialCommand.
+		IceTipAddTokenCredentialCommand }
+	do: [ :each |
+		aCommandGroup register: (each forSpecContext: presenter) ]
 ]
 
-{ #category : #accessing }
-IceTipCredentialsStoreBrowser >> contextClass [
-	^ IceTipCredentialsStoreContext
+{ #category : 'commands' }
+IceTipCredentialsStoreBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	{ 	IceTipEditCredentialCommand.
+		IceTipRemoveCredentialCommand }
+	do: [ :each |
+		aCommandGroup register: (each forSpecContext: presenter) ]
 ]
 
-{ #category : #'private factory' }
-IceTipCredentialsStoreBrowser >> createCommandContext [
-	^ self newContextWithSelection: self credentialSelected.
+{ #category : 'commands' }
+IceTipCredentialsStoreBrowser class >> buildSelectionExtraCommandGroupWith: presenter for: aCommandGroup [
+
+	aCommandGroup register: (IceTipInspectCommand forSpecContext: presenter)
 ]
 
-{ #category : #'private factory' }
-IceTipCredentialsStoreBrowser >> createCommandContextForSelection: selectedItems [
-	^ self newContextWithSelection: selectedItems
-]
-
-{ #category : #accessing }
-IceTipCredentialsStoreBrowser >> credentialSelected [
-^	credentialsList selection selectedItem
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCredentialsStoreBrowser >> credentialsList [
+
 	^ credentialsList
 ]
 
-{ #category : #initialization }
-IceTipCredentialsStoreBrowser >> initialize [
+{ #category : 'layout' }
+IceTipCredentialsStoreBrowser >> defaultLayout [
 
-	model ifNil: [ model := IceCredentialStore current ].	
-	super initialize.
-
+	^ SpBoxLayout newTopToBottom
+		  add: credentialsList;
+		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
+IceTipCredentialsStoreBrowser >> initialize [
+
+	model ifNil: [ model := IceCredentialStore current ].
+	super initialize
+]
+
+{ #category : 'initialization' }
 IceTipCredentialsStoreBrowser >> initializeCredentialsList [
+
 	credentialsList
 		addColumn:
 			(SpStringTableColumn new
@@ -62,48 +69,52 @@ IceTipCredentialsStoreBrowser >> initializeCredentialsList [
 				width: 100 * self currentWorld displayScaleFactor;
 				yourself);
 		addColumn:
-			(SpStringTableColumn new
-				title: 'Type';
-				evaluated: #type;
+			((SpStringTableColumn
+				title: 'Type'
+				evaluated: #type)
 				width: 75 * self currentWorld displayScaleFactor;
 				yourself);
 		addColumn:
-			(SpStringTableColumn new
-				title: 'Description';
-				evaluated: #description;
-				yourself);
-		items: self model allCredentials;
-		selectIndex: 1;
-		contextMenu: [ self buildMenu]
+			(SpStringTableColumn
+				title: 'Description'
+				evaluated: #description)
 ]
 
-{ #category : #initialization }
-IceTipCredentialsStoreBrowser >> initializeWidgets [
-	super initializeWidgets.
+{ #category : 'initialization' }
+IceTipCredentialsStoreBrowser >> initializePresenters [
+
 	credentialsList := self newTable.
-	self initializeCredentialsList.
-	self focusOrder add: credentialsList
+	self initializeCredentialsList
 ]
 
-{ #category : #'private factory' }
-IceTipCredentialsStoreBrowser >> newContextWithSelection: anObject [ 
+{ #category : 'accessing - ui' }
+IceTipCredentialsStoreBrowser >> mainList [
 
-	^ IceTipCredentialContext new
-		store: model;
-		credential: anObject;
-		tool: self;
-		yourself
+	^ credentialsList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCredentialsStoreBrowser >> refresh [
 
 	credentialsList items: self model allCredentials
 ]
 
-{ #category : #api }
-IceTipCredentialsStoreBrowser >> title [
+{ #category : 'accessing' }
+IceTipCredentialsStoreBrowser >> store [
+
+	^ self model
+]
+
+{ #category : 'initialization' }
+IceTipCredentialsStoreBrowser >> titleForWindow [
+
 	^ model isCurrent
-		ifTrue: [ 'Current Iceberg credentials' ]
-		ifFalse: [ 'Credentials of ' , model printString ]
+		  ifTrue: [ 'Current Iceberg credentials' ]
+		  ifFalse: [ 'Credentials of ' , model printString ]
+]
+
+{ #category : 'initialization' }
+IceTipCredentialsStoreBrowser >> updatePresenter [
+
+	self refresh
 ]

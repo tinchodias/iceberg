@@ -20,31 +20,34 @@ Metacello new
 
 "
 Class {
-	#name : #IceGitLocalRepositoryType,
-	#superclass : #IceMetacelloRepositoryType,
-	#category : 'Iceberg-Metacello-Integration'
+	#name : 'IceGitLocalRepositoryType',
+	#superclass : 'IceMetacelloRepositoryType',
+	#category : 'Iceberg-Metacello-Integration-RepoTypes',
+	#package : 'Iceberg-Metacello-Integration',
+	#tag : 'RepoTypes'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitLocalRepositoryType class >> type [
 	^ 'gitlocal'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceGitLocalRepositoryType >> isGitRoot: aReference [
 	^ IceRepositoryCreator isGitRoot: aReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitLocalRepositoryType >> mcRepository [
+
 	| repository tuple extractedLocation |
-	
+
 	tuple := self splitRootAndSubdirectoryFromLocation.
 	extractedLocation := tuple first asFileReference asAbsolute.
 	repository := IceRepository registry 
 		detect: [ :each | 
-			each location notNil 
-				and: [ each location asAbsolute = extractedLocation ] ]
+			each location isNotNil 
+				and: [ each location resolve asAbsolute = extractedLocation ] ]
 		ifNone: [ 
 			(IceRepositoryCreator new 
 				location: tuple first;
@@ -56,7 +59,7 @@ IceGitLocalRepositoryType >> mcRepository [
 	^ repository metacelloAdapter: repository head description.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceGitLocalRepositoryType >> splitRootAndSubdirectoryFromLocation [
 	| root subDir |
 	(self location beginsWith: (self class type, '://'))

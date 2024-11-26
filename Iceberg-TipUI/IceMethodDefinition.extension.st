@@ -1,6 +1,6 @@
-Extension { #name : #IceMethodDefinition }
+Extension { #name : 'IceMethodDefinition' }
 
-{ #category : #'*Iceberg-TipUI' }
+{ #category : '*Iceberg-TipUI' }
 IceMethodDefinition >> browse [
 	
 	| owner |
@@ -9,7 +9,7 @@ IceMethodDefinition >> browse [
 	(owner >> name) browse
 ]
 
-{ #category : #'*Iceberg-TipUI' }
+{ #category : '*Iceberg-TipUI' }
 IceMethodDefinition >> canBeBrowsed [
 	
 	^ self class environment at: self ownerName
@@ -17,14 +17,14 @@ IceMethodDefinition >> canBeBrowsed [
 		ifAbsent: [ false ]
 ]
 
-{ #category : #'*Iceberg-TipUI' }
+{ #category : '*Iceberg-TipUI' }
 IceMethodDefinition >> canBrowseReferences [
 	
 	^ false
 ]
 
-{ #category : #'*Iceberg-TipUI' }
-IceMethodDefinition >> icon [
+{ #category : '*Iceberg-TipUI' }
+IceMethodDefinition >> iconName [
 	
-	^ self iconNamed: #changeUpdate
+	^ #changeUpdate
 ]

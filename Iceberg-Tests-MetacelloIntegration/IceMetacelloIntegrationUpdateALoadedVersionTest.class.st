@@ -1,19 +1,18 @@
 Class {
-	#name : #IceMetacelloIntegrationUpdateALoadedVersionTest,
-	#superclass : #AbstractIceMetacelloIntegrationTests,
-	#category : 'Iceberg-Tests-MetacelloIntegration'
+	#name : 'IceMetacelloIntegrationUpdateALoadedVersionTest',
+	#superclass : 'AbstractIceMetacelloIntegrationTest',
+	#category : 'Iceberg-Tests-MetacelloIntegration',
+	#package : 'Iceberg-Tests-MetacelloIntegration'
 }
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> repositoryName [
 	
 	^ 'test-project-source-properties-tonel'
 ]
 
-{ #category : #tests }
+{ #category : 'running' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> tearDown [
-
-	super tearDown.
 	
 	(IceRepository registry select: [ :e | e name = 'test-project-with-dep' ]) do: [ :each | each ifNotNil: [ :repo |
 		repo unload.
@@ -25,9 +24,10 @@ IceMetacelloIntegrationUpdateALoadedVersionTest >> tearDown [
 		detect: [ :registration | registration projectName = 'TestProjectWithDep' ]
 		ifFound: [ :registration | registration unregisterProject ].
 	
+	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> testConflictDetectedWithProjectWithDependency [
 
 	Metacello new
@@ -45,7 +45,7 @@ IceMetacelloIntegrationUpdateALoadedVersionTest >> testConflictDetectedWithProje
 			
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> testIncommingWhenProjectWithDependency [
 
 	Metacello new
@@ -67,7 +67,7 @@ IceMetacelloIntegrationUpdateALoadedVersionTest >> testIncommingWhenProjectWithD
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> testKeepExistingWhenProjectWithDependency [
 
 	Metacello new
@@ -89,7 +89,7 @@ IceMetacelloIntegrationUpdateALoadedVersionTest >> testKeepExistingWhenProjectWi
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceMetacelloIntegrationUpdateALoadedVersionTest >> testUpdateProjectShouldCheckoutTheNewVersion [
 
 	Metacello new

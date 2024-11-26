@@ -5,38 +5,32 @@ I'm a model for IceLogVersion entries.
 - I can install a certain method version.
 "
 Class {
-	#name : #IceTipVersionModel,
-	#superclass : #IceTipCommitModel,
-	#category : 'Iceberg-TipUI-Model'
+	#name : 'IceTipVersionModel',
+	#superclass : 'IceTipCommitModel',
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #private }
-IceTipVersionModel >> basicInstall [
-	| definition |
-	
-	definition := self entity definition.
-	definition realClass 
-		compile: definition sourceCode
-		classified: definition category	
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipVersionModel >> commit [
 	^ self entity commit
 ]
 
-{ #category : #actions }
-IceTipVersionModel >> install [
-	<noCache>
+{ #category : 'actions' }
+IceTipVersionModel >> newInstallAction [
 
-	IceTipStandardAction new 
-		repository: self repositoryModel entity; 
-		message: ('Installing {1} - {2}' format: { self entity definition. self name });
-		onSuccessRepositoryModified;
-		execute: [ self basicInstall ]
+	^ IceTipStandardAction new
+		  repository: self repositoryModel entity;
+		  message: ('Installing {1} - {2}' format: {
+						   self entity definition.
+						   self name });
+		  onSuccessRepositoryModified;
+		  action: [ self entity install ];
+		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipVersionModel >> source [
 	^ self entity source
 ]

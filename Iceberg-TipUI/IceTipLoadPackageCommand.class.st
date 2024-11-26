@@ -2,40 +2,39 @@
 Command that loads the current non-loaded selected package
 "
 Class {
-	#name : #IceTipLoadPackageCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipLoadPackageCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipLoadPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 40 for: IceTipWorkingCopyContext
-]
+{ #category : 'accessing - defaults' }
+IceTipLoadPackageCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipLoadPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded not
-]
-
-{ #category : #accessing }
-IceTipLoadPackageCommand class >> defaultHelp [
 	^ 'Load selected package in the image'
 ]
 
-{ #category : #accessing }
-IceTipLoadPackageCommand class >> defaultMenuIconName [
-	^ #add
-]
+{ #category : 'accessing - defaults' }
+IceTipLoadPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipLoadPackageCommand class >> defaultMenuItemName [
 	^ 'Load'
 ]
 
-{ #category : #execution }
+{ #category : 'testing' }
+IceTipLoadPackageCommand >> canBeExecuted [
+
+	^ self isPackageLoaded not
+]
+
+{ #category : 'executing' }
 IceTipLoadPackageCommand >> execute [
-	self packageModel load.
-	Iceberg announcer announce: (IceRepositoryModified for: self repositoryModel entity)
+
+	self packageModel newLoadAction executeWithContext: self context
+]
+
+{ #category : 'accessing' }
+IceTipLoadPackageCommand >> iconName [
+
+	^ #add
 ]

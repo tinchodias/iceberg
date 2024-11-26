@@ -2,55 +2,45 @@
 Command that fetches from remote repositories
 "
 Class {
-	#name : #IceTipFetchRemoteCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'remoteModel'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipFetchRemoteCommand',
+	#superclass : 'IceTipRemotesTreeCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceTipFetchRemoteCommand class >> actsOnRemote: aRemoteModel [
-	^ true
-]
+{ #category : 'accessing - defaults' }
+IceTipFetchRemoteCommand class >> defaultDescription [
 
-{ #category : #activation }
-IceTipFetchRemoteCommand class >> browserContextActivation [
- 	<classAnnotation>
-    
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 10
-		for: IceTipRepositoryContext
-]
-
-{ #category : #accessing }
-IceTipFetchRemoteCommand class >> canBeExecutedInContext: aToolContext [
-    ^ aToolContext item canActivateCommand: self
-]
-
-{ #category : #accessing }
-IceTipFetchRemoteCommand class >> defaultHelp [
 	^ 'Fetch commits from this remote'
 ]
 
-{ #category : #accessing }
-IceTipFetchRemoteCommand class >> defaultMenuIconName [
-	^ #smallUpdate
-]
+{ #category : 'accessing - defaults' }
+IceTipFetchRemoteCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipFetchRemoteCommand class >> defaultMenuItemName [
 	^ 'Fetch remote'
 ]
 
-{ #category : #execution }
-IceTipFetchRemoteCommand >> execute [
-	remoteModel fetch
+{ #category : 'testing' }
+IceTipFetchRemoteCommand >> actsOnRemote: aRemoteModel [
+
+	^ true
 ]
 
-{ #category : #execution }
-IceTipFetchRemoteCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	remoteModel := aToolContext item.
+{ #category : 'executing' }
+IceTipFetchRemoteCommand >> execute [
+
+	self remoteModel fetch
+]
+
+{ #category : 'accessing' }
+IceTipFetchRemoteCommand >> iconName [
+
+	^ #smallUpdate
+]
+
+{ #category : 'executing' }
+IceTipFetchRemoteCommand >> remoteModel [
+
+	^ self item
 ]

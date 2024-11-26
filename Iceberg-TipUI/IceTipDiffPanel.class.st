@@ -7,37 +7,25 @@ also #elements answer should be a collection of elements that also understand el
 (IceTipDiffPanel onDiff: (IceRepository registry first workingCopyDiff)) openWithSpec
 "
 Class {
-	#name : #IceTipDiffPanel,
-	#superclass : #IceTipSpPresenter,
+	#name : 'IceTipDiffPanel',
+	#superclass : 'IceTipPresenter',
 	#instVars : [
 		'model',
-		'changeList',
-		'diffPanel'
+		'diffPanel',
+		'iceNodesTree'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipDiffPanel class >> defaultSpec [
-	<spec: #default>
-	^ SpPanedLayout newHorizontal
-		position: 25 percent;
-		add: #changeList;
-		add: #diffPanel;
-		yourself
-]
-
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceTipDiffPanel class >> onDiff: aDiff [
+
 	^ self on: (IceTipCommitDiffModel on: aDiff)
 ]
 
-{ #category : #specs }
-IceTipDiffPanel class >> title [
-	^ 'Diff'
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipDiffPanel >> basicRefresh [
 	self resetDiffContents.
 	
@@ -50,13 +38,7 @@ IceTipDiffPanel >> basicRefresh [
 		changeList adapter widget dataSource expandAll ]
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> buildMenu [
-	^ (CmdContextMenuActivation
-		buildMenuInContext: self createCommandContext) asSpMenuPresenter
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipDiffPanel >> changeDescriptionColumn [
 
 	^ SpStringTableColumn new
@@ -64,38 +46,31 @@ IceTipDiffPanel >> changeDescriptionColumn [
 		  yourself
 ]
 
-{ #category : #'accessing ui' }
-IceTipDiffPanel >> changeList [
-	^ changeList
-]
-
-{ #category : #'accessing ui' }
-IceTipDiffPanel >> changeList: anObject [
-	changeList := anObject
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipDiffPanel >> changeListColumn [
 
 	^ self changeDescriptionColumn
 ]
 
-{ #category : #private }
-IceTipDiffPanel >> changeSelected [
-	^ changeList selectedItem
+{ #category : 'private' }
+IceTipDiffPanel >> collapsePath: aPath [
+
+	iceNodesTree 
+		collapsePath: aPath;
+		selectPath: aPath
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> contextClass [
-	^ IceTipDiffContext
+{ #category : 'layout' }
+IceTipDiffPanel >> defaultLayout [
+
+	^ SpPanedLayout newLeftToRight
+		  positionOfSlider: 25 percent;
+		  add: iceNodesTree;
+		  add: diffPanel;
+		  yourself
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> contextSelection [ 
-	^ self changeSelected
-]
-
-{ #category : #private }
+{ #category : 'private' }
 IceTipDiffPanel >> diffContentsLeft: leftString right: rightString [
 
 	diffPanel
@@ -107,127 +82,182 @@ IceTipDiffPanel >> diffContentsLeft: leftString right: rightString [
 		rightText: rightString
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'initialization' }
+IceTipDiffPanel >> diffEntryRemoved: announcement [
+
+	| parent |
+	(parent := announcement entry parent) removeChild: announcement entry.
+	"Removing all changes to a class should remove the class node too,
+	unless the class definition has changed as well. Extension definitions
+	may appear as an 'addition' or 'removal', but can only exist when methods
+	of that class have changed. Repeat this process to check if the containing
+	package no longer has any changes. Cannot remove the root node as it has
+	no parent, but it's fine to just leave it there empty--though perhaps we should
+	close the browser instead in that case?"
+	[
+	parent parent isNotNil and: [
+		parent isEmpty and: [
+			parent value isNoModification or: [
+				parent value definition isExtensionDefinition ] ] ] ] whileTrue: [
+		parent parent removeChild: parent.
+		parent := parent parent ].
+
+	self basicRefresh
+]
+
+{ #category : 'accessing - ui' }
 IceTipDiffPanel >> diffPanel [
+
 	^ diffPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipDiffPanel >> diffPanel: anObject [
-	diffPanel := anObject
+{ #category : 'actions' }
+IceTipDiffPanel >> doCollapseSelection [
+	
+	self collapsePath: iceNodesTree selection selectedPath
 ]
 
-{ #category : #initialization }
-IceTipDiffPanel >> initializeChangeList [
-	changeList
-		addColumn: self changeListColumn;
-		children: [ :each | each children ];
-		whenSelectionChangedDo: [ self selectionChanged ];
-		contextMenu: [ self buildMenu ].
-		
-	changeList whenBuiltDo: [ :ann | self basicRefresh ]
+{ #category : 'actions' }
+IceTipDiffPanel >> doExpandSelection [
+	
+	self expandPath: iceNodesTree selection selectedPath
 ]
 
-{ #category : #initialization }
+{ #category : 'private' }
+IceTipDiffPanel >> expandPath: aPath [
+
+	iceNodesTree 
+		expandPath: aPath;
+		selectPath: aPath
+]
+
+{ #category : 'event handling' }
+IceTipDiffPanel >> handleArrowLeft [
+
+	self collapsePath: iceNodesTree selection selectedPath
+]
+
+{ #category : 'event handling' }
+IceTipDiffPanel >> handleArrowRight [
+
+	self expandPath: iceNodesTree selection selectedPath
+]
+
+{ #category : 'accessing - ui' }
+IceTipDiffPanel >> iceNodesTree [
+
+	^ iceNodesTree
+]
+
+{ #category : 'initialization' }
+IceTipDiffPanel >> initialize [
+
+	super initialize.
+	self subscribeToAnnouncements
+]
+
+{ #category : 'initialization' }
 IceTipDiffPanel >> initializeDiffPanel [
+
 	diffPanel showOptions: false
 ]
 
-{ #category : #initialization }
-IceTipDiffPanel >> initializeWidgets [
-	changeList := self newTreeTable.
+{ #category : 'initialization' }
+IceTipDiffPanel >> initializePresenters [
+
+	iceNodesTree := self newTreeTable.
 	diffPanel := self instantiate: SpDiffPresenter.
 
-	self initializeChangeList.
-	self initializeDiffPanel.
-
-"	changeList widget
-		onAnnouncement: FTSelectionChanged
-		send: #selectionChanged:
-		to: self."
-
-"	self whenBuiltDo: [ :ann | self addShortcutsTo: ann widget ]."
-
-	self focusOrder
-		add: changeList;
-		add: diffPanel
+	self initializeTree.
+	self initializeDiffPanel
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> leftLabel: aString [ 
-	"This allows us to be compatible with old pharo versions"
-	(diffPanel respondsTo: #leftLabel:) ifFalse: [ ^ self ].
+{ #category : 'initialization' }
+IceTipDiffPanel >> initializeTree [
+
+	iceNodesTree
+		hideColumnHeaders;
+		addColumn: self changeListColumn;
+		children: [ :each | each children ];
+		whenSelectionChangedDo: [ self selectionChanged ];
+		bindKeyCombination: Character arrowLeft asKeyCombination 
+			toAction: [ self handleArrowLeft ];
+		bindKeyCombination: Character arrowRight asKeyCombination 
+			toAction: [ self handleArrowRight ].
+]
+
+{ #category : 'accessing' }
+IceTipDiffPanel >> leftLabel: aString [
+
 	diffPanel leftLabel: aString.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipDiffPanel >> model [
 
 	^ model
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> model: anObject [
-	model := anObject.
-	self refresh
-]
-
-{ #category : #'private factory' }
-IceTipDiffPanel >> newContext [
-	^ super newContext
-	repositoryModel: self model repositoryModel;
-	yourself
-]
-
-{ #category : #'private factory' }
-IceTipDiffPanel >> newContextWithSelection: anObject [
-	^ self newContext
-	item: anObject;
-	yourself
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipDiffPanel >> refresh [
+
 	self model reset.
 	self basicRefresh
-	
+
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipDiffPanel >> resetDiffContents [
+
 	self diffContentsLeft: '' right: ''
 ]
 
-{ #category : #accessing }
-IceTipDiffPanel >> rightLabel: aString [ 
-	"This allows us to be compatible with old pharo versions"
-	(diffPanel respondsTo: #leftLabel:) ifFalse: [ ^ self ].
+{ #category : 'accessing' }
+IceTipDiffPanel >> rightLabel: aString [
+
 	diffPanel rightLabel: aString
 ]
 
-{ #category : #'event handling' }
+{ #category : 'accessing' }
+IceTipDiffPanel >> selectedItem [
+
+	^ iceNodesTree selectedItem
+]
+
+{ #category : 'event handling' }
 IceTipDiffPanel >> selectionChanged [
+
 	| itemValue |
-	itemValue := changeList selectedItem value.
+	itemValue := iceNodesTree selectedItem value.
 	itemValue ifNotNil: [ 
 		self
 			diffContentsLeft: itemValue rightContents
 			right: itemValue leftContents ]
 ]
 
-{ #category : #'event handling' }
-IceTipDiffPanel >> selectionChanged: ann [
-	| element |
-	(ann newSelectedIndexes reject: [ :each | each = 0 ])
-		ifNotEmpty: [ :indexes | 
-			element := changeList widget dataSource realElementAt: indexes first.
-			self
-				diffContentsLeft: element value rightContents
-				right: element value leftContents ]
-		ifEmpty: [ self resetDiffContents ]
+{ #category : 'initialization' }
+IceTipDiffPanel >> setModelBeforeInitialization: anObject [
+
+	model := anObject
 ]
 
-{ #category : #initialization }
-IceTipDiffPanel >> setModelBeforeInitialization: anObject [
-	model := anObject
+{ #category : 'initialization' }
+IceTipDiffPanel >> subscribeToAnnouncements [
+
+	self announcer
+		when: IceTipDiffEntryRemoved
+		send: #diffEntryRemoved:
+		to: self
+]
+
+{ #category : 'initialization' }
+IceTipDiffPanel >> titleForWindow [
+
+	^ 'Diff'
+]
+
+{ #category : 'initialization' }
+IceTipDiffPanel >> updatePresenter [
+
+	self basicRefresh
 ]

@@ -1,18 +1,23 @@
+"
+A branch was not found.
+"
 Class {
-	#name : #IceBranchNotFound,
-	#superclass : #IceError,
+	#name : 'IceBranchNotFound',
+	#superclass : 'IceError',
 	#instVars : [
 		'branchName'
 	],
-	#category : #'Iceberg-Libgit-Exceptions'
+	#category : 'Iceberg-Libgit-Exceptions',
+	#package : 'Iceberg-Libgit',
+	#tag : 'Exceptions'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceBranchNotFound >> branchName [
 	^ branchName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceBranchNotFound >> branchName: aString [ 
 	branchName := aString
 ]

@@ -3,168 +3,243 @@ I'm a visitor to provide users with an interactive way to react to iceberg error
 
 "
 Class {
-	#name : #IceTipInteractiveErrorVisitor,
-	#superclass : #IceErrorVisitor,
+	#name : 'IceTipInteractiveErrorVisitor',
+	#superclass : 'IceErrorVisitor',
 	#instVars : [
+		'context',
 		'repository'
 	],
-	#category : #'Iceberg-TipUI'
+	#category : 'Iceberg-TipUI-Exceptions',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Exceptions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
+IceTipInteractiveErrorVisitor class >> newContext: aContext [
+
+	^ self newContext: aContext repository: nil
+]
+
+{ #category : 'instance creation' }
+IceTipInteractiveErrorVisitor class >> newContext: aContext repository: aModel [
+
+	^ self new 
+		context: aContext;
+		repository: aModel;
+		yourself
+]
+
+{ #category : 'instance creation' }
 IceTipInteractiveErrorVisitor class >> on: aModel [
 	^ self new repository: aModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceTipInteractiveErrorVisitor >> context [
+
+	^ context
+]
+
+{ #category : 'accessing' }
+IceTipInteractiveErrorVisitor >> context: anObject [
+
+	context := anObject
+]
+
+{ #category : 'accessing' }
 IceTipInteractiveErrorVisitor >> repository [
 	^ repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipInteractiveErrorVisitor >> repository: anObject [
 	repository := anObject
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitAuthenticationError: anError [
-	UIManager default 
-		alert: anError messageText
-		title: 'Iceberg authentication Error'
+ 
+	context application newInform
+		label: anError messageText;
+		title: 'Iceberg authentication Error';
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitCheckoutConflict: anError [
-	UIManager default 
-		alert: anError messageText
-		title: 'Iceberg conflicts while checking out'
+
+	context application
+		label: anError messageText;
+		title: 'Iceberg conflicts while checking out';
+		openModal
 ]
 
-{ #category : #visiting }
-IceTipInteractiveErrorVisitor >> visitCloneLocationAlreadyExists: anError [ 
-	UIManager default 
-		alert: ('The clone location {1} already exists' format: { anError location })
-		title: 'Clone action failed'	
+{ #category : 'visiting' }
+IceTipInteractiveErrorVisitor >> visitCloneLocationAlreadyExists: anError [
+
+	context application
+		label:
+		('The clone location {1} already exists' format:
+			 { anError location });
+		title: 'Clone action failed';
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitCloneRemoteNotFound: anError [
-	UIManager default 
-		alert: ('The clone remote {1} could not been found' format: { anError remoteUrl })
-		title: 'Clone action failed'	
+
+	context application newInform
+		label: ('The clone remote {1} could not been found' format:
+				 { anError remoteUrl });
+		title: 'Clone action failed';
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
+IceTipInteractiveErrorVisitor >> visitExperimentalFeature: aWarning [
+
+	| proceed |
+	proceed := context application newConfirm
+		           label: aWarning messageText;
+		           title: 'Warning!';
+		           acceptLabel: 'Continue';
+		           cancelLabel: 'Cancel';
+					openModal.
+	proceed ifFalse: [ ^ self ].
+	aWarning resume
+]
+
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitGenericError: anError [
 	
-	(IceTipErrorDialog on: anError) openDialogWithSpec
+	(IceTipErrorDialogPresenter 
+		newApplication: context application 
+		model: anError) 
+		asModalWindow 
+			centeredRelativeTo: context window;
+			open
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitMergeAborted: anError [
-	UIManager default 
-		alert: (anError messageText ifNil: ['Automatic (fast-forward) merge is not possible. 
+
+	context application
+		label: (anError messageText ifNil: [
+				 'Automatic (fast-forward) merge is not possible. 
 Please perform the merge manually, then proceed with your previous operation.
-WARNING: If you have external files, you may need to verify the conflicts there.'])
-		title: 'Automatic merge failed'
+WARNING: If you have external files, you may need to verify the conflicts there.' ]);
+		title: 'Automatic merge failed';
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitMissingCredentialsError: anError [
 
-	((IceTipGitUsernameAndEmailDialog on: self repository)
+	((IceTipGitUsernameAndEmailDialogPresenter 
+		newApplication: context application 
+		model: self repository)
 		onAccept: [ anError resume ];
-		openDialogWithSpec)
-			modalRelativeTo: self currentWorld.
+		asModalWindow)
+			centeredRelativeTo: context window;
+			open
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitNoCommitMessage: aWarning [
+
 	| proceed |
-	
-	proceed := UIManager default
-		confirm: aWarning messageText
-		label: 'Warning!'  
-		trueChoice: 'Commit' 
-		falseChoice: 'Cancel'
-		cancelChoice: nil
-		default: false.
-	
-	proceed ifNil: [ ^ self ].
-	proceed ifTrue: [ aWarning resume ]
+	proceed := context application newConfirm
+		           label: aWarning messageText;
+		           title: 'Warning!';
+		           acceptLabel: 'Commit';
+		           cancelLabel: 'Cancel';
+		         		openModal.
+
+	proceed ifFalse: [ ^ self ].
+	aWarning resume
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitNoRemote: anError [
-	UIManager default 
-		alert: 'There are no remotes defined for this repository. 
-Add one before continue.'
-		title: 'Remote action failed'	
+
+	context application 
+		label: 'There are no remotes defined for this repository. 
+Add one before continue.';
+		title: 'Remote action failed';
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitNothingToCommitError: anError [
-	UIManager default inform: 'There is nothing to commit.'
+
+	context application newInform
+		title: 'There is nothing to commit.';
+		openModal
 ]
 
-{ #category : #visiting }
-IceTipInteractiveErrorVisitor >> visitRemoteAlreadyExistError: anError [ 
-	UIManager default inform: ('Remote "{1}" already exists.' format: { anError remoteName })
+{ #category : 'visiting' }
+IceTipInteractiveErrorVisitor >> visitRemoteAlreadyExistError: anError [
+
+	context application newInform
+		title:
+			('Remote "{1}" already exists.' format: { anError remoteName });
+		openModal
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitRemoteDesynchronizedError: anError [
+
 	| continue command |
-	
-	continue := UIManager default
-		confirm: ('Your repository is out of sync with remote {1}. 
-You need to pull remote changes before continue and push your changes.' format: { anError remote })
-		label: 'Remote repository out of sync!'
-		trueChoice: 'Pull'
-		falseChoice: 'Cancel'
-		cancelChoice: nil
-		default: false.	
-	(continue isNil or: [continue not])
-		ifTrue: [ ^ self ].	
+	continue := context application newConfirm
+		            label:
+			            ('Your repository is out of sync with remote {1}. 
+You need to pull remote changes before continue and push your changes.'
+				             format: { anError remote }); 
+		            title: 'Remote repository out of sync!';
+		            acceptLabel: 'Pull';
+		            cancelLabel: 'Cancel';
+		            openModal.
+	(continue isNil or: [ continue not ]) ifTrue: [ ^ self ].
 
 	command := IcePullRemoteCommand new
-		repository: self repository;
-		remote: anError remote;
-		yourself.
+		           repository: self repository;
+		           remote: anError remote;
+		           yourself.
 
-	[ command execute ]
-	on: IceMergeAborted, IceShouldCommitBeforePull
-	do: [ :e |
-		self flag: #pharoTodo. "Refactor this" 
-		(e isKindOf: IceShouldCommitBeforePull)
-			ifTrue: [ e resume ]
-			ifFalse: [ e acceptError: self ] ].
-	
+	[ command executeWithContext: context ]
+		on: IceMergeAborted , IceShouldCommitBeforePull
+		do: [ :e |
+			self flag: #pharoTodo. "Refactor this"
+			(e isKindOf: IceShouldCommitBeforePull)
+				ifTrue: [ e resume ]
+				ifFalse: [ e acceptError: self ] ].
+
 	command isSuccess ifFalse: [ ^ self ].
 	anError isResumable ifTrue: [ ^ anError resume ].
 	anError retry
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitShouldCommitBeforePullError: anError [
+
 	| continue |
-	continue := UIManager default
-		confirm:
-			'Your repository has uncommited changes. Merging incoming commits will change
+	continue := context application newConfirm
+		            label: 
+			            'Your repository has uncommitted changes. Merging incoming commits will change
 your current working copy and your current state will not be recoverable. 
-We recommend that you commit first and then pull incoming changes again.'
-		label: 'You might loose your current changes!'
-		trueChoice: 'Proceed anyway'
-		falseChoice: 'Cancel'
-		cancelChoice: nil
-		default: false.	
+We recommend that you commit first and then pull incoming changes again.';
+		            title: 'You might loose your current changes!';
+		            acceptLabel: 'Proceed anyway';
+		            cancelLabel: 'Cancel';
+						openModal.
 	continue ifFalse: [ ^ self ].
 	anError resume
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTipInteractiveErrorVisitor >> visitWorkingCopyDesynchronizedError: anError [
 	| solveStrategy command |
+
 	solveStrategy := UIManager default 
 		chooseFrom: #(
 			'Create new branch and commit' 
@@ -178,7 +253,7 @@ You need to solve this problem before you continue, please choose one of the str
 	solveStrategy ifNil: [ ^ self ].
 	(command := solveStrategy new) 
 		repository: self repository;
-		execute.
+		executeWithContext: context.
 	command isSuccess 
 		ifTrue: [ anError retry ]
 ]

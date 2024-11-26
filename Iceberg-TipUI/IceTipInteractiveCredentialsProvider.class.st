@@ -2,26 +2,28 @@
 I am a credential provider that requires the missing plaintext credential to the user.
 "
 Class {
-	#name : #IceTipInteractiveCredentialsProvider,
-	#superclass : #IceCredentialsProvider,
-	#category : #'Iceberg-TipUI-Credentials'
+	#name : 'IceTipInteractiveCredentialsProvider',
+	#superclass : 'IceCredentialsProvider',
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #private }
+{ #category : 'class initialization' }
 IceTipInteractiveCredentialsProvider class >> initialize [
-	
+
 	self providerType: nil
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipInteractiveCredentialsProvider class >> isDefault [
 	^ true
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipInteractiveCredentialsProvider >> obtainCredentials: credentialsToReturn [
-
 	| returnedCred |
+
 	returnedCred := credentialsToReturn askForModelClass new
 		credentialStore: self credentialStore;
 		askingHostname: remote host;
@@ -30,26 +32,28 @@ IceTipInteractiveCredentialsProvider >> obtainCredentials: credentialsToReturn [
 	credentialsToReturn readFrom: returnedCred
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipInteractiveCredentialsProvider >> obtainPlaintextCredentials: credentialsToReturn [
 	| returnedCred |
-	returnedCred := IceTipAskForPlaintextCredentialsModel new
-		credentialStore: self credentialStore;
+	
+	returnedCred := (credentialsToReturn askForModelClassOn: remote host) new
 		askingHostname: remote host;
-		openModalWithSpec;
+		credentialStore: self credentialStore;		
+		openModal;
 		credentials.
+
 	credentialsToReturn readFrom: returnedCred
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipInteractiveCredentialsProvider >> obtainSshCredentials: credentialsToReturn [ 
 	
 	| returnedCred |
 	
-	returnedCred := IceTipAskSSHCredentialsModel new
+	returnedCred := IceTipAskSSHCredentialsPresenter new
 		credentials: self sshCredentials;
 		credentialStore: self credentialStore;
 		open.
-		
+
 	credentialsToReturn readFrom: returnedCred
 ]

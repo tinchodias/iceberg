@@ -1,96 +1,97 @@
 Class {
-	#name : #IceTipCherrypickPreviewBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipCherrypickPreviewBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'diffPanel',
 		'buttonBar'
 	],
-	#category : #'Iceberg-TipUI-View-Branch'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipCherrypickPreviewBrowser class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-		add: #diffPanel;
-		add: #buttonBar height: self buttonHeight  ;
-		yourself
+{ #category : 'commands' }
+IceTipCherrypickPreviewBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'commands' }
+IceTipCherrypickPreviewBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
+]
+
+{ #category : 'instance creation' }
 IceTipCherrypickPreviewBrowser class >> onCommitish: aCommitish [
 	^ self
 		on:
 			(IceTipCherrypickModel onCommitish: aCommitish)
 ]
 
-{ #category : #initialization }
+{ #category : 'accessing - ui' }
 IceTipCherrypickPreviewBrowser >> buttonBar [
-^	buttonBar 
+
+	^ buttonBar
 ]
 
-{ #category : #initialization }
-IceTipCherrypickPreviewBrowser >> buttonBar: aSpButtonBarPresenter [
-	buttonBar  := aSpButtonBarPresenter
+{ #category : 'layout' }
+IceTipCherrypickPreviewBrowser >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: diffPanel;
+		  add: buttonBar expand: false;
+		  yourself
 ]
 
-{ #category : #accessing }
-IceTipCherrypickPreviewBrowser >> contextClass [
-	self
-		flag: 'Est-ce important si on a pas de menu commander ? comment ça marche ?'.
-		^IceTipCommitContext.
-]
-
-{ #category : #initialization }
+{ #category : 'accessing - ui' }
 IceTipCherrypickPreviewBrowser >> diffPanel [
-	^diffPanel
+
+	^ diffPanel
 ]
 
-{ #category : #initialization }
-IceTipCherrypickPreviewBrowser >> diffPanel: anObject [
-	diffPanel := anObject
-]
-
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipCherrypickPreviewBrowser >> doCherryPick [
-|root|
+
+	| root |
 	root := diffPanel model tree.
-			root accept: IceMergeToChangeTreeVisitor new.
-			self model repository workingCopy loadChangesInWorkingCopy: root.
-			self window close
+	root accept: IceMergeToChangeTreeVisitor new.
+	self model repository workingCopy loadChangesInWorkingCopy: root.
+	self closeWindow
 ]
 
-{ #category : #accessing }
-IceTipCherrypickPreviewBrowser >> initialExtent [
+{ #category : 'initialization' }
+IceTipCherrypickPreviewBrowser >> initialExtentForWindow [
+
 	^ (800 @ 600) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
-IceTipCherrypickPreviewBrowser >> initializeWidgets [
-	super initializeWidgets.
+{ #category : 'initialization' }
+IceTipCherrypickPreviewBrowser >> initializePresenters [
 
 	diffPanel := self
 		instantiate: (IceTipMergeSelectingPanel onDiff: self model diff).
 	buttonBar := self newButtonBar.
 	buttonBar add: self newActionButton.
 
-	self addShortcutsTo: self.
-
-	self focusOrder
-		add: self buttonBar;
-		add: self diffPanel.
-
 	diffPanel leftLabel: 'Working Copy'.
 	diffPanel rightLabel: ' With Cherrypicked commit '
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing - ui' }
+IceTipCherrypickPreviewBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ diffPanel iceNodesTree
+]
+
+{ #category : 'accessing' }
 IceTipCherrypickPreviewBrowser >> mergeType: anObject [
 	
 	self model mergeType: anObject
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private - factory' }
 IceTipCherrypickPreviewBrowser >> newActionButton [
 
 	^ self newButton
@@ -101,7 +102,8 @@ IceTipCherrypickPreviewBrowser >> newActionButton [
 		yourself
 ]
 
-{ #category : #api }
-IceTipCherrypickPreviewBrowser >> title [
+{ #category : 'initialization' }
+IceTipCherrypickPreviewBrowser >> titleForWindow [
+
 	^ 'Preview result of Cherrypick'
 ]

@@ -2,52 +2,59 @@
 I'm a base browser for pull/push action browser.
 "
 Class {
-	#name : #IceTipHistoryActionBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipHistoryActionBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'commitsPanel',
 		'actionButtonBar',
 		'button'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipHistoryActionBrowser >> accept [
+
 	button performAction
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'accessing - ui' }
 IceTipHistoryActionBrowser >> actionButtonBar [
- ^ actionButtonBar 
+
+	^ actionButtonBar
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipHistoryActionBrowser >> commitsPanel [
+
 	^ commitsPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipHistoryActionBrowser >> commitsPanel: anObject [
-	commitsPanel := anObject
+{ #category : 'accessing - ui' }
+IceTipHistoryActionBrowser >> commitsPanel: aSpPresenter [
+
+	commitsPanel := aSpPresenter
 ]
 
-{ #category : #accessing }
-IceTipHistoryActionBrowser >> initialExtent [
+{ #category : 'initialization' }
+IceTipHistoryActionBrowser >> initialExtentForWindow [
+
 	^ (800@600) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
-IceTipHistoryActionBrowser >> initializeWidgets [
-	super initializeWidgets.
+{ #category : 'initialization' }
+IceTipHistoryActionBrowser >> initializePresenters [
+
 	commitsPanel := self instantiate: IceTipHistoryBrowser on: self model.
 	actionButtonBar := self newButtonBar.
-	actionButtonBar add: (button := self newActionButton).
-	self addShortcutsTo: self.
+	actionButtonBar add: (button := self newActionButton)
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipHistoryActionBrowser >> moveToRemote: aRemoteModel [
+
 	aRemoteModel ifNil: [ ^ self ].
 	
 	self model useRemote: aRemoteModel.
@@ -56,38 +63,44 @@ IceTipHistoryActionBrowser >> moveToRemote: aRemoteModel [
 	self updateTitle
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private - factory' }
 IceTipHistoryActionBrowser >> newActionButton [
+	"Answer a new instance of SpButton to be placed at bottom, as the main action of the window."
+
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipHistoryActionBrowser >> refresh [
-	self refreshCommits.
+
+	self refreshCommits
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipHistoryActionBrowser >> refreshCommits [
+
 	commitsPanel refresh
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipHistoryActionBrowser >> refreshWhenRepository: ann [
+
 	(self model repositoryModel isModelOf: ann repository)
 		ifFalse: [ ^ self ].
 	self model reset.
 	self refresh
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipHistoryActionBrowser >> subscribeToAnnouncements [
-	self announcer 
-		when: IceTipDiffRefreshed 
-		send: #refreshWhenRepository: 
+
+	self announcer
+		when: IceTipDiffRefreshed
+		send: #refreshWhenRepository:
 		to: self.
-		
-	Iceberg announcer weak 
-		when: IceRepositoryAnnouncement 
-		send: #refreshWhenRepository: 
+
+	Iceberg announcer weak
+		when: IceRepositoryAnnouncement
+		send: #refreshWhenRepository:
 		to: self
 ]

@@ -3,15 +3,17 @@ I'm a repair option.
 Repositories can be broken in several ways. My children will describe them and take the actions needed to perform the re-alignment of an image with its repository.
 "
 Class {
-	#name : #IceTipRepairAction,
-	#superclass : #IceTipAction,
+	#name : 'IceTipRepairAction',
+	#superclass : 'IceTipAction',
 	#instVars : [
 		'repositoryModel'
 	],
-	#category : #'Iceberg-TipUI-Commands'
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction class >> allAvailableFor: aRepository [
 	^ ((self allSubclasses 
 		select: [ :each | each isAvailableFor: aRepository ])
@@ -19,38 +21,46 @@ IceTipRepairAction class >> allAvailableFor: aRepository [
 		collect: #new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction class >> help [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction class >> icon [
 	^ self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
+IceTipRepairAction class >> isAbstract [
+
+	^ self == IceTipRepairAction
+]
+
+{ #category : 'testing' }
 IceTipRepairAction class >> isAvailableFor: aRepository [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction class >> order [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction class >> title [
 	^ self subclassResponsibility
 ]
 
-{ #category : #executing }
-IceTipRepairAction >> executeWith: aRepositoryModel [
+{ #category : 'executing' }
+IceTipRepairAction >> executeWithContext: aContext model: aRepositoryModel [
+
+	self context: aContext.
 	self repositoryModel: aRepositoryModel.
 	self execute
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipRepairAction >> fetchAllRemotes [
 	| remotes |
 	remotes := self repository remotes.
@@ -64,32 +74,32 @@ IceTipRepairAction >> fetchAllRemotes [
 			self repository fetchFrom: each ] ].	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction >> help [ 
 	^ self class help
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction >> icon [
 	^ self class icon
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction >> repository [
 	^ self repositoryModel entity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction >> repositoryModel [
 	^ repositoryModel
 ]
 
-{ #category : #accessing }
+{ #category : 'private' }
 IceTipRepairAction >> repositoryModel: anObject [
 	repositoryModel := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairAction >> title [
 	^ self class title
 ]

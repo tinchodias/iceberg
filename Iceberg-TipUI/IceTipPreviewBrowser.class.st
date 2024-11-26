@@ -3,81 +3,75 @@ I'm a browser to show a preview of an operation that can be made right after.
 Tipically, I'm using through my chldren, to do a checkout or merge.
 "
 Class {
-	#name : #IceTipPreviewBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipPreviewBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'diffPanel',
 		'actionPanel',
 		'button'
 	],
-	#category : #'Iceberg-TipUI-View-Branch'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipPreviewBrowser class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-				add: #diffPanel;
-				add: #actionPanel height: 25;
-			yourself
+{ #category : 'commands' }
+IceTipPreviewBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'commands' }
+IceTipPreviewBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	"Nothing to add"
+]
+
+{ #category : 'accessing - ui' }
 IceTipPreviewBrowser >> actionPanel [
+
 	^ actionPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipPreviewBrowser >> actionPanel: anObject [
-	actionPanel := anObject
+{ #category : 'layout' }
+IceTipPreviewBrowser >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		borderWidth: 5;
+		spacing: 5; 
+		add: diffPanel;
+		add: actionPanel expand: false;
+	 	yourself
 ]
 
-{ #category : #accessing }
-IceTipPreviewBrowser >> contextClass [
-	^ IceTipBranchContext
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipPreviewBrowser >> diffPanel [
+
 	^ diffPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipPreviewBrowser >> diffPanel: anObject [
-	diffPanel := anObject
-]
+{ #category : 'initialization' }
+IceTipPreviewBrowser >> initialExtentForWindow [
 
-{ #category : #accessing }
-IceTipPreviewBrowser >> initialExtent [
 	^ (800 @ 400) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
-IceTipPreviewBrowser >> initializeWidgets [
-	super initializeWidgets.
-	
+{ #category : 'initialization' }
+IceTipPreviewBrowser >> initializePresenters [
+
 	diffPanel := self instantiate: IceTipDiffPanel on: self model diff.
-	actionPanel := self instantiate: IceTipActionPanel.
-	actionPanel addAction: (button := self newActionButton).
-	
-	self addShortcutsTo: self.
-	
-	self focusOrder 
-		add: self actionPanel;
-		add: self diffPanel
+	actionPanel := self newButtonBar.
+	actionPanel add: (button := self newActionButton)
 ]
 
-{ #category : #initialization }
-IceTipPreviewBrowser >> initializeWindow: aWindowPresenter [
-	aWindowPresenter
-		title: self title;
-		initialExtent: self initialExtent;
-		windowIcon: self windowIcon;
-		askOkToClose: self askOkToClose;
-		aboutText: self aboutText
+{ #category : 'accessing - ui' }
+IceTipPreviewBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ diffPanel iceNodesTree
 ]
 
-{ #category : #'private factory' }
+{ #category : 'private - factory' }
 IceTipPreviewBrowser >> newActionButton [
 	self subclassResponsibility
 ]

@@ -2,55 +2,50 @@
 Command that opens the repair window on a repository
 "
 Class {
-	#name : #IceTipRepairCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipRepairCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipRepairCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 1
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipRepairCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipRepairCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational not
-]
-
-{ #category : #accessing }
-IceTipRepairCommand class >> defaultHelp [
 	^ 'Helps you to repair your repository when it is detached.'
 ]
 
-{ #category : #accessing }
-IceTipRepairCommand class >> defaultMenuIconName [
-	^ #repair
-]
+{ #category : 'accessing - defaults' }
+IceTipRepairCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipRepairCommand class >> defaultMenuItemName [
 	^ 'Repair repository'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing - defaults' }
 IceTipRepairCommand class >> defaultToolbarItemName [
+
 	^ 'Repair'
 ]
 
-{ #category : #activation }
-IceTipRepairCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 1
+{ #category : 'testing' }
+IceTipRepairCommand >> canBeExecuted [
+
+	^ super canBeExecuted and: [ self isRepositoryOperational not ]
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipRepairCommand >> execute [
-	(IceTipRepairRepositoryDialog on: self repositoryModel) openDialogWithSpec
+
+	((IceTipRepairRepositoryDialogPresenter 
+		newApplication: context application
+		model: self repositoryModel)
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipRepairCommand >> iconName [
+
+	^ #repair
 ]

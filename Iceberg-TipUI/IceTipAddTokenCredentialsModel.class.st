@@ -2,8 +2,8 @@
 I am a dialog to add token credentials.
 "
 Class {
-	#name : #IceTipAddTokenCredentialsModel,
-	#superclass : #IceTipAbstractCredentialsModel,
+	#name : 'IceTipAddTokenCredentialsModel',
+	#superclass : 'IceTipAbstractCredentialsModel',
 	#instVars : [
 		'hostInput',
 		'tokenInput',
@@ -12,10 +12,12 @@ Class {
 		'usernameInput',
 		'usernameLabel'
 	],
-	#category : #'Iceberg-TipUI-Credentials'
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 IceTipAddTokenCredentialsModel class >> defaultSpec [
 	<spec: #default>
 	^ SpBoxLayout newVertical
@@ -40,25 +42,13 @@ IceTipAddTokenCredentialsModel class >> defaultSpec [
 		yourself
 ]
 
-{ #category : #accessing }
-IceTipAddTokenCredentialsModel >> accept [
-
-	self acceptAddAction
-]
-
-{ #category : #accessing }
-IceTipAddTokenCredentialsModel >> hostnameFromInput [
-	
-	^ hostInput text
-]
-
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipAddTokenCredentialsModel >> initialExtent [
 
 	^ (350 @ (self class inputTextHeight * 5 + self class buttonHeight)) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipAddTokenCredentialsModel >> initializePresenters [
 
 	super initializePresenters.
@@ -81,7 +71,7 @@ IceTipAddTokenCredentialsModel >> initializePresenters [
 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipAddTokenCredentialsModel >> isOkEnabled [
 
 	^ self usernameFromInput isNotEmpty and: [ 
@@ -89,7 +79,7 @@ IceTipAddTokenCredentialsModel >> isOkEnabled [
 			  self tokenFromInput isNotEmpty ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipAddTokenCredentialsModel >> newCredentials [
 	
 	^ IceTokenCredentials new
@@ -99,7 +89,7 @@ IceTipAddTokenCredentialsModel >> newCredentials [
 		yourself 
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipAddTokenCredentialsModel >> putFocusOrder [
 
 	self focusOrder
@@ -108,19 +98,7 @@ IceTipAddTokenCredentialsModel >> putFocusOrder [
 		add: tokenInput
 ]
 
-{ #category : #accessing }
-IceTipAddTokenCredentialsModel >> title [
-
-	^ 'Add token credentials'
-]
-
-{ #category : #accessing }
-IceTipAddTokenCredentialsModel >> tokenFromInput [
-	
-	^ tokenInput text
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipAddTokenCredentialsModel >> usernameFromInput [
 	
 	^ usernameInput text

@@ -2,39 +2,39 @@
 Command to unload a package from the system, keeping it in the repository
 "
 Class {
-	#name : #IceTipUnloadPackageCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipUnloadPackageCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipUnloadPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 40 for: IceTipWorkingCopyContext
+{ #category : 'accessing - defaults' }
+IceTipUnloadPackageCommand class >> defaultDescription [
+
+	^ 'Unload selected package from the system, but keep it in the repository.'
 ]
 
-{ #category : #testing }
-IceTipUnloadPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded
-]
+{ #category : 'accessing - defaults' }
+IceTipUnloadPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultHelp [
-	^ 'Unload selected package from the system, but keep it in the repository'
-]
-
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultMenuIconName [
-	^ #smallCancel
-]
-
-{ #category : #accessing }
-IceTipUnloadPackageCommand class >> defaultMenuItemName [
 	^ 'Unload'
 ]
 
-{ #category : #execution }
+{ #category : 'testing' }
+IceTipUnloadPackageCommand >> canBeExecuted [
+
+	^ self isPackageLoaded
+]
+
+{ #category : 'executing' }
 IceTipUnloadPackageCommand >> execute [
-	self packageModel unload
+
+	self packageModel newUnloadAction executeWithContext: self context
+]
+
+{ #category : 'accessing' }
+IceTipUnloadPackageCommand >> iconName [
+
+	^ #smallCancel
 ]

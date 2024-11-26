@@ -1,10 +1,12 @@
 Class {
-	#name : #IceConflictsCherryPickingTest,
-	#superclass : #IceCherryPickingTest,
-	#category : #'Iceberg-Tests-Cherrypicking'
+	#name : 'IceConflictsCherryPickingTest',
+	#superclass : 'IceCherryPickingTest',
+	#category : 'Iceberg-Tests-Cherrypicking',
+	#package : 'Iceberg-Tests',
+	#tag : 'Cherrypicking'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceConflictsCherryPickingTest >> testAddPackageConflict [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -34,9 +36,9 @@ IceConflictsCherryPickingTest >> testAddPackageConflict [
 		deny: (mergeTree  / self packageName2) value isConflict
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceConflictsCherryPickingTest >> testMethodModificationConflict [
-	| commitToCherryPick diff mergeTree |
+	| commitToCherryPick mergeTree |
 	self repository workingCopy addPackageNamed: self packageName1.
 	self repository workingCopy
 		createClass: 'TestClass2'

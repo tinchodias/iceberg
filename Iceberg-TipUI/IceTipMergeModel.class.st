@@ -1,38 +1,22 @@
 Class {
-	#name : #IceTipMergeModel,
-	#superclass : #IceTipDiffPreviewModel,
+	#name : 'IceTipMergeModel',
+	#superclass : 'IceTipDiffPreviewModel',
 	#instVars : [
 		'mergeType',
 		'mergeAction'
 	],
-	#category : #'Iceberg-TipUI-Model'
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipMergeModel >> calculateDiff [
 
 	^ self mergeAction
 ]
 
-{ #category : #actions }
-IceTipMergeModel >> executeMergeActionAndThen: aBlock [ 
-
-	<noCache>
-	IceTipStandardAction new 
-		repository: self repository;
-		message: ('Merging {1} into {2}' format: { self targetName. self repositoryName });
-		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self merge ]
-]
-
-{ #category : #actions }
-IceTipMergeModel >> merge [
-
-	mergeType mergeOn: commitish then: [  ].
-]
-
-{ #category : #actions }
+{ #category : 'private' }
 IceTipMergeModel >> mergeAction [
 
 	^ mergeAction ifNil: [
@@ -42,13 +26,30 @@ IceTipMergeModel >> mergeAction [
 			yourself ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipMergeModel >> mergeType: aMergeType [
 
 	mergeType := aMergeType
 ]
 
-{ #category : #accessing }
+{ #category : 'actions' }
+IceTipMergeModel >> newExecuteMergeAction [ 
+	
+	^ IceTipStandardAction new
+		repository: self repository;
+		message: ('Merging {1} into {2}' format: { self targetName. self repositoryName });
+		onSuccessRepositoryModified;
+		action: [ :aContext | self newMergeAction executeWithContext: aContext ];
+		yourself
+]
+
+{ #category : 'actions' }
+IceTipMergeModel >> newMergeAction [
+
+	^ mergeType newMergeAction: commitish
+]
+
+{ #category : 'accessing' }
 IceTipMergeModel >> repositoryModel [
 	^ commitish repositoryModel
 ]

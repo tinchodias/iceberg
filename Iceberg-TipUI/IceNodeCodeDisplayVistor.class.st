@@ -3,55 +3,56 @@ I am a IceNode (containing an IceOperationMerge) visitor meant to update a SpCod
  with the highlighted code.
 "
 Class {
-	#name : #IceNodeCodeDisplayVistor,
-	#superclass : #Object,
+	#name : 'IceNodeCodeDisplayVistor',
+	#superclass : 'Object',
 	#instVars : [
 		'codePresenter'
 	],
-	#category : #'Iceberg-TipUI'
+	#category : 'Iceberg-TipUI',
+	#package : 'Iceberg-TipUI'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceNodeCodeDisplayVistor class >> onCodePresenter: aSpCodePresenter [
 	^ self new
 		codePresenter: aSpCodePresenter ;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNodeCodeDisplayVistor >> codePresenter [
 	^ codePresenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNodeCodeDisplayVistor >> codePresenter: aSpCodePresenter [.
 	codePresenter := aSpCodePresenter 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceNodeCodeDisplayVistor >> visitClassDefinition: anIceClassDefinition [ 
 	codePresenter text: anIceClassDefinition contents.
 	codePresenter behavior: nil
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceNodeCodeDisplayVistor >> visitConflictingOperation: anIceConflictingOperation [ 
 	anIceConflictingOperation chosenOperation definition accept: self.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceNodeCodeDisplayVistor >> visitMethodNode: anIceMethodDefinition [ 
 	codePresenter text: anIceMethodDefinition sourceCode;
 	behavior: (anIceMethodDefinition ownerName asClassIfAbsent: [ UndefinedObject  ] ). 
 	
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceNodeCodeDisplayVistor >> visitNonConflictingOperation: anIceNonConflictingOperation [ 
 	anIceNonConflictingOperation definition accept: self .
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceNodeCodeDisplayVistor >> visitPackage: anIcePackageDefinition [
 	codePresenter
 		text: '';

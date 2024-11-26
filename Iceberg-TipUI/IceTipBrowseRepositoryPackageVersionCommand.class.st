@@ -4,29 +4,27 @@ Command that opens a browser on the code of the repository.
 The current implementation relies on a monticello MCSnapshotBrowser
 "
 Class {
-	#name : #IceTipBrowseRepositoryPackageVersionCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipBrowseRepositoryPackageVersionCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipBrowseRepositoryPackageVersionCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 20 for: IceTipWorkingCopyContext
-]
+{ #category : 'accessing - defaults' }
+IceTipBrowseRepositoryPackageVersionCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipBrowseRepositoryPackageVersionCommand class >> defaultHelp [
 	^ 'Browse the version in the repository'
 ]
 
-{ #category : #accessing }
-IceTipBrowseRepositoryPackageVersionCommand class >> defaultMenuItemName [
-	^ 'Browse repository version'
+{ #category : 'accessing - defaults' }
+IceTipBrowseRepositoryPackageVersionCommand class >> defaultName [
+
+	^ 'Browse this version in Monticello'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipBrowseRepositoryPackageVersionCommand >> execute [
+
 	self packageModel browseRepositoryVersion
 ]

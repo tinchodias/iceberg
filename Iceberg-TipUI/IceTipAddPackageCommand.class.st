@@ -2,48 +2,50 @@
 Command that opens a dialog to add a/many package/s into the selected repository.
 "
 Class {
-	#name : #IceTipAddPackageCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipAddPackageCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #accessing }
-IceTipAddPackageCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $n meta for: IceTipWorkingCopyContext
-]
+{ #category : 'accessing - defaults' }
+IceTipAddPackageCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipAddPackageCommand class >> defaultHelp [
 	^ 'Adds an existing package to this repository'
 ]
 
-{ #category : #accessing }
-IceTipAddPackageCommand class >> defaultMenuIconName [
-	^ #add
-]
+{ #category : 'accessing - defaults' }
+IceTipAddPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipAddPackageCommand class >> defaultMenuItemName [
 	^ 'Add package'
 ]
 
-{ #category : #accessing }
-IceTipAddPackageCommand class >> defaultPosition [
-	^ #right
-]
-
-{ #category : #accessing }
-IceTipAddPackageCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 20
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipAddPackageCommand >> execute [
-	(IceTipAddPackagesDialog on: self repositoryModel) openDialogWithSpec 
+
+	(IceTipAddPackagesDialogPresenter 
+		newApplication: context application 
+		model: self repositoryModel) 
+		asDialogWindow 
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipAddPackageCommand >> iconName [
+
+	^ #add
+]
+
+{ #category : 'accessing' }
+IceTipAddPackageCommand >> shortcutKey [
+
+	^ $n meta
+]
+
+{ #category : 'testing' }
+IceTipAddPackageCommand >> shouldBeDisplayedOnRightSideInToolbar [
+
+	^ true
 ]

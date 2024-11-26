@@ -5,172 +5,261 @@ I show the packages managed by this repository and a series of actions to proper
 (IceTipPackagesBrowser forRepository: IceRepository registry anyOne) openWithSpec
 "
 Class {
-	#name : #IceTipWorkingCopyBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipWorkingCopyBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
-		'packageList',
-		'statusBar'
+		'statusBar',
+		'packagesTable',
+		'filterInput'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-WorkingCopy',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-WorkingCopy'
 }
 
-{ #category : #specs }
-IceTipWorkingCopyBrowser class >> defaultSpec [
-	<spec: #default>
-	
-	^ SpBoxLayout newVertical 
-		add: #toolbar expand: false fill: true padding: 0;
-			add: #packageList;
-			add: #statusBar height: self defaultStatusBarHeight;
-			yourself 
+{ #category : 'commands' }
+IceTipWorkingCopyBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	{	IceTipRepairCommand. 	
+		IceTipCommitCommand.
+		IceTipPushCommand.
+		IceTipPullCommand.
+		IceTipFetchCommand.
+		IceTipCheckoutBranchCommand.
+		IceTipMergeCommand.
+		IceTipManageRepositoryCommand.
+		IceTipDiscardChangesCommand.
+		IceTipAddPackageCommand } 
+		do: [ :each |
+			aCommandGroup register: (each forSpecContext: presenter) ]
+
 ]
 
-{ #category : #specs }
-IceTipWorkingCopyBrowser class >> defaultStatusBarHeight [
-	^ 25 * self currentWorld displayScaleFactor
+{ #category : 'commands' }
+IceTipWorkingCopyBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	{ 	IceTipBrowsePackageCommand.
+		IceTipBrowseRepositoryPackageVersionCommand.
+		IceTipLoadPackageCommand.
+		IceTipReloadPackageCommand.
+		IceTipUnloadPackageCommand.
+		IceTipUnloadAndRemovePackageCommand.
+		IceTipRemoveFromRepositoryPackageCommand }
+			do: [ :each | aCommandGroup register: (each forSpecContext: presenter) ]
+
 ]
 
-{ #category : #'instance creation' }
-IceTipWorkingCopyBrowser class >> new [
-	self error: 'Use #for:'
-]
-
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceTipWorkingCopyBrowser class >> onRepository: aRepository [
-	^ self on: (IceTipRepositoryModel on: aRepository)
+
+	^ self on: (IceTipWorkingCopyModel on: (IceTipRepositoryModel on: aRepository) workingCopy: aRepository workingCopy)
 ]
 
-{ #category : #accessing }
-IceTipWorkingCopyBrowser >> contextClass [
-	^ IceTipWorkingCopyContext
+{ #category : 'accessing' }
+IceTipWorkingCopyBrowser >> allListItems [
+
+	^ self model packageModels
 ]
 
-{ #category : #'private factory' }
-IceTipWorkingCopyBrowser >> createCommandContext [
-	^ self newContextWithSelection: self packageSelected
-]
-
-{ #category : #accessing }
-IceTipWorkingCopyBrowser >> initialExtent [
-	^ (700@500) scaledByDisplayScaleFactor
-]
-
-{ #category : #initialization }
-IceTipWorkingCopyBrowser >> initializePackageList [
-	packageList
-		beResizable;
-		addColumn:
-			((SpStringTableColumn evaluated: #descriptionWithDecoration)
-				title: 'Name';
-				yourself);
-		addColumn:
-			((SpStringTableColumn evaluated: #statusWithDecoration)
-				title: 'Status';
-				yourself);
-		items: self model packageModels;
-		selectIndex: 1;
-		itemFilter: [ :anItem :aPattern | 
-			IceTipPackageFilter new
-				pattern: aPattern;
-				matches: anItem ];
-		contextMenu: [ self buildMenu ]
-]
-
-{ #category : #initialization }
-IceTipWorkingCopyBrowser >> initializeStatusBar [
-	statusBar 
-"		addItem: (IceTipBranchWithCommitStatusBarItem new
-			model: self model;
-			yourself);
-"		addItem: (IceTipStatusBarTargetItem new 
-			bePositionRight;
-			target: self model;
-			contentsBlock: #status;
-			helpBlock: #status;
-			yourself)
-]
-
-{ #category : #initialization }
-IceTipWorkingCopyBrowser >> initializeWidgets [
-	super initializeWidgets.
-	packageList := self newTable.
-	statusBar := self instantiate: IceTipStatusBar.
-
-	self initializePackageList.
-	self initializeStatusBar.
+{ #category : 'private - actions' }
+IceTipWorkingCopyBrowser >> browsePackage: aPackageModel [
+	| commandClass |
 	
-	self focusOrder add: packageList
+	commandClass := aPackageModel isLoaded
+		ifTrue: [ IceTipBrowsePackageCommand ]
+		ifFalse: [ IceTipBrowseRepositoryPackageVersionCommand ].
+		
+	 commandClass new
+		packageModel: aPackageModel;
+		execute
 ]
 
-{ #category : #'private factory' }
-IceTipWorkingCopyBrowser >> newContextWithSelection: anObject [ 
-	^ self newContext 
-		packageModel: anObject;
-		yourself
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> connectPresenters [
+
+	super connectPresenters.
+	filterInput
+		placeholder: 'Filter...';
+		whenTextChangedDo: [ :text | self refreshPackagesTable ]
+
 ]
 
-{ #category : #'accessing ui' }
-IceTipWorkingCopyBrowser >> packageList [
-	^ packageList
+{ #category : 'layout' }
+IceTipWorkingCopyBrowser >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: packagesTable;
+		  add: filterInput expand: false;
+		  yourself
 ]
 
-{ #category : #'accessing ui' }
-IceTipWorkingCopyBrowser >> packageList: anObject [
-	packageList := anObject
+{ #category : 'accessing - ui' }
+IceTipWorkingCopyBrowser >> filterInput [
+
+	^ filterInput
 ]
 
-{ #category : #private }
-IceTipWorkingCopyBrowser >> packageSelected [
-	^ packageList selection selectedItem
+{ #category : 'private' }
+IceTipWorkingCopyBrowser >> filteredItemsFor: pattern [
+
+	^ self allListItems select: [ :each | 
+		  each name asLowercase includesSubstring: pattern asLowercase ]
 ]
 
-{ #category : #accessing }
+{ #category : 'private' }
+IceTipWorkingCopyBrowser >> iconFor: aPackage [ 
+
+	self decorations do: [ :each | 
+		(each iconNameForPackage: aPackage) 
+			ifNotNil: [ :aName | ^ self iconNamed: aName ] ].
+
+	^ self iconNamed: #package
+]
+
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> initialExtentForWindow [
+
+	^ (700 @ 500) scaledByDisplayScaleFactor
+]
+
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> initializePackagesTable [
+
+	packagesTable
+		beResizable;
+		addColumn: (SpImageTableColumn new 
+			beNotExpandable;
+			evaluated: [ :aPackage | self iconFor: aPackage ];
+			yourself);
+		addColumn: (SpStringTableColumn new
+			title: 'Name';
+			evaluated: #description;
+			displayColor: [ :each | each descriptionDecorator color ];
+			displayBold: [ :each | each descriptionDecorator isBold ];
+			displayItalic: [ :each | each descriptionDecorator isItalic ];			
+			yourself);
+		addColumn: (SpStringTableColumn new
+			title: 'Status';
+			evaluated: #status;
+			displayColor: [ :each | each descriptionDecorator color ];
+			displayBold: [ :each | each descriptionDecorator isBold ];
+			displayItalic: [ :each | each descriptionDecorator isItalic ];			
+			yourself);
+		activateOnDoubleClick;
+		whenActivatedDo: [ :selection | self browsePackage: selection selectedItem ]
+]
+
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> initializePresenters [
+
+	filterInput := self newTextInput.
+	packagesTable := self newTable.
+	self initializePackagesTable.
+	statusBar := self instantiate: IceTipWorkingCopyStatusBarPresenter
+]
+
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> initializeWindow: aSpWindowPresenter [
+	
+	super initializeWindow: aSpWindowPresenter.
+
+	aSpWindowPresenter statusBar: statusBar.
+
+]
+
+{ #category : 'accessing - ui' }
+IceTipWorkingCopyBrowser >> mainList [
+
+	^ packagesTable
+]
+
+{ #category : 'accessing' }
+IceTipWorkingCopyBrowser >> packageModel [
+	
+	^ packagesTable selectedItem
+]
+
+{ #category : 'accessing - ui' }
+IceTipWorkingCopyBrowser >> packagesTable [
+
+	^ packagesTable
+]
+
+{ #category : 'accessing' }
 IceTipWorkingCopyBrowser >> refresh [
-	self rebuildToolbar. 
-	packageList items: self model packageModels.
-	statusBar refresh
+
+	self refreshCommands.
+	self refreshStatusBar.
+	self refreshPackagesTable
 ]
 
-{ #category : #private }
+{ #category : 'private' }
+IceTipWorkingCopyBrowser >> refreshPackagesTable [
+
+	packagesTable items: (filterInput text
+		ifEmpty: [ self allListItems ]
+		ifNotEmpty: [ :pattern | self filteredItemsFor: pattern ])
+
+]
+
+{ #category : 'private' }
+IceTipWorkingCopyBrowser >> refreshStatusBar [
+
+	statusBar model: self model
+]
+
+{ #category : 'private' }
 IceTipWorkingCopyBrowser >> refreshWhenRepository: ann [
-	(ann repository isNil 
-		or: [ self model repositoryModel isModelOf: ann repository ])
-		ifFalse: [ ^ self ].
+
+	(ann repository isNil or: [ 
+		self model repositoryModel isModelOf: ann repository ]) ifFalse: [ 
+		^ self ].
 	self model reset.
 	self refresh
+
 ]
 
-{ #category : #initialization }
-IceTipWorkingCopyBrowser >> setModelBeforeInitialization: aRepositoryModel [
-	self model: (IceTipWorkingCopyModel on: aRepositoryModel)
+{ #category : 'accessing - model' }
+IceTipWorkingCopyBrowser >> setModelBeforeInitialization: aWorkingCopyModel [
+
+	self model: aWorkingCopyModel
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipWorkingCopyBrowser >> showsPackageNamed: aString [ 
 	
-	^ packageList items anySatisfy: [ :packageModel | packageModel name = aString ]
+	^ packagesTable items anySatisfy: [ :packageModel | packageModel name = aString ]
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipWorkingCopyBrowser >> statusBar [
+
 	^ statusBar
 ]
 
-{ #category : #'accessing ui' }
-IceTipWorkingCopyBrowser >> statusBar: anObject [
-	statusBar := anObject
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipWorkingCopyBrowser >> subscribeToAnnouncements [
-	Iceberg announcer weak 
-		when: IceRepositoryAnnouncement 
-		send: #refreshWhenRepository: 
-		to: self
 
+	Iceberg announcer weak
+		when: IceRepositoryAnnouncement
+		send: #refreshWhenRepository:
+		to: self
 ]
 
-{ #category : #accessing }
-IceTipWorkingCopyBrowser >> title [
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> titleForWindow [
+
 	^ 'Working copy of ', self model repositoryName
+]
+
+{ #category : 'initialization' }
+IceTipWorkingCopyBrowser >> updatePresenter [
+
+	self refresh
+]
+
+{ #category : 'accessing' }
+IceTipWorkingCopyBrowser >> workingCopyModel [
+	
+	^ self model
 ]

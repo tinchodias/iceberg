@@ -3,42 +3,29 @@ I'm an abstract model to provide locations (directories or files).
 I need to be included in other components (search references to my children for examples)
 "
 Class {
-	#name : #IceTipLocationPresenter,
-	#superclass : #SpPresenter,
+	#name : 'IceTipLocationPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
-		'locationLabel',
 		'locationInput',
 		'chooseButton',
-		'label',
 		'chooseTitle',
 		'chooseBlock',
 		'keptLocation'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #accessing }
-IceTipLocationPresenter class >> defaultChooseDialogTitle [
-	^ 'Choose directory'
+{ #category : 'testing' }
+IceTipLocationPresenter class >> isAbstract [
+
+	^ self == IceTipLocationPresenter
 ]
 
-{ #category : #accessing }
-IceTipLocationPresenter class >> defaultLabel [
-	^ 'Directory'
-]
-
-{ #category : #specs }
-IceTipLocationPresenter class >> defaultSpec [
-	<spec>
-	^ SpBoxLayout newHorizontal
-		add: #locationLabel width: self labelWidth ;
-		add: #locationInput;
-		add: #chooseButton width: 24;
-		yourself.
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocationPresenter >> appendPath: aString [
+
 	keptLocation ifNil: [ keptLocation := self location ].
 	
 	self basicLocation: (aString 
@@ -46,75 +33,89 @@ IceTipLocationPresenter >> appendPath: aString [
 		ifEmpty: [ keptLocation ]).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipLocationPresenter >> basicLocation: aReference [
+
 	locationInput text: aReference pathString
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipLocationPresenter >> choose [
+
 	self chooseReference ifNotNil: [ :reference | 
 		self location: reference.
-		"self locationInput text: reference pathString."
 		self onChoose ifNotNil: #value ]
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipLocationPresenter >> chooseButton [
+
 	^ chooseButton
 ]
 
-{ #category : #'accessing ui' }
-IceTipLocationPresenter >> chooseButton: anObject [
-	chooseButton := anObject
-]
+{ #category : 'actions' }
+IceTipLocationPresenter >> chooseReference [
 
-{ #category : #actions }
-IceTipLocationPresenter >> chooseReference [ 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocationPresenter >> chooseTitle [
-	^ chooseTitle ifNil: [ self class defaultChooseDialogTitle ]
+
+	^ chooseTitle ifNil: [ self defaultChooseDialogTitle ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocationPresenter >> chooseTitle: aString [
+
 	chooseTitle := aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceTipLocationPresenter >> defaultChooseDialogTitle [
+
+	^ 'Choose directory'
+]
+
+{ #category : 'accessing' }
+IceTipLocationPresenter >> defaultLabel [
+
+	^ 'Directory'
+]
+
+{ #category : 'layout' }
+IceTipLocationPresenter >> defaultLayout [
+
+	^ SpBoxLayout newLeftToRight
+		borderWidth: 0;
+		vAlignCenter;
+		spacing: 5;
+		add: #locationInput;
+		add: #chooseButton expand: false;
+		yourself
+]
+
+{ #category : 'accessing' }
 IceTipLocationPresenter >> icon [
+
 	^ self iconNamed: #open
 ]
 
-{ #category : #initialization }
-IceTipLocationPresenter >> initializeWidgets [
-	locationLabel := self newLabel label: self label.
-	locationInput := self newTextInput autoAccept: true.
-	chooseButton := self newButton icon: self icon.
+{ #category : 'initialization' }
+IceTipLocationPresenter >> initializePresenters [
+
+	locationInput := self newTextInput
+		autoAccept: true;
+		yourself.
+	chooseButton := self newButton
+		addStyle: 'small';
+		icon: self icon;
+		yourself.
 	
-	locationInput whenBuiltDo: [ :w | w widget wrapFlag: false ]. 
-	chooseButton action: [ self choose ].
-	
-	self focusOrder add: locationInput
-	
+	chooseButton action: [ self choose ]
 ]
 
-{ #category : #accessing }
-IceTipLocationPresenter >> label [
-	^ label ifNil: [ self class defaultLabel ]
-]
-
-{ #category : #accessing }
-IceTipLocationPresenter >> label: aString [
-	label := aString.
-	self locationLabel label: aString
-	
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocationPresenter >> location [
 	"This method return the location to use in the repository
 	If the location is relative to IceLibgitRepository >> #localRepositoriesLocation
@@ -136,10 +137,10 @@ IceTipLocationPresenter >> location [
 	^ IceLibgitRepository localRepositoriesLocation resolvePath: relativePath 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocationPresenter >> location: aReferenceOrString [
+
 	| ref |
-	
 	ref := aReferenceOrString asFileReference.
 	keptLocation ifNotNil: [ 
 		| newRef |
@@ -153,39 +154,27 @@ IceTipLocationPresenter >> location: aReferenceOrString [
 	self basicLocation: ref
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipLocationPresenter >> locationInput [
+
 	^ locationInput
 ]
 
-{ #category : #'accessing ui' }
-IceTipLocationPresenter >> locationInput: anObject [
-	locationInput := anObject
-]
-
-{ #category : #'accessing ui' }
-IceTipLocationPresenter >> locationLabel [
-	^ locationLabel
-]
-
-{ #category : #'accessing ui' }
-IceTipLocationPresenter >> locationLabel: anObject [
-	locationLabel := anObject
-]
-
-{ #category : #hook }
+{ #category : 'hook' }
 IceTipLocationPresenter >> onChoose [
+
 	^ chooseBlock
 ]
 
-{ #category : #hook }
+{ #category : 'hook' }
 IceTipLocationPresenter >> onChoose: aBlockClosure [
 	"I allow to set a hook to execute when the user select a location."
 
 	chooseBlock := aBlockClosure
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 IceTipLocationPresenter >> whenTextChanged: aBlockClosure [
+
 	self locationInput whenTextChangedDo: aBlockClosure
 ]

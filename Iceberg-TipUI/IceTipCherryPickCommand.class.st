@@ -1,22 +1,42 @@
+"
+Generic command to cherry pick changes
+"
 Class {
-	#name : #IceTipCherryPickCommand,
-	#superclass : #CmCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCherryPickCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #hooks }
-IceTipCherryPickCommand >> execute [
-	"Execute the actions that should be done by the command.
-	 This method expect that the context has been put in #context inst. var. if any context is relevant."
+{ #category : 'accessing - defaults' }
+IceTipCherryPickCommand class >> defaultDescription [
 
-(	IceTipCherrypickPreviewBrowser
-		onCommitish: context selectedCommit realObject entity) openWithSpec.
+	^ 'Cherrypick this commit and apply changes to the working copy'
 ]
 
-{ #category : #hooks }
-IceTipCherryPickCommand >> initialize [
-	super initialize.
-	self
-		name: 'Cherrypick';
-		description: 'Cherrypick this commit and apply changes to the working copy'
+{ #category : 'accessing - defaults' }
+IceTipCherryPickCommand class >> defaultName [
+
+	^ 'Cherrypick'
+]
+
+{ #category : 'testing' }
+IceTipCherryPickCommand >> canBeExecuted [
+
+	self flag: #pharoTodo. "TODO: Still not ready"
+	^ false
+]
+
+{ #category : 'executing' }
+IceTipCherryPickCommand >> execute [
+
+	(IceTipCherrypickPreviewBrowser onCommitish: self selectedCommitish)
+		open
+]
+
+{ #category : 'executing' }
+IceTipCherryPickCommand >> selectedCommitish [
+
+	^ self context selectedCommit entity
 ]

@@ -1,29 +1,29 @@
 Class {
-	#name : #IcePushTransferProgress,
-	#superclass : #LGitPushTransferProgressCallback,
+	#name : 'IcePushTransferProgress',
+	#superclass : 'LGitPushTransferProgressCallback',
 	#instVars : [
 		'job'
 	],
-	#category : 'Iceberg-Progress'
+	#category : 'Iceberg-Progress',
+	#package : 'Iceberg',
+	#tag : 'Progress'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePushTransferProgress >> block [
+	
 	^ [ :current :total :bytes :payload | 
 		job ensureStarted.
-		
 		job min: 0.
 		job max: total.
 		job current: current.
 		job title: ((self title, ' ({1}/{2})') format: { current. total}).
-		
 		job changed.
-		
 		0
 	]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IcePushTransferProgress >> initialize [
 	super initialize.
 	
@@ -31,15 +31,18 @@ IcePushTransferProgress >> initialize [
 		title: self title;
 		yourself.
 		
-	self initializeBlock.
+	self initializeBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IcePushTransferProgress >> initializeBlock [
-	self signature: self class fnSpec block: self block.
+
+	self 
+		signature: self class fnSpec 
+		block: self block.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePushTransferProgress >> title [
 	^ 'Pushing...'
 ]

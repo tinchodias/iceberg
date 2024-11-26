@@ -8,15 +8,17 @@ I also contain the monticello definition that corresponds to me.
 See my super/subclasses for more information.
 "
 Class {
-	#name : #IceMethodContainerDefinition,
-	#superclass : #IceCodeDefinition,
+	#name : 'IceMethodContainerDefinition',
+	#superclass : 'IceCodeDefinition',
 	#instVars : [
 		'mcDefinition'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceMethodContainerDefinition class >> named: aString [
 	
 	^ self new
@@ -24,33 +26,33 @@ IceMethodContainerDefinition class >> named: aString [
 		yourself
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceMethodContainerDefinition >> asMCDefinition [
 	^ mcDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceMethodContainerDefinition >> mcDefinition [
 	^ mcDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceMethodContainerDefinition >> mcDefinition: aMCDefinition [
 	mcDefinition := aMCDefinition
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceMethodContainerDefinition >> ownedDefinitions [
 	^ self propertyDefinitions, self variableDefinitions
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceMethodContainerDefinition >> removeFrom: aPatcher [
 	
 	aPatcher removeClass: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceMethodContainerDefinition >> variableDefinitions [
 	^ mcDefinition variables
 		collect: [ :each | 

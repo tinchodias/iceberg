@@ -2,21 +2,34 @@
 I'm a model for IcePackage entries.
 "
 Class {
-	#name : #IceTipPackageModel,
-	#superclass : #IceTipEntityModel,
-	#category : #'Iceberg-TipUI-Model'
+	#name : 'IceTipPackageModel',
+	#superclass : 'IceTipEntityModel',
+	#instVars : [
+		'workingCopyModel'
+	],
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #actions }
-IceTipPackageModel >> browsePackage [
-	<noCache>
+{ #category : 'instance creation' }
+IceTipPackageModel class >> workingCopyModel: aWorkingCopyModel on: aPackage [
 
+	^ (self
+		   repositoryModel: aWorkingCopyModel repositoryModel
+		   on: aPackage)
+		  workingCopyModel: aWorkingCopyModel;
+		  yourself
+]
+
+{ #category : 'actions' }
+IceTipPackageModel >> browsePackage [
+	
 	self entity browse
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipPackageModel >> browseRepositoryVersion [
-	<noCache>
 	| snapshot |
 	
 	snapshot := self entity mcSnapshotInRepository.
@@ -24,112 +37,126 @@ IceTipPackageModel >> browseRepositoryVersion [
 		showLabelled: 'Snapshot for ', self entity name
 ]
 
-{ #category : #accessing }
-IceTipPackageModel >> descriptionWithDecoration [
+{ #category : 'accessing' }
+IceTipPackageModel >> description [
 	| text |
 	
-	text := self displayString asText.
-	self entity isLoaded
-		ifFalse:[ text := text makeAllColor: self colorNotLoaded ].
+	text := self displayString.
 	self entity isModified 
-		ifTrue: [ text := ('*', text) asText makeAllColor: self colorModified ].
+		ifTrue: [ text := '*', text ].
 	^ text
 ]
 
-{ #category : #testing }
+{ #category : 'accessing' }
+IceTipPackageModel >> descriptionDecorator [
+
+	self entity isModified 
+		ifTrue: [ ^ IceTipDescriptionDecorator modified ].
+	self entity isLoaded
+		ifFalse:[ ^ IceTipDescriptionDecorator notLoaded ].
+	
+	^ super descriptionDecorator
+]
+
+{ #category : 'testing' }
 IceTipPackageModel >> isLoaded [
 	^ self entity isLoaded
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipPackageModel >> isModified [
 	^ self entity isModified
 ]
 
-{ #category : #actions }
-IceTipPackageModel >> load [
-	<noCache>
+{ #category : 'actions' }
+IceTipPackageModel >> newLoadAction [
 
-	IceTipStandardAction new 
+	^ IceTipStandardAction new 
 		repository: self entity repository;
 		message: ('Loading package {1}' format: { self entity name });
 		onSuccessRepositoryModified;
-		execute: [ 
+		action: [ 
 			Iceberg announcer
 				suspendAllForRepository: self entity repository
-				while: [ self entity load ] ]
+				while: [ self entity load ] ];
+		yourself
 ]
 
-{ #category : #accessing }
-IceTipPackageModel >> name [
-	^ self entity name
+{ #category : 'actions' }
+IceTipPackageModel >> newReloadAction [
+	
+	^ IceTipStandardAction new 
+		repository: self entity repository;
+		message: ('Reloading package {1}' format: { self entity name }) ;
+		onSuccessRepositoryModified;
+		action: [ 
+			Iceberg announcer 
+				suspendAllForRepository: self entity repository 
+				while: [ self entity reload ] ];
+		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'actions' }
+IceTipPackageModel >> newRemoveAction [
+	
+	^ IceTipStandardAction new 
+		repository: self entity repository;
+		message: ('Removing package {1}' format: { self entity name });
+		onSuccessRepositoryModified;
+		action: [
+			Iceberg announcer
+				suspendAllForRepository: self entity repository
+				while: [ self entity remove ] ];
+		yourself
+]
+
+{ #category : 'actions' }
+IceTipPackageModel >> newUnloadAction [
+	
+	^ IceTipStandardAction new 
+		repository: self entity repository;
+		message: ('Unloading package {1}' format: { self entity name });
+		onSuccessRepositoryModified; 
+		action: [ 
+			Iceberg announcer
+				suspendAllForRepository: self entity repository
+				while: [ self entity unload ] ];
+		yourself
+]
+
+{ #category : 'accessing' }
 IceTipPackageModel >> packageName [
 	^ self entity packageName
 ]
 
-{ #category : #actions }
-IceTipPackageModel >> reload [
-	<noCache>
-
-	IceTipStandardAction new 
-		repository: self entity repository;
-		message: ('Reloading package {1}' format: { self entity name }) ;
-		onSuccessRepositoryModified;
-		execute: [ 
-			Iceberg announcer 
-				suspendAllForRepository: self entity repository 
-				while: [ self entity reload ] ]
-]
-
-{ #category : #actions }
-IceTipPackageModel >> remove [
-	<noCache>
-
-	IceTipStandardAction new 
-		repository: self entity repository;
-		message: ('Removing package {1}' format: { self entity name });
-		onSuccessRepositoryModified; 
-		execute: [ 
-			Iceberg announcer
-				suspendAllForRepository: self entity repository
-				while: [ self entity remove ] ]
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipPackageModel >> status [
 	"entity could be a repository or a package"
 	[
-		self entity repository isMissing ifTrue: [ ^ self toErrorMessage: 'Local repository missing' ].
+		self entity repository isMissing ifTrue: [ ^ 'Local repository missing' ].
 		self entity isLoaded ifFalse: [ ^ 'Not loaded' ].
-		self entity isModified ifTrue: [ ^ 'Uncommited changes' ].
+		self entity isModified ifTrue: [ ^ 'Uncommitted changes' ].
 		^ 'Up to date' ] 
 	on: Error do: [ :e | 
-		^ self toErrorMessage: e description ]
+		^ e description ]
 ]
 
-{ #category : #accessing }
-IceTipPackageModel >> statusWithDecoration [
-	| text |
-	
-	text := self status asText.
+{ #category : 'accessing' }
+IceTipPackageModel >> statusDecorator [
+
 	self entity isLoaded 
-		ifFalse: [ text := text makeAllColor: self colorNotLoaded ].
-	^ text
+		ifFalse: [ IceTipDescriptionDecorator notLoaded ].
+	^ super statusDecorator
 ]
 
-{ #category : #actions }
-IceTipPackageModel >> unload [
-	<noCache>
+{ #category : 'accessing' }
+IceTipPackageModel >> workingCopyModel [
 
-	IceTipStandardAction new 
-		repository: self entity repository;
-		message: ('Unloading package {1}' format: { self entity name });
-		onSuccessRepositoryModified; 
-		execute: [ 
-			Iceberg announcer
-				suspendAllForRepository: self entity repository
-				while: [ self entity unload ] ]
+	^ workingCopyModel
+]
+
+{ #category : 'accessing' }
+IceTipPackageModel >> workingCopyModel: anObject [
+
+	workingCopyModel := anObject
 ]

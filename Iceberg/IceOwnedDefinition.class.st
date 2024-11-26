@@ -4,15 +4,17 @@ I am an abstract class that represents a sub-definition of either a IceClassDefi
 My instances only have meaning as elements of the container. 
 "
 Class {
-	#name : #IceOwnedDefinition,
-	#superclass : #IceCodeDefinition,
+	#name : 'IceOwnedDefinition',
+	#superclass : 'IceCodeDefinition',
 	#instVars : [
 		'ownerIceDefinition'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceOwnedDefinition >> = anotherDefinition [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -20,7 +22,7 @@ IceOwnedDefinition >> = anotherDefinition [
 		and: [ self ownerName = anotherDefinition ownerName ]
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceOwnedDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 
 	self flag: #todo. "?"
@@ -34,7 +36,7 @@ IceOwnedDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatche
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceOwnedDefinition >> addToPatcher: aMCPatcher [ 
 
 	self flag: #todo.
@@ -49,19 +51,19 @@ IceOwnedDefinition >> addToPatcher: aMCPatcher [
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceOwnedDefinition >> addedIn: aMCDefinition [
 	"Answer a copy of the argument that includes self."
 
 	^ aMCDefinition copy
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> browse [
 	self ownerIceDefinition browse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> className [
 
 	self
@@ -71,64 +73,64 @@ IceOwnedDefinition >> className [
 	^ self ownerName
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceOwnedDefinition >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: self ownerName hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> icon [
 	^ self iconNamed: #menuPin
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOwnedDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> key [
 	"Answer a string that is enough as an identification between my siblings."
 
 	^ self type, ': ', name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> ownerIceDefinition [
 	^ ownerIceDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> ownerIceDefinition: anIceMethodContainerDefinition [
 	ownerIceDefinition := anIceMethodContainerDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> ownerMCDefinition [
 	^ ownerIceDefinition asMCDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> ownerName [
 	
 	^ ownerIceDefinition name
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceOwnedDefinition >> removeFrom: aPatcher [
 	"By default, of the owner is removed, then also I'm removed."
 
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceOwnedDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOwnedDefinition >> type [
 
 	^ self subclassResponsibility

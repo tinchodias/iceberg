@@ -3,48 +3,55 @@ I register Iceberg projects.
 I will open a dialog to take the new possible repository (from available options) and I will register it into the IceRepository>>#registry list.
 "
 Class {
-	#name : #IceTipAddRepositoryCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipAddRepositoryCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipAddRepositoryCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $n meta for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipAddRepositoryCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipAddRepositoryCommand class >> defaultHelp [
 	^ 'Add a repository (new, local, cloned) to your managed repositories.'
 ]
 
-{ #category : #accessing }
-IceTipAddRepositoryCommand class >> defaultMenuIconName [
-	^ #add
-]
+{ #category : 'accessing - defaults' }
+IceTipAddRepositoryCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipAddRepositoryCommand class >> defaultMenuItemName [
 	^ 'Add'
 ]
 
-{ #category : #accessing }
-IceTipAddRepositoryCommand class >> defaultPosition [
-	^ #right
-]
-
-{ #category : #activation }
-IceTipAddRepositoryCommand class >> toolbarRepositoryListActivation [
-	<classAnnotation>
+{ #category : 'testing' }
+IceTipAddRepositoryCommand >> canBeExecuted [ 
 	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipRepositoryListContext
-		order: 100
+	"This command can be executed with our without selection"
+	^ true
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipAddRepositoryCommand >> execute [
-	IceTipRegisterRepositoryDialog new openDialogWithSpec
+
+	(IceTipRegisterRepositoryDialogPresenter newApplication: context application)	
+		asDialogWindow 
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipAddRepositoryCommand >> iconName [
+
+	^ #add
+]
+
+{ #category : 'accessing' }
+IceTipAddRepositoryCommand >> shortcutKey [
+
+	^ $n meta
+]
+
+{ #category : 'testing' }
+IceTipAddRepositoryCommand >> shouldBeDisplayedOnRightSideInToolbar [
+
+	^ true
 ]

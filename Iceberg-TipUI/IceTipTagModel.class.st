@@ -1,25 +1,24 @@
 Class {
-	#name : #IceTipTagModel,
-	#superclass : #IceTipCommitishModel,
-	#category : #'Iceberg-TipUI-Model'
+	#name : 'IceTipTagModel',
+	#superclass : 'IceTipCommitishModel',
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipTagModel >> commitModels [
-	
+
 	| commits |
 	commits := OrderedCollection new.
-	self entity commitsDo: [ :each | 
-		commits add: (IceTipCommitModel 
-			repositoryModel: self repositoryModel 
-			on: each) 
-			beCached ].
+	self entity commitsDo: [ :each |
+		commits add:
+			(IceTipCommitModel repositoryModel: self repositoryModel on: each) ].
 	^ commits
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipTagModel >> delete [
-	<noCache>
 	
 	IceTipStandardAction new
 		repository: self repositoryModel entity;
@@ -28,23 +27,28 @@ IceTipTagModel >> delete [
 		do: [ self repositoryModel entity removeTag: self entity ]
 ]
 
-{ #category : #accessing }
-IceTipTagModel >> descriptionWithDecoration [
+{ #category : 'accessing' }
+IceTipTagModel >> description [
 	
 	^ self entity name
 ]
 
-{ #category : #accessing }
-IceTipTagModel >> name [
-	
-	^ self entity name
+{ #category : 'actions' }
+IceTipTagModel >> newDeleteAction [
+
+	<noCache>
+	^ IceTipStandardAction new
+		  repository: self repositoryModel entity;
+		  message: ('Removing tag {1}' format: { self name });
+		  onSuccessRepositoryModified;
+		  action: [ self entity delete ];
+		  yourself
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipTagModel >> previewCheckout [
 	"this will open a 'checkout browser' that will allow user to validate the changes before 
 	 actually checking out (checkout operation will be called in my sibling method, #checkout)"
-	<noCache>
 
-	(IceTipCheckoutPreviewBrowser onBranch: self) openWithSpec
+	(IceTipCheckoutPreviewBrowser onBranch: self) open
 ]

@@ -2,55 +2,45 @@
 Command that deletes the selected remote
 "
 Class {
-	#name : #IceTipDeleteRemoteCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'branchModel'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipDeleteRemoteCommand',
+	#superclass : 'IceTipRemotesTreeCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceTipDeleteRemoteCommand class >> actsOnRemote: aRemoteModel [
-	^ true
-]
+{ #category : 'accessing - defaults' }
+IceTipDeleteRemoteCommand class >> defaultDescription [
 
-{ #category : #execution }
-IceTipDeleteRemoteCommand class >> browserContextActivation [
-    <classAnnotation>
-    
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 100
-		for: IceTipRepositoryContext
-]
-
-{ #category : #execution }
-IceTipDeleteRemoteCommand class >> canBeExecutedInContext: aToolContext [
-    ^ aToolContext item canActivateCommand: self
-]
-
-{ #category : #accessing }
-IceTipDeleteRemoteCommand class >> defaultHelp [
 	^ 'Delete this remote for this repository'
 ]
 
-{ #category : #accessing }
-IceTipDeleteRemoteCommand class >> defaultMenuIconName [
-	^ #delete
-]
+{ #category : 'accessing - defaults' }
+IceTipDeleteRemoteCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipDeleteRemoteCommand class >> defaultMenuItemName [
 	^ 'Delete remote'
 ]
 
-{ #category : #execution }
-IceTipDeleteRemoteCommand >> execute [
-	branchModel delete
+{ #category : 'testing' }
+IceTipDeleteRemoteCommand >> actsOnRemote: aRemoteModel [
+
+	^ true
 ]
 
-{ #category : #execution }
-IceTipDeleteRemoteCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	branchModel := aToolContext item.
+{ #category : 'executing' }
+IceTipDeleteRemoteCommand >> execute [
+
+	self remoteModel newDeleteAction executeWithContext: self context
+]
+
+{ #category : 'accessing' }
+IceTipDeleteRemoteCommand >> iconName [
+
+	^ #delete
+]
+
+{ #category : 'executing' }
+IceTipDeleteRemoteCommand >> remoteModel [
+
+	^ self item
 ]

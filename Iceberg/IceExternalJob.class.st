@@ -1,77 +1,100 @@
 Class {
-	#name : #IceExternalJob,
-	#superclass : #Object,
+	#name : 'IceExternalJob',
+	#superclass : 'Object',
 	#instVars : [
 		'title',
 		'started',
 		'min',
 		'max',
-		'current'
+		'current',
+		'mutex'
 	],
-	#category : 'Iceberg-Progress'
+	#category : 'Iceberg-Progress',
+	#package : 'Iceberg',
+	#tag : 'Progress'
 }
 
-{ #category : #events }
+{ #category : 'events' }
 IceExternalJob >> changed [
-
-	current >= max ifTrue: [ ^ Job jobAnnouncer announce: (JobEnd on: self) ].
-	Job jobAnnouncer announce: (JobChange on: self)
+	
+	started ifFalse: [ ^ self ].
+	mutex critical: [ 
+		Job jobAnnouncer announce: (JobChange on: self) ].
+	current = max ifTrue: [ self end ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceExternalJob >> current: anInteger [ 
 	current := anInteger 
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 IceExternalJob >> end [
-	Job jobAnnouncer announce: (JobEnd on: self)
-]
 
-{ #category : #events }
-IceExternalJob >> ensureStarted [
-	started ifFalse: [ self start ]
-]
-
-{ #category : #initialization }
-IceExternalJob >> initialize [
-	super initialize.
+	mutex critical: [ 
+		Job jobAnnouncer announce: (JobEnd on: self) ].
 	started := false
 ]
 
-{ #category : #accessing }
+{ #category : 'events' }
+IceExternalJob >> ensureStarted [
+
+	started ifFalse: [ self start ]
+]
+
+{ #category : 'initialization' }
+IceExternalJob >> initialize [
+
+	super initialize.
+	mutex := Mutex new.
+	started := false.
+	current := 0.
+	min := 0. 
+	max := 100
+]
+
+{ #category : 'accessing' }
+IceExternalJob >> isRunning [
+
+	^ started 
+]
+
+{ #category : 'accessing' }
 IceExternalJob >> max: anInteger [ 
 	max := anInteger
 ]
 
-{ #category : #accessing }
-IceExternalJob >> min: anInteger [ 
+{ #category : 'accessing' }
+IceExternalJob >> min: anInteger [
+
 	min := anInteger 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceExternalJob >> owner [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceExternalJob >> progress [
+	
 	^ min >= max ifTrue: [ 1 ] ifFalse: [ (current - min) / (max - min) ]
 ]
 
-{ #category : #events }
+{ #category : 'events' }
 IceExternalJob >> start [
-	started := true.
 
-	Job jobAnnouncer announce: (JobStart on: self)
+	started := true.
+	mutex critical: [
+		Job jobAnnouncer announce: (JobStart on: self) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceExternalJob >> title [
 	^ title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceExternalJob >> title: aString [ 
 	title := aString
 ]

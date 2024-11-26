@@ -2,71 +2,44 @@
 Command that opens a dialog to select a branch to merge in the current merge
 "
 Class {
-	#name : #IceTipMergeCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipMergeCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipMergeCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 200 
-		for: IceTipRepositoryListContext
+{ #category : 'accessing - defaults' }
+IceTipMergeCommand class >> defaultDescription [
+
+	^ 'Merge a given branch into your current branch.'
 ]
 
-{ #category : #testing }
-IceTipMergeCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational
+{ #category : 'accessing - defaults' }
+IceTipMergeCommand class >> defaultName [
+
+	^ 'Merge to current'
 ]
 
-{ #category : #accessing }
-IceTipMergeCommand class >> defaultHelp [
-	^ 'Merge your current branch with another.'
+{ #category : 'testing' }
+IceTipMergeCommand >> canBeExecuted [
+
+	^ self isRepositoryOperational
 ]
 
-{ #category : #accessing }
-IceTipMergeCommand class >> defaultMenuIconName [
-	^ #merge
-]
-
-{ #category : #accessing }
-IceTipMergeCommand class >> defaultMenuItemName [
-	^ 'Merge branch'
-]
-
-{ #category : #accessing }
-IceTipMergeCommand class >> defaultToolbarItemName [
-	^ 'Merge'
-]
-
-{ #category : #activation }
-IceTipMergeCommand class >> toolbarHistoryActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation byRootGroupItemFor: IceTipHistoryContext
-]
-
-{ #category : #activation }
-IceTipMergeCommand class >> toolbarRepositoryActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipRepositoryContext
-		order: 1010
-]
-
-{ #category : #activation }
-IceTipMergeCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 1010
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipMergeCommand >> execute [
-	(IceTipMergeBranchDialog on: self repositoryModel) openDialogWithSpec
+	
+	(IceTipMergeBranchDialogPresenter 
+		newApplication: context application 
+		model: self repositoryModel) 
+		asDialogWindow 
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipMergeCommand >> iconName [
+
+	^ #merge
 ]

@@ -2,40 +2,39 @@
 Command that reloads the code of an already loaded package, discarding all changes done in the meantime that were not committed.
 "
 Class {
-	#name : #IceTipReloadPackageCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipReloadPackageCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipReloadPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 30 for: IceTipWorkingCopyContext
+{ #category : 'accessing - defaults' }
+IceTipReloadPackageCommand class >> defaultDescription [
+
+	^ 'Reload selected package, discarding all changes.'
 ]
 
-{ #category : #testing }
-IceTipReloadPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded
-]
+{ #category : 'accessing - defaults' }
+IceTipReloadPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipReloadPackageCommand class >> defaultHelp [
-	^ 'Reload selected package, discarding all changes'
-]
-
-{ #category : #accessing }
-IceTipReloadPackageCommand class >> defaultMenuIconName [
-	^ #refresh
-]
-
-{ #category : #accessing }
-IceTipReloadPackageCommand class >> defaultMenuItemName [
 	^ 'Reload'
 ]
 
-{ #category : #execution }
+{ #category : 'testing' }
+IceTipReloadPackageCommand >> canBeExecuted [
+
+	^ self isPackageLoaded
+]
+
+{ #category : 'executing' }
 IceTipReloadPackageCommand >> execute [
-	self packageModel reload.
-	Iceberg announcer announce: (IceRepositoryModified for: self repositoryModel entity)
+
+	self packageModel newReloadAction executeWithContext: self context.
+]
+
+{ #category : 'accessing' }
+IceTipReloadPackageCommand >> iconName [
+
+	^ #refresh
 ]

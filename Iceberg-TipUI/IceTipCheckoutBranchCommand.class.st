@@ -2,71 +2,50 @@
 Command that opens a dialog to checkout a (new or already existing) branch.
 "
 Class {
-	#name : #IceTipCheckoutBranchCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCheckoutBranchCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipCheckoutBranchCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 200 
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutBranchCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipCheckoutBranchCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryMissing not
-]
-
-{ #category : #accessing }
-IceTipCheckoutBranchCommand class >> defaultHelp [
 	^ 'Checkout a new or existing branch.'
 ]
 
-{ #category : #accessing }
-IceTipCheckoutBranchCommand class >> defaultMenuIconName [
-	^ #branch
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutBranchCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipCheckoutBranchCommand class >> defaultMenuItemName [
 	^ 'Checkout branch'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing - defaults' }
 IceTipCheckoutBranchCommand class >> defaultToolbarItemName [
+
 	^ 'Branch'
 ]
 
-{ #category : #activation }
-IceTipCheckoutBranchCommand class >> toolbarHistoryActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation byRootGroupItemFor: IceTipHistoryContext
+{ #category : 'testing' }
+IceTipCheckoutBranchCommand >> canBeExecuted [
+
+	^ super canBeExecuted and: [ self isRepositoryMissing not]
 ]
 
-{ #category : #activation }
-IceTipCheckoutBranchCommand class >> toolbarRepositoryActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipRepositoryContext
-		order: 1000
-]
-
-{ #category : #activation }
-IceTipCheckoutBranchCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 1000
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipCheckoutBranchCommand >> execute [
-	(IceTipCheckoutBranchDialog on: self repositoryModel) openDialogWithSpec
+
+	(IceTipCheckoutBranchDialog 
+		newApplication: context application 
+		model: self repositoryModel)
+		asDialogWindow 
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipCheckoutBranchCommand >> iconName [
+
+	^ #branch
 ]

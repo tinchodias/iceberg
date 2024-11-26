@@ -1,6 +1,6 @@
-Extension { #name : #IceClassDefinition }
+Extension { #name : 'IceClassDefinition' }
 
-{ #category : #'*Iceberg-TipUI' }
-IceClassDefinition >> icon [
-	^ self iconNamed: #class
+{ #category : '*Iceberg-TipUI' }
+IceClassDefinition >> iconName [
+	^ #class
 ]

@@ -1,13 +1,24 @@
+"
+Abstract superclass for projects
+"
 Class {
-	#name : #IceAbstractProject,
-	#superclass : #Object,
+	#name : 'IceAbstractProject',
+	#superclass : 'Object',
 	#instVars : [
 		'commitish'
 	],
-	#category : 'Iceberg-Project'
+	#category : 'Iceberg-Project',
+	#package : 'Iceberg',
+	#tag : 'Project'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'testing' }
+IceAbstractProject class >> isAbstract [
+
+	^ self == IceAbstractProject
+]
+
+{ #category : 'instance creation' }
 IceAbstractProject class >> onCommitish: anIceCommitish [
 	
 	^ self new
@@ -15,13 +26,13 @@ IceAbstractProject class >> onCommitish: anIceCommitish [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceAbstractProject class >> onRepository: aRepository [
 	
 	^ self onCommitish: aRepository workingCopy
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceAbstractProject >> = anotherProject [
 
 	self species = anotherProject species ifFalse: [ ^ false ].
@@ -30,92 +41,85 @@ IceAbstractProject >> = anotherProject [
 	^ true.
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 IceAbstractProject >> addToChangeBuilder: anIceChangeImporter [ 
 	
 	"Nothing by default"
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> commitish: anIceCommitish [
 	
 	commitish := anIceCommitish
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceAbstractProject >> isDirty [
 	"Compare against the project extracted from the HEAD commit.
 	If the commit has no project, it will be an unborn project."
 	^ self repository workingCopy referenceCommit project ~= self readOnlyVersion
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceAbstractProject >> isInvalid [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceAbstractProject >> isUnborn [
 	
 	^ false
 ]
 
-{ #category : #'API-packages' }
+{ #category : 'API - packages' }
+IceAbstractProject >> packageNames [
+
+	self repository handleLibgitError: [
+		| writerClass sourceFileReference |
+		writerClass := self writerClass.
+		sourceFileReference := commitish fileSystem resolve:
+			                       self sourceDirectoryPath.
+		sourceFileReference exists ifFalse: [ ^ #(  ) ].
+
+		^ sourceFileReference children
+			  select: [ :each | writerClass isValidPackage: each ]
+			  thenCollect: [ :each |
+			  writerClass packageNameFromDirectory: each ] ]
+]
+
+{ #category : 'API - packages' }
 IceAbstractProject >> packages [
-	
-	self repository handleLibgitError: [ | writerClass sourceFileReference |
-		writerClass := self writerClass.
-		sourceFileReference := commitish fileSystem resolve: self sourceDirectoryPath.
-		sourceFileReference exists ifFalse: [ ^ #() ].
-		
-		^ sourceFileReference children
-			select: [ :each | writerClass isValidPackage: each ]
-			thenCollect: [ :each | | packageName |
-				packageName := writerClass packageNameFromDirectory: each.
-				IcePackage named: packageName repository: self repository ] ]
+
+	^ self packageNames collect: [ :each |
+		IcePackage named: each repository: self repository ]
 ]
 
-{ #category : #'API-packages' }
-IceAbstractProject >> packagesFrom: aCommit [
-	
-	self repository handleLibgitError: [ | writerClass sourceFileReference |
-		writerClass := self writerClass.
-		sourceFileReference :=  aCommit fileSystem resolve: self sourceDirectory.
-		sourceFileReference exists ifFalse: [ ^ #() ].
-		
-		^ sourceFileReference children
-			select: [ :each | writerClass isValidPackage: each ]
-			thenCollect: [ :each | | packageName |
-				packageName := writerClass packageNameFromDirectory: each basename.
-				IcePackage named: packageName repository: self repository ] ]
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> properties [
 
 	^ Dictionary new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceAbstractProject >> readOnlyVersion [
 
 	^ self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> repository [
 	
 	^ commitish repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> sourceDirectory [
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> sourceDirectoryPath [
 
 	"API compatible both with Pharo6 and Pharo7.
@@ -126,13 +130,19 @@ IceAbstractProject >> sourceDirectoryPath [
 	^ (RelativePath withAll: (RelativePath canonicalizeElements: ($/ split: self sourceDirectory)))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceAbstractProject >> sourceDirectoryReference [
 	
 	^ commitish fileSystem resolve: self sourceDirectoryPath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceAbstractProject >> tags [
+
+	^ #()
+]
+
+{ #category : 'accessing' }
 IceAbstractProject >> writerClass [
 	
 	^ self repository properties writerClass

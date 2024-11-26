@@ -1,10 +1,12 @@
 Class {
-	#name : #IceTipTreeRemote,
-	#superclass : #IceTipTreeGroup,
-	#category : #'Iceberg-TipUI-View-DataSource'
+	#name : 'IceTipTreeRemote',
+	#superclass : 'IceTipTreeGroup',
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipTreeRemote >> canActivateCommand: aCommandClass [
 	^ aCommandClass actsOnRemote: self
 ]

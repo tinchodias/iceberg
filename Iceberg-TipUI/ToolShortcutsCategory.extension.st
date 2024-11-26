@@ -1,7 +1,10 @@
-Extension { #name : #ToolShortcutsCategory }
+Extension { #name : 'ToolShortcutsCategory' }
 
-{ #category : #'*Iceberg-TipUI' }
+{ #category : '*Iceberg-TipUI' }
 ToolShortcutsCategory >> openIceberg [
+
 	<shortcut>
-	^ KMKeymap shortcut: PharoShortcuts current openIcebergShortcut action: [ IceTipRepositoriesBrowser new openWithSpec ]
+	^ KMKeymap
+		  shortcut: PharoShortcuts current openIcebergShortcut
+		  action: [ IceTipRepositoriesBrowser new open ]
 ]

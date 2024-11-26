@@ -1,7 +1,7 @@
-Extension { #name : #IceAddition }
+Extension { #name : 'IceAddition' }
 
-{ #category : #'*Iceberg-TipUI' }
-IceAddition >> icon [
+{ #category : '*Iceberg-TipUI' }
+IceAddition >> iconName [
 	
-	^ self iconNamed: #changeAdd
+	^ #changeAdd
 ]

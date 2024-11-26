@@ -3,49 +3,44 @@ I will allow the ""forget"" of a repository (remote it from list of registered r
 I also add the possibility of remove the repository from file system.
 "
 Class {
-	#name : #IceTipForgetRepositoryCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipForgetRepositoryCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipForgetRepositoryCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 10000 "put it at the end"
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipForgetRepositoryCommand class >> defaultDescription [
 
-{ #category : #activation }
-IceTipForgetRepositoryCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $x meta for: IceTipRepositoryListContext
-]
-
-{ #category : #accessing }
-IceTipForgetRepositoryCommand class >> confirmMessage [
-	^ 'Are you sure to remove repository: {name}?
-(Packages will not be deleted, nor the repository from the file system)'
-]
-
-{ #category : #accessing }
-IceTipForgetRepositoryCommand class >> defaultHelp [
 	^ 'Removes this repository from the list of managed repositories (it will not remove any local repository)'
 ]
 
-{ #category : #accessing }
-IceTipForgetRepositoryCommand class >> defaultMenuIconName [
-	^ #remove
-]
+{ #category : 'accessing - defaults' }
+IceTipForgetRepositoryCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipForgetRepositoryCommand class >> defaultMenuItemName [
 	^ 'Forget repository'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipForgetRepositoryCommand >> execute [
-	(IceTipRemoveRepositoryDialog on: self repositoryModel) openDialogWithSpec
+
+	(IceTipRemoveRepositoryDialogPresenter 
+		newApplication: context application 
+		model: self repositoryModel)
+		asModalWindow 
+			centeredRelativeTo: context window;
+			open		
+]
+
+{ #category : 'accessing' }
+IceTipForgetRepositoryCommand >> iconName [
+
+	^ #remove
+]
+
+{ #category : 'accessing' }
+IceTipForgetRepositoryCommand >> shortcutKey [
+
+	^ $x meta
 ]

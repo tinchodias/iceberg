@@ -2,51 +2,46 @@
 I'm a command to ""browse"" a change definition (method, class or package).
 "
 Class {
-	#name : #IceTipBrowseCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'item'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipBrowseCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipBrowseCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemFor: IceTipDiffContext
-]
+{ #category : 'accessing - defaults' }
+IceTipBrowseCommand class >> defaultDescription [
 
-{ #category : #activation }
-IceTipBrowseCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $b meta for: IceTipDiffContext
-]
-
-{ #category : #accessing }
-IceTipBrowseCommand class >> defaultHelp [
 	^ 'Browse the selected item'
 ]
 
-{ #category : #accessing }
-IceTipBrowseCommand class >> defaultMenuIconName [
-	^ #smallSystemBrowser
-]
+{ #category : 'accessing - defaults' }
+IceTipBrowseCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipBrowseCommand class >> defaultMenuItemName [
 	^ 'Browse...'
 ]
 
-{ #category : #execution }
-IceTipBrowseCommand >> execute [
-	item ifNil: [ ^ self ].
-	item value definition browse
+{ #category : 'testing' }
+IceTipBrowseCommand >> canBeExecuted [
+	"In the case of a method removal it is not possible to browse the selected element."
+
+	^ self hasSelectedItem and: [ self item value definition canBeBrowsed ]
 ]
 
-{ #category : #execution }
-IceTipBrowseCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	item := aToolContext item
+{ #category : 'executing' }
+IceTipBrowseCommand >> execute [
+
+	self item value definition browse
+]
+
+{ #category : 'accessing' }
+IceTipBrowseCommand >> iconName [
+
+	^ #smallSystemBrowser
+]
+
+{ #category : 'activation' }
+IceTipBrowseCommand >> shortcutKey [
+
+	^ $b meta
 ]

@@ -1,10 +1,14 @@
+"
+Baseline for https://github.com/pharo-vcs/iceberg project
+"
 Class {
-	#name : #BaselineOfIceberg,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfIceberg
+	#name : 'BaselineOfIceberg',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfIceberg',
+	#package : 'BaselineOfIceberg'
 }
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfIceberg >> baseline: spec [
 	<baseline>
 	
@@ -13,21 +17,20 @@ BaselineOfIceberg >> baseline: spec [
 		
 		self tonel: spec.
 		self libgit: spec.
-		self ring2: spec.
 		
 		spec
 			"iceberg"
 			package: 'Iceberg';
-			package: 'Iceberg-Spec2-Transition';
 			package: 'Iceberg-Plugin' with: [ spec requires: #('Iceberg' 'Iceberg-TipUI') ];
 			package: 'Iceberg-Plugin-Metacello' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-GitHub' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-Pharo' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Plugin-Migration' with: [ spec requires: #('Iceberg-Plugin') ];
 			package: 'Iceberg-Metacello-Integration' with: [ spec requires: #('Iceberg')];
-			package: 'Iceberg-TipUI' with: [ spec requires: #('Iceberg' 'Iceberg-Spec2-Transition') ];
+			package: 'Iceberg-TipUI' with: [ spec requires: #('Iceberg') ];
 			package: 'Iceberg-Memory' with: [ spec requires: #('Iceberg') ];
-			package: 'Iceberg-Tests' with: [ spec requires: #('Iceberg' 'Iceberg-GitCommand' 'Iceberg-Memory' 'Ring2') ];
+			"tests"
+			package: 'Iceberg-Tests' with: [ spec requires: #('Iceberg' 'Iceberg-Memory') ];
 			package: 'Iceberg-Tests-MetacelloIntegration' with: [ spec requires: #('Iceberg-Tests') ];
 			package: 'Iceberg-UI-Tests' with: [ spec requires: #('Iceberg-TipUI' 'Iceberg-Tests')];
 			package: 'Iceberg-Plugin-Migration-Tests' with: [ spec requires: #('Iceberg-Plugin-Migration' 'Iceberg-Tests') ];
@@ -35,17 +38,6 @@ BaselineOfIceberg >> baseline: spec [
 			package: 'Iceberg-Libgit' with: [ spec requires: #('Iceberg' 'LibGit') ];
 			package: 'Iceberg-Libgit-Filetree' with: [ spec requires: #('Iceberg' 'Iceberg-Libgit') ];
 			package: 'Iceberg-Libgit-Tonel' with: [ spec requires: #('Iceberg' 'Iceberg-Libgit' 'Tonel') ];
-			
-			"for testing"
-			for: #MacOS do: [ 
-				self osSubprocess: spec.
-				spec package: 'Iceberg-GitCommand' with: [ spec requires: #('OSSubprocess') ] ];
-			for: #Unix do: [ 
-				self osSubprocess: spec.
-				spec package: 'Iceberg-GitCommand' with: [ spec requires: #('OSSubprocess' ) ] ];
-			for: #Windows do: [ 
-				self processWrapper: spec.
-				spec package: 'Iceberg-GitCommand' with: [ spec requires: #('ProcessWrapper') ] ];
 			"groups"
 			group: 'default' with: #(
 				minimal 
@@ -71,14 +63,14 @@ BaselineOfIceberg >> baseline: spec [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BaselineOfIceberg >> customProjectAttributes [
 	Smalltalk os isMacOS ifTrue: [ ^ #(#MacOS) ].
 	Smalltalk os isUnix ifTrue: [ ^ #(#Unix) ].
 	Smalltalk os isWindows ifTrue: [ ^ #(#Windows) ]
 ]
 
-{ #category : #baseline }
+{ #category : 'baseline' }
 BaselineOfIceberg >> libgit: spec [
 	spec 
 		baseline: 'LibGit' 
@@ -92,22 +84,14 @@ BaselineOfIceberg >> libgit: spec [
 		with: [ spec loads: #('tests') ]
 ]
 
-{ #category : #baseline }
-BaselineOfIceberg >> osSubprocess: spec [
-	spec 
-		baseline: 'OSSubprocess' 
-		with: [ spec repository: 'github://pharo-contributions/OSSubprocess:v1.0.1/repository' ]
-
-]
-
-{ #category : #script }
+{ #category : 'script' }
 BaselineOfIceberg >> postLoad [
 
 	self resetKMRepository.
 	(Smalltalk at: #Iceberg) bootstrap
 ]
 
-{ #category : #script }
+{ #category : 'script' }
 BaselineOfIceberg >> postLoadWithDirective: aDirective projectSpec: aSpec [
 	| repository |
 	self resetKMRepository.
@@ -124,17 +108,7 @@ BaselineOfIceberg >> postLoadWithDirective: aDirective projectSpec: aSpec [
 		packageList: aSpec packageNames
 ]
 
-{ #category : #baseline }
-BaselineOfIceberg >> processWrapper: spec [
-	spec 
-		configuration: 'ProcessWrapper' 
-		with: [ 
-			spec
-				versionString: '1.2';
-				repository: 'http://smalltalkhub.com/mc/hernan/ProcessWrapper/main' ]				
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 BaselineOfIceberg >> projectClass [
 	^ super projectClass 
 	"this is breaking the bootstrap. Reverting it for now."
@@ -143,23 +117,16 @@ BaselineOfIceberg >> projectClass [
 		do: [ super projectClass ]"
 ]
 
-{ #category : #script }
+{ #category : 'script' }
 BaselineOfIceberg >> resetKMRepository [
 	Smalltalk 
 		at: #KMRepository 
 		ifPresent: [ :class | class reset ]
 ]
 
-{ #category : #baseline }
-BaselineOfIceberg >> ring2: spec [
-	spec
-		baseline: 'Ring2'
-		with: [ spec repository: 'github://guillep/Ring2:v2.0.0/src' ]
-]
-
-{ #category : #baseline }
+{ #category : 'external projects' }
 BaselineOfIceberg >> tonel: spec [
 	spec
 		baseline: 'Tonel' 
-		with: [ spec repository: 'github://pharo-vcs/tonel:v1.0.17' ]
+		with: [ spec repository: 'github://pharo-vcs/tonel:Pharo13' ]
 ]

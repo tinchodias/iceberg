@@ -3,27 +3,30 @@ I'm a pull request from github API.
 I represent (more or less), what is described here: https://developer.github.com/v3/pulls/#list-pull-requests
 "
 Class {
-	#name : #IceGitHubPullRequest,
-	#superclass : #Object,
+	#name : 'IceGitHubPullRequest',
+	#superclass : 'Object',
 	#instVars : [
 		'repository',
 		'json',
 		'fetched',
 		'branch',
 		'detail',
-		'status'
+		'status',
+		'remote'
 	],
-	#category : #'Iceberg-Plugin-GitHub-Model'
+	#category : 'Iceberg-Plugin-GitHub-Model',
+	#package : 'Iceberg-Plugin-GitHub',
+	#tag : 'Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceGitHubPullRequest class >> fromJSON: aDictionary [
 	^ self basicNew
 		initializeWithJSON: aDictionary;
 		yourself
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceGitHubPullRequest >> acceptMessage: messageString type: typeString [
 	IceGitHubAPI new 
 		acceptPullRequest: self owner 
@@ -40,7 +43,7 @@ IceGitHubPullRequest >> acceptMessage: messageString type: typeString [
 				#merge_method -> typeString } asDictionary
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceGitHubPullRequest >> addComment: messageString [
 	| aJsonDictionary |
 	aJsonDictionary := IceGitHubAPI new 
@@ -52,27 +55,27 @@ IceGitHubPullRequest >> addComment: messageString [
 	^ IceGitHubPullRequestComment fromJSON: aJsonDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> author [
 	^ (self jsonAt: 'user') at: 'login'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> baseCommit [
 	^ repository commitAt: self baseSHA
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> baseLabel [
 	^ (self jsonAt: #base) at: #label
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> baseSHA [
 	^ (self jsonAt: #base) at: #sha
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> basicBranch [
 	^ branch ifNil: [
 		branch := (self repository
@@ -80,112 +83,110 @@ IceGitHubPullRequest >> basicBranch [
 				remoteBranchNamed: self headRef ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> basicHeadCommit [
 	^ self basicBranch commit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> body [
 	^ self jsonAt: #body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> branch [
 	fetched ifFalse: [ self fetch ].
 	^ branch ifNil: [
-		branch := (self repository
-			remoteNamed: self remote name )
-				remoteBranchNamed: self headRef ]
+		branch := self remote remoteBranchNamed: self headRef ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> branchName [
 	^ self branch name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> commits [
 	^ self branch commits
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> creationDateAndTime [
 	^ (json at: #created_at) asDateAndTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> detail [
 	^ detail ifNil: [
 		detail := IceGitHubAPI new get: ((self jsonAt: #url) allButFirst: 23) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> diffToBase [
 	^ self basicHeadCommit diffTo: self baseCommit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> diffToRepositoryHead [
 	"Inspired on IceMerge>>calculateChanges"
 
 	^ self basicBranch commit diffTo: self repository headCommit
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceGitHubPullRequest >> fetch [
-	[ ^ self remote fetch ]
-	ensure: [ fetched := true ]
+
+	^ [ self remote fetch ] ensure: [ fetched := true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> headLabel [
 	^ (self jsonAt: #head) at: #label
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> headRef [
 	^ (self jsonAt: #head) at: #ref
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> headSHA [
 	^ (self jsonAt: #head) at: #sha
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> htmlUrl [
 	^ self jsonAt: #html_url
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> id [
 	^ json at: #id
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceGitHubPullRequest >> initialize [
 	super initialize.
 	fetched := false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceGitHubPullRequest >> initializeWithJSON: aDictionary [
 	json := aDictionary.
 	self initialize
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private - accessing' }
 IceGitHubPullRequest >> json [
 	^ json
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private - accessing' }
 IceGitHubPullRequest >> jsonAt: aKey [
 	^ self json at: aKey
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceGitHubPullRequest >> mergeIntoWorkingCopy [
 	self repository 
 		ensureBranch: self branchName;
@@ -193,22 +194,38 @@ IceGitHubPullRequest >> mergeIntoWorkingCopy [
 	self branch merge
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> number [
 	^ self jsonAt: #number
 ]
 
-{ #category : #accessing }
+{ #category : 'private' }
+IceGitHubPullRequest >> obtainRemote [
+	| remoteCandidate |
+	
+	remoteCandidate := IceGitRemote 
+		name: self author
+		url: (((self jsonAt: #head) at: #repo) at: #ssh_url).
+	^ self repository remotes 
+		detect: [ :each | each = remoteCandidate ]
+		ifFound: [ :each | each ]
+		ifNone: [ 
+			"self repository addRemote: remoteCandidate."
+			remoteCandidate localRepository: self repository.
+			remoteCandidate ]
+]
+
+{ #category : 'accessing' }
 IceGitHubPullRequest >> owner [ 
 	^ (((self jsonAt: #base) at: #repo) at: #owner) at: #login
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> projectName [
 	^ ((self jsonAt: #base) at: #repo) at: #name
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceGitHubPullRequest >> rejectMessage: messageString [
 	messageString trimBoth 
 		ifNotEmpty: [ self addComment: messageString ].
@@ -219,50 +236,40 @@ IceGitHubPullRequest >> rejectMessage: messageString [
 			data: { #state -> #closed } asDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> remote [
-	| remote |
-	remote := IceGitRemote 
-		name: self author
-		url: (((self jsonAt: #head) at: #repo) at: #ssh_url).
-	^ self repository remotes 
-		detect: [ :each | each = remote ]
-		ifFound: [ :each | each ]
-		ifNone: [ 
-			self repository addRemote: remote.
-			remote ].
-	
-	
+
+	^ remote ifNil: [ remote := self obtainRemote ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> repository [
 	^ repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> repository: anIceRepository [
 	repository := anIceRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> state [
 	^ self jsonAt: #state
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> status [
 	^ status ifNil: [ 
 		status := IceGitHubAPI new 
 			get: 'repos/', self owner, '/', self projectName, '/commits/', self headSHA, '/status' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> title [
 	^ self jsonAt: #title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceGitHubPullRequest >> url [
 	^ self jsonAt: #url
 ]

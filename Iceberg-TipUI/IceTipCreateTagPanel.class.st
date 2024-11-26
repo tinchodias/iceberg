@@ -5,125 +5,143 @@ I have a form with a label and an input, and the commitish to tag.
 I'm done to be embedded in a dialog, so I implement doAccept to execute my action.
 "
 Class {
-	#name : #IceTipCreateTagPanel,
-	#superclass : #IceTipSpPresenter,
+	#name : 'IceTipCreateTagPanel',
+	#superclass : 'IceTipPresenter',
 	#instVars : [
-		'spacePanel',
 		'callback',
 		'tagNameInputText',
 		'commitishToTag',
 		'currentCommitishLabel',
 		'tagNameLabel',
-		'acceptBlock',
 		'existingTagsList',
 		'majorButton',
 		'minorButton',
 		'patchButton'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #specs }
-IceTipCreateTagPanel class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-		add: #currentCommitishLabel height: self inputTextHeight;
-		add:
-			(SpBoxLayout newHorizontal
-				add: #tagNameLabel width: self labelWidth ;
-				add: #tagNameInputText;
-				yourself)
-			height: self inputTextHeight;
-		add:
-			(SpBoxLayout newHorizontal
-				add: #majorButton;
-				add: #minorButton;
-				add: #patchButton;
-				yourself)
-			height: self inputTextHeight;
-		add: #existingTagsList height: self inputTextHeight * 3;
-		add: #spacePanel;
-		yourself 
-]
-
-{ #category : #accessing }
-IceTipCreateTagPanel class >> icon [
-	^ self iconNamed: #smallNew
-]
-
-{ #category : #accessing }
-IceTipCreateTagPanel class >> order [
-	^ 10
-]
-
-{ #category : #specs }
-IceTipCreateTagPanel class >> title [
-	^ 'New tag'
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> accept [
+
 	self validate.
-	self doAccept.
-	acceptBlock ifNotNil: [ acceptBlock cull: self ]
+	self doAccept
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceTipCreateTagPanel >> acceptThen: aBlock [
+
+	self accept.
+	aBlock value
+]
+
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> commitish: anIceTipCachedModel [
 	
 	commitishToTag := anIceTipCachedModel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> commitishToTag [
+
 	^ commitishToTag
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> currentCommitishLabel [
+
 	^ currentCommitishLabel
 ]
 
-{ #category : #accessing }
-IceTipCreateTagPanel >> currentCommitishLabel: anObject [
-	currentCommitishLabel := anObject
+{ #category : 'layout' }
+IceTipCreateTagPanel >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		borderWidth: 5;
+		spacing: 5;
+		add: currentCommitishLabel expand: false;
+		add: (SpBoxLayout newLeftToRight
+				spacing: 5;
+				add: tagNameLabel expand: false;
+				add: tagNameInputText;
+				yourself)
+			expand: false;
+	  	add: (SpBoxLayout newLeftToRight
+				spacing: 5;
+				add: majorButton;
+				add: minorButton;
+				add: patchButton;
+				yourself)
+	  		expand: false;
+		add: existingTagsList;
+		yourself
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipCreateTagPanel >> doAccept [
+
 	self validate.
-	commitishToTag
-		createTag: self tagName
-		thenDo: [ :newBranch | callback ifNotNil: [ callback value: newBranch ] ]
+	(commitishToTag newCreateTagAction: self tagName) 
+		onSuccess: [ 
+			callback ifNotNil: [ 
+				callback value: (IceTag 
+					named: self tagName
+					inRepository: commitishToTag repository) ] ];
+		executeWithContext: self
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> existingTagsList [
+
 	^ existingTagsList
 ]
 
-{ #category : #initialization }
-IceTipCreateTagPanel >> initializeCurrentBranchLabel [
-	currentCommitishLabel := self newLabel
-		label: 'Current commit: ' , commitishToTag commit shortId
+{ #category : 'initialization' }
+IceTipCreateTagPanel >> iconForWindow [
+
+	^ self iconNamed: #smallNew
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
+IceTipCreateTagPanel >> initializeCurrentBranchLabel [
+
+	currentCommitishLabel := self newLabel
+		label: 'Current commit: ', commitishToTag commit shortId;
+		yourself
+
+]
+
+{ #category : 'initialization' }
+IceTipCreateTagPanel >> initializeDialogWindow: aDialogWindowPresenter [
+	"Used to initialize the model in the case of the use into a dialog window.
+	 Override this to set buttons other than the default (Ok, Cancel)."
+	
+	aDialogWindowPresenter
+		addButton: 'Cancel' do: [ :presenter |
+			presenter triggerCancelAction.
+			presenter close ];
+		addDefaultButton: 'Create Tag' do: [ :presenter | 
+			self acceptThen: [ 
+				presenter triggerOkAction.
+				presenter close ] ]
+]
+
+{ #category : 'initialization' }
 IceTipCreateTagPanel >> initializeExistingTagsList [
+
 	existingTagsList := self newList.
 	existingTagsList
 		items: commitishToTag tagModels;
-		displayBlock: #name;
+		display: #name;
 		sortingBlock: #name descending
+
 ]
 
-{ #category : #initialization }
-IceTipCreateTagPanel >> initializeFocusOrder [
-	self focusOrder add: self tagNameInputText
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipCreateTagPanel >> initializeNextTagPanel [
+
 	| parts prefix nextMajor nextMinor nextPatch toString |
 	parts := self latestTagParts.
 	prefix := parts first.
@@ -143,38 +161,40 @@ IceTipCreateTagPanel >> initializeNextTagPanel [
 	patchButton := self newButton
 		label: 'patch (' , nextPatch , ')';
 		action: [ tagNameInputText text: nextPatch ]
+
 ]
 
-{ #category : #initialization }
-IceTipCreateTagPanel >> initializeWidgets [
-	self initializeWidgetsContents.
-	self initializeFocusOrder
-]
+{ #category : 'initialization' }
+IceTipCreateTagPanel >> initializePresenters [
 
-{ #category : #initialization }
-IceTipCreateTagPanel >> initializeWidgetsContents [
 	self initializeCurrentBranchLabel.
-	tagNameLabel := self newLabel label: 'New tag'.
+
+	tagNameLabel := self newLabel
+		                label: 'New tag';
+		                yourself.
 	tagNameInputText := self newTextInput
-		autoAccept: true;
-		placeholder: 'e.g., v[X].[Y].[Z]'.
+		                    autoAccept: true;
+		                    placeholder: 'e.g., v[X].[Y].[Z]';
+		                    yourself.
+
 	self initializeNextTagPanel.
-	self initializeExistingTagsList.
-	spacePanel := PanelMorph new asSpecAdapter
+	self initializeExistingTagsList
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipCreateTagPanel >> isNewBranch [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> latestTagParts [
+
 	^ self latestTagPartsIn: (commitishToTag tagModels collect: #name)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> latestTagPartsIn: tagNames [
+
 	| prefix parts |
 	"Find the highest numeric version with optional 'v' prefix. Set any missing parts to 0. For proper comparison (build data, prerelease, etc.), a Semver library is needed."
 	parts := #('v' 0 0 0).
@@ -193,85 +213,72 @@ IceTipCreateTagPanel >> latestTagPartsIn: tagNames [
 	^ parts
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> majorButton [
 	^ majorButton
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> minorButton [
 	^ minorButton
 ]
 
-{ #category : #accessing }
-IceTipCreateTagPanel >> openDialogWithSpec [
-	^ super openDialogWithSpec
+{ #category : 'accessing' }
+IceTipCreateTagPanel >> openDialog [
+
+	^ self asDialogWindow
 		okAction: [ self accept ];
-		yourself
+		open
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> patchButton [
+
 	^ patchButton
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> setModelBeforeInitialization: aCommitish [
 
 	self commitish: aCommitish
 ]
 
-{ #category : #'accessing ui' }
-IceTipCreateTagPanel >> spacePanel [
-	^ spacePanel
-]
-
-{ #category : #'accessing ui' }
-IceTipCreateTagPanel >> spacePanel: anObject [
-	spacePanel := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> tagName [
+
 	^ self tagNameInputText text asString trimBoth
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> tagNameInputText [
+
 	^ tagNameInputText
 ]
 
-{ #category : #accessing }
-IceTipCreateTagPanel >> tagNameInputText: anObject [
-	tagNameInputText := anObject
-]
-
-{ #category : #accessing }
+{ #category : 'accessing - ui' }
 IceTipCreateTagPanel >> tagNameLabel [
+
 	^ tagNameLabel
 ]
 
-{ #category : #accessing }
-IceTipCreateTagPanel >> tagNameLabel: anObject [
-	tagNameLabel := anObject
-]
+{ #category : 'initialization' }
+IceTipCreateTagPanel >> titleForWindow [
 
-{ #category : #api }
-IceTipCreateTagPanel >> title [
 	^ 'New tag of ' , commitishToTag name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCreateTagPanel >> validate [
+
 	self 
 		assert: self tagName isNotEmpty
-		description: 'Please enter your new branch name.'.
+		description: 'Please enter your new tag name.'.
 	self 
 		assert: (self tagName noneSatisfy: #isSeparator)
-		description: 'You can''t have spaces in your branch name.'
+		description: 'You can''t have spaces in your tag name.'
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 IceTipCreateTagPanel >> withResultDo: aBlockClosure [ 
 	
 	callback := aBlockClosure

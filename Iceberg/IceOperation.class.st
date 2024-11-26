@@ -2,15 +2,17 @@
 I represent a merge operation. I know how to install myself in the system, how to inverse myself and how to show the definitions I'm being applied to. Check my subclasses for more information.
 "
 Class {
-	#name : #IceOperation,
-	#superclass : #Object,
+	#name : 'IceOperation',
+	#superclass : 'Object',
 	#instVars : [
 		'definition'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceOperation class >> definition: aDefinition [
 	
 	^ self new
@@ -18,166 +20,166 @@ IceOperation class >> definition: aDefinition [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceOperation >> = anotherOperation [
 
 	^ self species = anotherOperation species
 		and: [ self leftDefinition = anotherOperation leftDefinition ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceOperation >> accept: aVisitor [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #'morphic-compatibility' }
+{ #category : 'morphic - compatibility' }
 IceOperation >> contextClass [
 	
 	^ definition contextClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> definition [
 	^ definition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> definition: aDefinition [
 
 	definition := aDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> description [
 	
 	^ definition key
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> hasChanges [
 	
 	^ true
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceOperation >> hash [
 	^ self leftDefinition hash
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 IceOperation >> install [
 	
 	self leftDefinition install
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 IceOperation >> inverse [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isAddition [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isConflict [
 	^false.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isModification [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isNoModification [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isOnlyLowImpact [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isRemoval [
 	
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceOperation >> isResolved [
 	
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> key [
 	
 	^ definition key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> leftContents [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> leftDefinition [
 
 	^ definition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> leftDefinition: aNode [
 
 	definition := aNode
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceOperation >> mergeWithLeftAddition: anIceAddition [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceOperation >> mergeWithLeftModification: anIceModification [ 
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceOperation >> mergeWithLeftNoOperation: anIceNoModification [ 
 	
 	^ self subclassResponsibility
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceOperation >> mergeWithLeftRemoval: anIceRemoval [ 
 	
 	self subclassResponsibility
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceOperation >> mergeWithOperation: anOperation [
 	
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> name [
 	
 	^ definition name
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceOperation >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
 
@@ -189,7 +191,7 @@ IceOperation >> printOn: aStream [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceOperation >> rightContents [
 	
 	^ definition contents

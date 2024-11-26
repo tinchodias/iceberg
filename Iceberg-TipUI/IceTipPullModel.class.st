@@ -2,27 +2,28 @@
 I'm a model to present pull commits and operations.
 "
 Class {
-	#name : #IceTipPullModel,
-	#superclass : #IceTipRemoteActionModel,
-	#category : #'Iceberg-TipUI-Model'
+	#name : 'IceTipPullModel',
+	#superclass : 'IceTipRemoteActionModel',
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipPullModel >> commitModels [
-	^ (self entity branch incomingCommitsFrom: self remote)
-		collect: [ :each | 
-			(IceTipCommitModel 
-				repositoryModel: self repositoryModel 
-				on: each) 
-				beCached ]
+
+	^ (self entity branch incomingCommitsFrom: self remote) collect: [
+		  :each |
+		  IceTipCommitModel repositoryModel: self repositoryModel on: each ]
 ]
 
-{ #category : #actions }
-IceTipPullModel >> pullThen: aBlock [
-	IceTipStandardAction new 
+{ #category : 'actions' }
+IceTipPullModel >> newPullAction [
+
+	^ IceTipStandardAction new 
 		repository: self entity;
 		message: ('Pulling from {1}' format: { self remote name });
 		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self entity pullFrom: self remote ]
+		action: [ self entity pullFrom: self remote ];
+		yourself
 ]

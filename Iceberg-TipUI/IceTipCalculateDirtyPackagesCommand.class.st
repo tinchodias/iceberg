@@ -1,43 +1,40 @@
+"
+I'm a command that makes a working copy to recalculate the dirty packages (via #forceCalculateDirtyPackages).
+"
 Class {
-	#name : #IceTipCalculateDirtyPackagesCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'item'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCalculateDirtyPackagesCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipCalculateDirtyPackagesCommand class >> browserRepositoryListActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byItemOf: CmdExtraMenuGroup
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipCalculateDirtyPackagesCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipCalculateDirtyPackagesCommand class >> defaultMenuIconName [
-	^ #repair
-]
-
-{ #category : #accessing }
-IceTipCalculateDirtyPackagesCommand class >> defaultMenuItemName [
 	^ 'Recalculate dirty packages'
 ]
 
-{ #category : #execution }
-IceTipCalculateDirtyPackagesCommand >> execute [
-	item ifNil: [ ^ self ].
-	IceTipStandardAction new
-		repository: item entity;
-		message: 'Recalculating Dirty Packages';
-		onSuccessRepositoryModified;
-		execute: [ item entity workingCopy forceCalculateDirtyPackages ]
+{ #category : 'testing' }
+IceTipCalculateDirtyPackagesCommand >> canBeExecuted [
+
+	^ self hasSelectedItem
+
 ]
 
-{ #category : #execution }
-IceTipCalculateDirtyPackagesCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	item := aToolContext item
+{ #category : 'executing' }
+IceTipCalculateDirtyPackagesCommand >> execute [
+
+	IceTipStandardAction new
+		repository: self item entity;
+		message: 'Recalculating Dirty Packages';
+		onSuccessRepositoryModified;
+		action: [ self item entity workingCopy forceCalculateDirtyPackages ];
+		executeWithContext: context
+]
+
+{ #category : 'accessing' }
+IceTipCalculateDirtyPackagesCommand >> iconName [
+
+	^ #repair
 ]

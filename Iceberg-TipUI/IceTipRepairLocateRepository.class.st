@@ -6,12 +6,14 @@ I'm active when repository can not be located in disk.
 Notice that doing this can lead you to another situation that needs repair (like a detached status)
 "
 Class {
-	#name : #IceTipRepairLocateRepository,
-	#superclass : #IceTipRepairAction,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipRepairLocateRepository',
+	#superclass : 'IceTipRepairAction',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairLocateRepository class >> help [
 	^ 'Locate this repository in your file system.
 
@@ -23,47 +25,50 @@ You will need to re-synchronize your repository with another repair action.
 This happens if the repository has been removed from the disk or the image was pointing to a repository in another machine (For example, when sharing images with other machines / people).'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairLocateRepository class >> icon [
 	^ self iconNamed: #glamorousFolder
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipRepairLocateRepository class >> isAvailableFor: aRepository [
 	"active when there is no repository directory"
 	
 	^ aRepository isMissing
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairLocateRepository class >> order [
 	^ 10
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepairLocateRepository class >> title [
 	^ 'Locate this repository in your file system'
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 IceTipRepairLocateRepository >> basicExecute [
 	| dialog |
-	dialog := IceTipLocalRepositoryPanel new
+	
+	dialog := (IceTipLocalRepositoryPanel newApplication: context application)
 		location: (self repository location ifNil: [ self defaultLocation ]);
 		yourself.
-	dialog openDialogWithSpec 
-		okAction: [
+	
+	dialog asDialogWindow 
+		okAction: [ 
 			dialog validate.
 			self repositoryModel updateLocation: dialog location.
-			true ]
+			true ];
+		open.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipRepairLocateRepository >> defaultLocation [
 	^ IceLibgitRepository repositoriesLocation
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 IceTipRepairLocateRepository >> defaultSubdirectory [
 	^ IceLibgitRepository defaultCodeSubdirectory
 ]

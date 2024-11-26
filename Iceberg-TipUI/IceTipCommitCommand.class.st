@@ -2,64 +2,48 @@
 I open a the commit window, with all latest changes.
 "
 Class {
-	#name : #IceTipCommitCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCommitCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipCommitCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 100
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceTipCommitCommand class >> defaultDescription [
 
-{ #category : #activation }
-IceTipCommitCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $s meta for: IceTipRepositoryListContext
-]
-
-{ #category : #testing }
-IceTipCommitCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational
-]
-
-{ #category : #accessing }
-IceTipCommitCommand class >> defaultHelp [
 	^ 'Commit changes to this repository'
 ]
 
-{ #category : #accessing }
-IceTipCommitCommand class >> defaultMenuIconName [
-	^ #smallOk
-]
+{ #category : 'accessing - defaults' }
+IceTipCommitCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipCommitCommand class >> defaultMenuItemName [
 	^ 'Commit'
 ]
 
-{ #category : #activation }
-IceTipCommitCommand class >> packageListShortcutActivation [
-	<classAnnotation>
-	
-	^ CmdShortcutActivation by: $s meta for: IceTipWorkingCopyContext
+{ #category : 'testing' }
+IceTipCommitCommand >> canBeExecuted [
+
+	^ self isRepositoryOperational
 ]
 
-{ #category : #activation }
-IceTipCommitCommand class >> toolbarWorkingCopyActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipWorkingCopyContext
-		order: 10
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipCommitCommand >> execute [
-	(IceTipCommitBrowser on: self repositoryModel) openWithSpec
+
+	(IceTipCommitBrowser 
+		newApplication: context application 
+		model: context workingCopyModel) 
+		open
+]
+
+{ #category : 'accessing' }
+IceTipCommitCommand >> iconName [
+
+	^ #smallOk
+]
+
+{ #category : 'accessing' }
+IceTipCommitCommand >> shortcutKey [
+
+	^ $s meta
 ]

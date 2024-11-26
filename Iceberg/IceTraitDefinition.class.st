@@ -6,18 +6,20 @@ My contents is the trait definition.
 See my superclasses for more information.
 "
 Class {
-	#name : #IceTraitDefinition,
-	#superclass : #IceMethodContainerDefinition,
-	#category : #'Iceberg-Changes'
+	#name : 'IceTraitDefinition',
+	#superclass : 'IceMethodContainerDefinition',
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceTraitDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitTraitDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceTraitDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatcher [
 	
 	aMCPatcher
@@ -25,7 +27,7 @@ IceTraitDefinition >> addModification: anotherIceDefinition toPatcher: aMCPatche
 		to: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceTraitDefinition >> addToPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses if their mcDefinition is nil.
@@ -36,7 +38,7 @@ IceTraitDefinition >> addToPatcher: aMCPatcher [
 	aMCPatcher addDefinition: self asMCDefinition
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceTraitDefinition >> allPropertyNames [
 	"Answer the names of the IcePropertyDefinition objects that are owned by this definition. 
 	This is a specialized implementation given there are cases where the mcDefinition is not a MCClassDefinition but a MCClassDefinition."
@@ -44,18 +46,18 @@ IceTraitDefinition >> allPropertyNames [
 	^ mcDefinition class instVarNames copyWithoutAll: #(name variables commentStamp baseTrait) 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTraitDefinition >> contents [
 	^ mcDefinition definitionString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTraitDefinition >> isTraitDefinition [
 
 	^ true
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceTraitDefinition >> removeFromPatcher: aMCPatcher [ 
 	
 	"We should not handle metaclasses. They will be added automatically when added the instance side"

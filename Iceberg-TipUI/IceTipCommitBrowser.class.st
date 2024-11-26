@@ -4,163 +4,258 @@ I'm a browser to commit changes to a repository.
 (self onRepository: IceRepository registry anyOne) openWithSpec
 "
 Class {
-	#name : #IceTipCommitBrowser,
-	#superclass : #IceTipBrowser,
+	#name : 'IceTipCommitBrowser',
+	#superclass : 'IceTipBrowser',
 	#instVars : [
 		'diffPanel',
 		'commentPanel',
 		'saveAction'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Commit',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Commit'
 }
 
-{ #category : #specs }
-IceTipCommitBrowser class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-		add: #toolbar expand: false fill: true padding: 0;
-		add:
-			(SpPanedLayout newVertical
-				add: #diffPanel;
-				add: #commentPanel;
-				yourself);
-			yourself
+{ #category : 'commands' }
+IceTipCommitBrowser class >> buildGeneralCommandGroupWith: presenter for: aCommandGroup [
+
+	aCommandGroup register: (IceTipRefreshCommitCommand forSpecContext: presenter)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'commands' }
+IceTipCommitBrowser class >> buildSelectionCommandGroupWith: presenter for: aCommandGroup [
+
+	{ 	
+		IceTipBrowseCommand.
+		IceTipRevertChangeCommand.
+	} 
+	do: [ :each | aCommandGroup register: (each forSpecContext: presenter) ].
+	
+	aCommandGroup register: ((CmCommandGroup named: 'Edit') asSpecGroup
+		beDisplayedAsGroup;
+		register: (IceTipTreeExpandCommand forSpecContext: presenter);
+		register: (IceTipTreeCollapseCommand forSpecContext: presenter);
+		yourself).
+
+]
+
+{ #category : 'instance creation' }
 IceTipCommitBrowser class >> onRepository: aRepository [
-	^ self on: (IceTipRepositoryModel on: aRepository)
+
+	^ self on: (IceTipWorkingCopyModel on: (IceTipRepositoryModel on: aRepository) workingCopy: aRepository workingCopy)
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipCommitBrowser >> accept [
+
 	^ self doCommit
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCommitBrowser >> commentPanel [
+
 	^ commentPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipCommitBrowser >> commentPanel: anObject [
-	commentPanel := anObject
+{ #category : 'accessing - ui' }
+IceTipCommitBrowser >> commentPanel: aSpPresenter [
+
+	commentPanel := aSpPresenter
 ]
 
-{ #category : #accessing }
-IceTipCommitBrowser >> contextClass [
-	^ IceTipCommitContext
+{ #category : 'layout' }
+IceTipCommitBrowser >> defaultLayout [
+
+	^ SpPanedLayout newTopToBottom
+		  positionOfSlider: 66 percent;
+		  add: diffPanel;
+		  add: commentPanel;
+		  yourself
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCommitBrowser >> diffPanel [
+
 	^ diffPanel
 ]
 
-{ #category : #'accessing ui' }
-IceTipCommitBrowser >> diffPanel: anObject [
-	diffPanel := anObject
+{ #category : 'accessing - ui' }
+IceTipCommitBrowser >> diffPanel: aSpPresenter [
+
+	diffPanel := aSpPresenter
 ]
 
-{ #category : #actions }
+{ #category : 'private' }
+IceTipCommitBrowser >> diffToReferenceCommit [
+
+	^ self workingCopyModel diffToReferenceCommit
+]
+
+{ #category : 'actions' }
+IceTipCommitBrowser >> doCollapseSelection [
+
+	diffPanel doCollapseSelection
+]
+
+{ #category : 'actions' }
 IceTipCommitBrowser >> doCommit [
-	self
-		doCommit: diffPanel selectedItems
-		message: commentPanel message
-		pushing: commentPanel isPushing
-		saving: commentPanel isSaving 
+	| selectedItems message isPushing isSaving commitBlock|
+
+	selectedItems := diffPanel selectedItems.
+	message := commentPanel message.
+	isPushing := commentPanel isPushing.
+	isSaving := commentPanel isSaving.
+	
+	commitBlock := [  
+		self
+			doCommit: selectedItems
+			message: message
+			pushing: isPushing
+			saving: isSaving ].
+
+	(IceTipCritiquesBeforeCommitBrowser newApplication: self application model: selectedItems)
+		commitModel: self model;
+		onAccept: commitBlock ;
+		openIfCritiques
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipCommitBrowser >> doCommit: aCollection message: aString pushing: pushingBoolean saving: savingBoolean [
-	self model
-		commit:
-			(IceTipCommitAction new
-				diff: self model workingCopyDiff;
-				items: aCollection;
-				message: aString;
-				yourself)
-		then: [ self verifyNeedsRefreshOrClose.
-			pushingBoolean
-				ifTrue: [ (IceTipPushAction new repository: self model entity) execute ].
-			savingBoolean
-				ifTrue: [ saveAction execute ] ]
+
+	self workingCopyModel newCommitAction
+		diff: self workingCopyModel diffToReferenceCommit;
+		items: aCollection;
+		message: aString;
+		onSuccess: [ 
+			self verifyNeedsRefreshOrClose.
+			pushingBoolean ifTrue: [ 
+				(IceTipPushAction new repository: self repository) executeWithContext: self ].
+			savingBoolean ifTrue: [ 
+				saveAction execute ] ];
+		executeWithContext: self
 ]
 
-{ #category : #accessing }
-IceTipCommitBrowser >> initialExtent [
+{ #category : 'actions' }
+IceTipCommitBrowser >> doExpandSelection [
+	
+	diffPanel doExpandSelection
+]
+
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initialExtentForWindow [
+
 	^ (800@600) scaledByDisplayScaleFactor
 ]
 
-{ #category : #accessing }
-IceTipCommitBrowser >> initialize [ 
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initialize [
 
 	super initialize.
 	saveAction := IceTipSaveImageAction new
+		context: self;
+		yourself
 ]
 
-{ #category : #initialization }
-IceTipCommitBrowser >> initializeWidgets [
-	super initializeWidgets.
-	
-	diffPanel := self instantiate: IceTipDiffSelectingPanel on: self model workingCopyDiff.
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initializeAcceptShortcut [
+
+	self
+		bindKeyCombination: $s meta
+		toAction: [ self accept ].
+		
+	commentPanel commentText
+		bindKeyCombination: $s meta
+		toAction: [ self accept ].
+
+]
+
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initializePresenters [
+
+	diffPanel := self instantiate: IceTipDiffSelectingPanel on: self diffToReferenceCommit.
 	diffPanel leftLabel: 'Repository'.
 	diffPanel rightLabel: 'Working Copy'.
 	
-	commentPanel := self instantiate: IceTipCommentPanel on: self model.
+	commentPanel := self instantiate: IceTipCommentPanel on: self repositoryModel.
 	commentPanel onCommit: [ self doCommit ].
 	
-	self addShortcutsTo: commentPanel commentText.
-	self addShortcutsTo: self.
-
-	self focusOrder 
-		add: commentPanel;
-		add: diffPanel
+	self initializeAcceptShortcut
 ]
 
-{ #category : #accessing }
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initializeWindow: aWindow [
+
+	super initializeWindow: aWindow.
+	aWindow bindKeyCombination: $s meta toAction: [ self accept ]
+]
+
+{ #category : 'accessing - ui' }
+IceTipCommitBrowser >> mainList [
+	"Answer the presenter that is the main list of items of this browser."
+
+	^ diffPanel iceNodesTree
+]
+
+{ #category : 'accessing' }
 IceTipCommitBrowser >> refresh [
+
 	diffPanel refresh
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipCommitBrowser >> refreshWhenRepository: ann [
-	(self model isModelOf: ann repository)
+
+	(self repository = ann repository)
 		ifFalse: [ ^ self ].
 	self model reset.
 	self refresh
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceTipCommitBrowser >> repository [
+	
+	^ self repositoryModel repository
+]
+
+{ #category : 'accessing' }
 IceTipCommitBrowser >> saveAction: anAction [
 
 	saveAction := anAction
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipCommitBrowser >> subscribeToAnnouncements [
-	self announcer 
-		when: IceTipDiffRefreshed 
-		send: #refreshWhenRepository: 
+
+	self announcer
+		when: IceTipDiffRefreshed
+		send: #refreshWhenRepository:
 		to: self
 ]
 
-{ #category : #accessing }
-IceTipCommitBrowser >> title [
+{ #category : 'initialization' }
+IceTipCommitBrowser >> titleForWindow [
+
 	^ 'Commit on {1} branch {2}' format: { 
-		self model name. 
-		self model branchName } 
+			  self repositoryModel name.
+			  self repositoryModel branchName }
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipCommitBrowser >> verifyNeedsRefreshOrClose [
 	"Verifies if there are remaining changes to commit. 
 	 In case there are none, close the window."
-	
-	self model reset.
-	diffPanel model reset.
-	diffPanel model isEmpty
-		ifTrue: [ ^ self window close ].
-	self commentPanel clear. 
+
+	self application informUser: 'Refreshing changes' during: [
+		self model reset.
+		diffPanel model reset ].
+
+	diffPanel model isEmpty ifTrue: [ ^ self closeWindow ].
+	self commentPanel clear.
 	diffPanel basicRefresh
+]
+
+{ #category : 'accessing' }
+IceTipCommitBrowser >> workingCopyModel [
+	
+	^ self model
 ]

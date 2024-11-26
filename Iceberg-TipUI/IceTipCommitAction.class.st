@@ -2,73 +2,86 @@
 I perform a commit
 "
 Class {
-	#name : #IceTipCommitAction,
-	#superclass : #IceTipAction,
+	#name : 'IceTipCommitAction',
+	#superclass : 'IceTipAction',
 	#instVars : [
 		'diff',
 		'items',
 		'message',
-		'publish'
+		'workingCopy'
 	],
-	#category : 'Iceberg-TipUI-Commands'
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #executing }
+{ #category : 'executing' }
 IceTipCommitAction >> basicExecute [
 	self validateCanCommit.
-	UIManager default 
-		informUser: 'Commiting...' 
+	self application
+		informUser: 'Committing...' 
 		during: [ 
-			self repository
+			self workingCopy
 				commitChanges: (diff copyWithOnly: items)
 				withMessage: message ].
 	Iceberg announcer announce: (IceRepositoryModified for: self repository).
 	Iceberg announcer announce: (IceCommited for: self repository).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> diff [
 	^ diff
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> diff: anObject [
 	diff := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> items [
 	^ items
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> items: anObject [
 	items := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> message [
 	^ message
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCommitAction >> message: anObject [
 	message := anObject
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 IceTipCommitAction >> validateCanCommit [
 	self validateMessageNotEmpty
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 IceTipCommitAction >> validateChangeListNotEmpty [
-	"If there are no selected changed, no point on commiting :)"
+	"If there are no selected changed, no point on committing :)"
 	
 	items ifEmpty: [ IceNothingToCommit signal ]
 ]
 
-{ #category : #validating }
+{ #category : 'validating' }
 IceTipCommitAction >> validateMessageNotEmpty [
 	self message ifEmpty: [ IceNoCommitMessage signal ]
+]
+
+{ #category : 'accessing' }
+IceTipCommitAction >> workingCopy [
+	^ workingCopy
+]
+
+{ #category : 'accessing' }
+IceTipCommitAction >> workingCopy: aWorkingCopy [
+
+	workingCopy := aWorkingCopy
 ]

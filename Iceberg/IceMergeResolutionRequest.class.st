@@ -1,36 +1,20 @@
 Class {
-	#name : #IceMergeResolutionRequest,
-	#superclass : #Notification,
+	#name : 'IceMergeResolutionRequest',
+	#superclass : 'Notification',
 	#instVars : [
 		'merge'
 	],
-	#category : #'Iceberg-Errors'
+	#category : 'Iceberg-Errors',
+	#package : 'Iceberg',
+	#tag : 'Errors'
 }
 
-{ #category : #exceptiondescription }
-IceMergeResolutionRequest >> defaultAction [
-
-	| window mergeMorph |
-	mergeMorph := (IceTipMergeMorph forMerger: merge).
-
-	mergeMorph
-		fromDescription: merge sourceDescription;
-		toDescription: merge targetDescription.
-
-	window := mergeMorph newWindow
-		title: 'Merge';
-		yourself.
-
-	window openModal.
-	^ mergeMorph merged
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceMergeResolutionRequest >> merge [
 	^ merge
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceMergeResolutionRequest >> merger: anIceMerge [ 
 	
 	merge := anIceMerge

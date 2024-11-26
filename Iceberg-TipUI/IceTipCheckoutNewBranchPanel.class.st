@@ -2,147 +2,132 @@
 I'm a panel to create a new local branch 
 "
 Class {
-	#name : #IceTipCheckoutNewBranchPanel,
-	#superclass : #IceTipBranchPanel,
+	#name : 'IceTipCheckoutNewBranchPanel',
+	#superclass : 'IceTipBranchPanel',
 	#instVars : [
 		'currentBranchLabel',
 		'branchLabel',
 		'branchInputText',
-		'spacePanel',
 		'branchCommitish',
 		'callback'
 	],
-	#category : #'Iceberg-TipUI-View-Branch'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipCheckoutNewBranchPanel class >> defaultSpec [
-	<spec: #default>
-
-	^ SpBoxLayout newVertical 
-			add: #currentBranchLabel height: self inputTextHeight;
-			add: ( SpBoxLayout newHorizontal 
-							add: #branchLabel width: self labelWidth ;
-							add: #branchInputText ;
-							yourself )
-					height: self inputTextHeight
-]
-
-{ #category : #accessing }
-IceTipCheckoutNewBranchPanel class >> icon [
-	^ self iconNamed: #smallNew
-]
-
-{ #category : #accessing }
-IceTipCheckoutNewBranchPanel class >> order [
-	^ 10
-]
-
-{ #category : #specs }
-IceTipCheckoutNewBranchPanel class >> title [
-	^ 'New branch'
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCheckoutNewBranchPanel >> branchInputText [
+
 	^ branchInputText
 ]
 
-{ #category : #'accessing ui' }
-IceTipCheckoutNewBranchPanel >> branchInputText: anObject [
-	branchInputText := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCheckoutNewBranchPanel >> branchLabel [
+
 	^ branchLabel
 ]
 
-{ #category : #'accessing ui' }
-IceTipCheckoutNewBranchPanel >> branchLabel: anObject [
-	branchLabel := anObject
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipCheckoutNewBranchPanel >> branchName [
+
 	^ self branchInputText text asString trimBoth
 ]
 
-{ #category : #accessing }
-IceTipCheckoutNewBranchPanel >> commitish: anIceTipCachedModel [
+{ #category : 'accessing' }
+IceTipCheckoutNewBranchPanel >> commitish: anIceTipModel [
 	
-	branchCommitish := anIceTipCachedModel
+	branchCommitish := anIceTipModel
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipCheckoutNewBranchPanel >> currentBranchLabel [
+
 	^ currentBranchLabel
 ]
 
-{ #category : #'accessing ui' }
-IceTipCheckoutNewBranchPanel >> currentBranchLabel: anObject [
-	currentBranchLabel := anObject
-]
+{ #category : 'layout' }
+IceTipCheckoutNewBranchPanel >> defaultLayout [
 
-{ #category : #actions }
-IceTipCheckoutNewBranchPanel >> doAccept [
-	self validate.
-	self model
-		checkoutNewBranchNamed: self branchName
-		inCommit: (branchCommitish ifNil: [ self model entity workingCopy referenceCommit ])
-		thenDo: [ :newBranch | callback ifNotNil: [ callback value: newBranch ] ]
-]
-
-{ #category : #initialization }
-IceTipCheckoutNewBranchPanel >> initializeCurrentBranchLabel [
-	currentBranchLabel := self newLabel
-		label: 'Current branch: ' , self model branchName
-]
-
-{ #category : #initialization }
-IceTipCheckoutNewBranchPanel >> initializeFocusOrder [
-	self focusOrder add: self branchInputText
-]
-
-{ #category : #initialization }
-IceTipCheckoutNewBranchPanel >> initializeWidgets [
-	self initializeWidgetsContents.
-	self initializeFocusOrder
-]
-
-{ #category : #initialization }
-IceTipCheckoutNewBranchPanel >> initializeWidgetsContents [
-	self initializeCurrentBranchLabel.
-	branchLabel := self newLabel label: 'New branch'.
-	branchInputText := self newTextInput
-		autoAccept: true;
-		placeholder: 'e.g., feature/what'.
-]
-
-{ #category : #testing }
-IceTipCheckoutNewBranchPanel >> isNewBranch [
-	^ true
-]
-
-{ #category : #accessing }
-IceTipCheckoutNewBranchPanel >> openDialogWithSpec [
-	^ super openDialogWithSpec
-		okAction: [ self accept ];
+	^ SpBoxLayout newTopToBottom
+		spacing: 5;
+		add: currentBranchLabel expand: false;
+		add: (SpBoxLayout newLeftToRight
+				vAlignCenter;
+				spacing: 5;
+				add: branchLabel expand: false;
+				add: branchInputText;
+				yourself)
+		 	expand: false;
 		yourself
 ]
 
-{ #category : #'accessing ui' }
-IceTipCheckoutNewBranchPanel >> spacePanel [
-	^ spacePanel
+{ #category : 'actions' }
+IceTipCheckoutNewBranchPanel >> doAccept [
+
+	(self model
+		newCheckoutNewBranchNamed: self branchName
+		inCommit: (branchCommitish ifNil: [ self model entity workingCopy referenceCommit ]))
+		onSuccess: [ 
+			callback ifNotNil: [ 
+				callback value: (self model branchNamed: self branchName) ] ];
+		executeWithContext: self
 ]
 
-{ #category : #'accessing ui' }
-IceTipCheckoutNewBranchPanel >> spacePanel: anObject [
-	spacePanel := anObject
+{ #category : 'accessing' }
+IceTipCheckoutNewBranchPanel >> icon [
+
+	^ self iconNamed: #smallNew
 ]
 
-{ #category : #accessing }
+{ #category : 'initialization' }
+IceTipCheckoutNewBranchPanel >> iconForWindow [
+
+	^ self icon
+]
+
+{ #category : 'initialization' }
+IceTipCheckoutNewBranchPanel >> initializeCurrentBranchLabel [
+
+	currentBranchLabel := self newLabel
+		label: 'Current branch: ', self model branchName
+]
+
+{ #category : 'initialization' }
+IceTipCheckoutNewBranchPanel >> initializePresenters [
+
+	self initializeCurrentBranchLabel.
+	branchLabel := self newLabel
+		label: 'New branch';
+		yourself.
+	branchInputText := self newTextInput
+		placeholder: 'e.g., feature/what';
+		yourself
+]
+
+{ #category : 'testing' }
+IceTipCheckoutNewBranchPanel >> isNewBranch [
+
+	^ true
+]
+
+{ #category : 'accessing' }
+IceTipCheckoutNewBranchPanel >> openDialog [
+
+	^ self asDialogWindow
+		  okAction: [ self accept ];
+		  open
+]
+
+{ #category : 'initialization' }
+IceTipCheckoutNewBranchPanel >> titleForWindow [
+
+	^ 'New branch'
+]
+
+{ #category : 'accessing' }
 IceTipCheckoutNewBranchPanel >> validate [
+
 	self 
 		assert: self branchName isNotEmpty
 		description: 'Please enter your new branch name.'.
@@ -151,7 +136,7 @@ IceTipCheckoutNewBranchPanel >> validate [
 		description: 'You can''t have spaces in your branch name.'
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 IceTipCheckoutNewBranchPanel >> withResultDo: aBlockClosure [ 
 	
 	callback := aBlockClosure

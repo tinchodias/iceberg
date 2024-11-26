@@ -3,18 +3,21 @@ I'm a generic repository type panel.
 I'm used as part of the creation dialog and to edit repository properties.
 "
 Class {
-	#name : #IceTipRepositoryTypePanel,
-	#superclass : #SpPresenter,
+	#name : 'IceTipRepositoryTypePanel',
+	#superclass : 'IceTipPresenter',
 	#instVars : [
+		'projectLocationLabel',
 		'projectLocation',
 		'remoteLabel',
 		'remoteInputText',
 		'repository'
 	],
-	#category : #'Iceberg-TipUI-View-RepositoryType'
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepositoryTypePanel class >> allTypes [
 	^ ((self allSubclasses 
 		reject: #isAbstract)
@@ -22,111 +25,101 @@ IceTipRepositoryTypePanel class >> allTypes [
 		collect: #new
 ]
 
-{ #category : #accessing }
-IceTipRepositoryTypePanel class >> icon [
-	self subclassResponsibility
-]
-
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipRepositoryTypePanel class >> isAbstract [
+
 	^ self = IceTipRepositoryTypePanel
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepositoryTypePanel class >> order [
+
 	^ 0
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 IceTipRepositoryTypePanel >> defaultLocation [
+
 	^ IceLibgitRepository repositoriesLocation pathString
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipRepositoryTypePanel >> defaultSubdirectory [
+
 	^ IceLibgitRepository defaultCodeSubdirectory
 ]
 
-{ #category : #accessing }
-IceTipRepositoryTypePanel >> icon [
-	^ self class icon
+{ #category : 'initialization' }
+IceTipRepositoryTypePanel >> initializePresenters [
+
+	self initializeProjectLocation
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipRepositoryTypePanel >> initializeProjectLocation [
+
+	projectLocationLabel := self newLabel label: 'Local directory'.
 	projectLocation := self instantiate: IceTipDirectoryPresenter.
-	projectLocation 
-		label: 'Local directory';
+	projectLocation
 		chooseTitle: 'Choose local repository';
-		location: self defaultLocation	
+		location: self defaultLocation
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipRepositoryTypePanel >> initializeRemoteURL [
-	remoteLabel := self newLabel label: 'Remote URL'.
+
+	remoteLabel := self newLabel label: 'Remote URL'; yourself.
 	remoteInputText := self newTextInput
 		placeholder: 'e.g., git@github.com:user/MyProject.git';
-		autoAccept: true
+		autoAccept: true;
+		yourself.
 ]
 
-{ #category : #initialization }
-IceTipRepositoryTypePanel >> initializeWidgets [
-	self initializeProjectLocation.
-
-]
-
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipRepositoryTypePanel >> isLocalRepository [
+
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipRepositoryTypePanel >> isNewRepository [
+
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepositoryTypePanel >> newRepository [
+
 	^ self subclassResponsibility
 ]
 
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipRepositoryTypePanel >> projectLocation [
+
 	^ projectLocation
 ]
 
-{ #category : #'accessing ui' }
-IceTipRepositoryTypePanel >> projectLocation: anObject [
-	projectLocation := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipRepositoryTypePanel >> remoteInputText [
+
 	^ remoteInputText
 ]
 
-{ #category : #'accessing ui' }
-IceTipRepositoryTypePanel >> remoteInputText: anObject [
-	remoteInputText := anObject
-]
-
-{ #category : #'accessing ui' }
+{ #category : 'accessing - ui' }
 IceTipRepositoryTypePanel >> remoteLabel [
+
 	^ remoteLabel
 ]
 
-{ #category : #'accessing ui' }
-IceTipRepositoryTypePanel >> remoteLabel: anObject [
-	remoteLabel := anObject
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepositoryTypePanel >> repository: aRepository [
 	"Used if editing an existing repository"
+
 	repository := aRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipRepositoryTypePanel >> validate [
+
 	^ self subclassResponsibility
 ]

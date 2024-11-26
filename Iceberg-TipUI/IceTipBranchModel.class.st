@@ -2,140 +2,148 @@
 I expose data of a branch.
 "
 Class {
-	#name : #IceTipBranchModel,
-	#superclass : #IceTipCommitishModel,
-	#category : #'Iceberg-TipUI-Model'
+	#name : 'IceTipBranchModel',
+	#superclass : 'IceTipCommitishModel',
+	#category : 'Iceberg-TipUI-Model',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Model'
 }
 
-{ #category : #private }
-IceTipBranchModel >> addDecorationTo: aString [
-	| text |
-	text := aString asText.
-	[ 
-		self entity isHead ifTrue: [ text := text allBold ] ]
-	on: IceNotInBranch do: [ :e | "Do not decorate" ].
-	^ text
+{ #category : 'accessing' }
+IceTipBranchModel >> branchName [
+	^ self entity name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipBranchModel >> checkoutStrategies [
 	^ IceCheckoutStrategy allStrategies
 ]
 
-{ #category : #actions }
-IceTipBranchModel >> checkoutWithStrategy: aCheckoutStrategy then: aBlock [
-	<noCache>
-	
-	IceTipStandardAction new 
-		repository: self entity repository; 
-		message: ('Checking out branch {1} from {2}' format: { self name. self repositoryName });
-		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self entity checkoutWithStrategy: aCheckoutStrategy ]
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipBranchModel >> commitModels [
+
 	| commits |
 	commits := OrderedCollection new.
-	self entity commitsDo: [ :each | 
-		commits add: (IceTipCommitModel 
-			repositoryModel: self repositoryModel 
-			on: each) 
-			beCached ].
+	self entity commitsDo: [ :each |
+		commits add:
+			(IceTipCommitModel repositoryModel: self repositoryModel on: each) ].
 	^ commits
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipBranchModel >> commits [
 	self shouldBeImplemented.
 ]
 
-{ #category : #actions }
-IceTipBranchModel >> delete [
-	<noCache>
-	
-	IceTipStandardAction new
-		repository: self repositoryModel entity;
-		message: ('Removing branch {1}' format: { self name });
-		onSuccessRepositoryModified;
-		execute: [ self entity delete ]
-]
+{ #category : 'accessing' }
+IceTipBranchModel >> description [
 
-{ #category : #accessing }
-IceTipBranchModel >> descriptionWithDecoration [
-	^ self addDecorationTo: (self entity isRemote 
+	^ self entity isRemote 
 		ifTrue: [ self entity shortName ]
-		ifFalse: [ self name ])
+		ifFalse: [ self name ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
+IceTipBranchModel >> descriptionDecorator [
+		
+	self entity isHead ifTrue: [ ^ IceTipDescriptionDecorator head ].
+	^ super descriptionDecorator
+]
+
+{ #category : 'accessing' }
 IceTipBranchModel >> diffFromHead [
 	| commitModel |
 	commitModel := IceTipCommitModel on: self entity commit.
 	^ commitModel diffFromHead
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipBranchModel >> diffToWorkingCopy [
 	| commitModel |
 	commitModel := IceTipCommitModel on: self entity commit.
 	^ commitModel diffToWorkingCopy
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipBranchModel >> hasUpstream [
 	
 	^ entity hasUpstream
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipBranchModel >> isHead [
 	^ self entity isHead
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipBranchModel >> isLocal [
 	^ self entity isLocal
 ]
 
-{ #category : #actions }
-IceTipBranchModel >> mergeThen: aBlock [
-	<noCache>
+{ #category : 'actions' }
+IceTipBranchModel >> newCheckoutWithStrategyAction: aCheckoutStrategy [
+	
+	^ IceTipStandardAction new 
+		repository: self entity repository; 
+		message: ('Checking out branch {1} from {2}' format: { self name. self repositoryName });
+		onSuccessRepositoryModified;
+		action: [ self entity checkoutWithStrategy: aCheckoutStrategy ];
+		yourself
+]
 
-	IceTipStandardAction new 
+{ #category : 'actions' }
+IceTipBranchModel >> newDeleteAction [
+	
+	^ IceTipStandardAction new
+		repository: self repositoryModel entity;
+		message: ('Removing branch {1}' format: { self name });
+		onSuccessRepositoryModified;
+		action: [ self entity delete ];
+		yourself
+]
+
+{ #category : 'actions' }
+IceTipBranchModel >> newDirectMergeAction [
+
+	^ IceTipStandardAction new 
 		repository: self repositoryModel entity;
 		message: ('Merging branch {1} from {2}' format: { self name. self repositoryName });
 		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self entity merge ]
+		action: [ self entity merge ];
+		yourself
 ]
 
-{ #category : #accessing }
-IceTipBranchModel >> name [
-	^ self entity name
+{ #category : 'actions' }
+IceTipBranchModel >> newSwitchAndMergeAction [
+	
+	^ IceTipStandardAction new
+		repository: self entity repository; 
+		message: ('Merging branch {1} from {2}' format: { self name. self repositoryName });
+		onSuccessRepositoryModified;
+		action: [ self entity switchAndMergeWorkingCopy ];
+		yourself
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipBranchModel >> previewCheckout [
+
 	"this will open a 'checkout browser' that will allow user to validate the changes before 
 	 actually checking out (checkout operation will be called in my sibling method, #checkout)"
-	<noCache>
 
-	(IceTipCheckoutPreviewBrowser onBranch: self) openWithSpec
+	(IceTipCheckoutPreviewBrowser onBranch: self) open
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 IceTipBranchModel >> previewMerge: aMergeType [
 	"this will open a 'checkout browser' that will allow user to validate the changes before 
 	 actually checking out (checkout operation will be called in my sibling method, #checkout)"
-	<noCache>
+
 	(IceTipMergePreviewBrowser onBranch: self) 
 		mergeType: aMergeType;
-		openWithSpec
+		open
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceTipBranchModel >> printOn: aStream [
 	super printOn: aStream.
 	aStream
@@ -144,32 +152,13 @@ IceTipBranchModel >> printOn: aStream [
 		nextPut: $]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipBranchModel >> repositoryName [
 	^ self repositoryModel name
 ]
 
-{ #category : #'API-commits' }
+{ #category : 'API - commits' }
 IceTipBranchModel >> resetToCommit: anIceTipCachedModel [ 
 	
 	entity resetToCommit: anIceTipCachedModel entity
-]
-
-{ #category : #accessing }
-IceTipBranchModel >> shortDescriptionWithDecoration [
-	^ self addDecorationTo: (self entity isRemote 
-		ifTrue: [ self name copyAfter: $/ ]
-		ifFalse: [ self name])
-]
-
-{ #category : #actions }
-IceTipBranchModel >> switchAndMergeThen: aBlock [
-	<noCache>
-
-	IceTipStandardAction new
-		repository: self entity repository; 
-		message: ('Merging branch {1} from {2}' format: { self name. self repositoryName });
-		onSuccessRepositoryModified;
-		onSuccess: aBlock;
-		execute: [ self entity switchAndMergeWorkingCopy ]
 ]

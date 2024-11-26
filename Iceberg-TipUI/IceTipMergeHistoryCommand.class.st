@@ -2,46 +2,40 @@
 Command that opens a window showing the history of the selected merged branch.
 "
 Class {
-	#name : #IceTipMergeHistoryCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'commitModel'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipMergeHistoryCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipMergeHistoryCommand class >> browserHistoryContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byRootGroupItemOrder: 100
-		for: IceTipHistoryContext
-]
+{ #category : 'accessing - defaults' }
+IceTipMergeHistoryCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipMergeHistoryCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext selectedCommit hasMultipleAncestors
-]
-
-{ #category : #accessing }
-IceTipMergeHistoryCommand class >> defaultHelp [
 	^ 'Show the merged history of the selected merge commit'
 ]
 
-{ #category : #activation }
-IceTipMergeHistoryCommand class >> defaultMenuItemName [
+{ #category : 'accessing - defaults' }
+IceTipMergeHistoryCommand class >> defaultName [
+
 	^ 'Browse merge history'
 ]
 
-{ #category : #execution }
-IceTipMergeHistoryCommand >> execute [
-	(IceTipHistoryBrowser on: commitModel mergeHistoryFromSecondAncestor) openWithSpec
-	
+{ #category : 'testing' }
+IceTipMergeHistoryCommand >> canBeExecuted [
+
+	^ self commitModel hasMultipleAncestors
 ]
 
-{ #category : #execution }
-IceTipMergeHistoryCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	commitModel := aToolContext item
+{ #category : 'executing' }
+IceTipMergeHistoryCommand >> commitModel [
+
+	^ self context selectedCommit
+]
+
+{ #category : 'executing' }
+IceTipMergeHistoryCommand >> execute [
+
+	(IceTipHistoryBrowser on:
+		 self commitModel mergeHistoryFromSecondAncestor) open
 ]

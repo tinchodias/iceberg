@@ -2,39 +2,33 @@
 Command that removes a package from the repository, without removing it from the system.
 "
 Class {
-	#name : #IceTipRemoveFromRepositoryPackageCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipRemoveFromRepositoryPackageCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipRemoveFromRepositoryPackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 110 for: IceTipWorkingCopyContext
-]
+{ #category : 'accessing - defaults' }
+IceTipRemoveFromRepositoryPackageCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ true
-]
-
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultHelp [
 	^ 'Removes the current repository from the repository, without removing it from the system'
 ]
 
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultMenuIconName [
-	^ #glamorousTrash
-]
+{ #category : 'accessing - defaults' }
+IceTipRemoveFromRepositoryPackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipRemoveFromRepositoryPackageCommand class >> defaultMenuItemName [
 	^ 'Remove from repository'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipRemoveFromRepositoryPackageCommand >> execute [
-	self packageModel remove
+
+	self packageModel newRemoveAction executeWithContext: self context
+]
+
+{ #category : 'accessing' }
+IceTipRemoveFromRepositoryPackageCommand >> iconName [
+
+	^ #glamorousTrash
 ]

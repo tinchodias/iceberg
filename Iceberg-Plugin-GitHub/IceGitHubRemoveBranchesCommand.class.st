@@ -2,30 +2,24 @@
 I'm a command to remove branches from remotes.
 "
 Class {
-	#name : #IceGitHubRemoveBranchesCommand,
-	#superclass : #IceGitHubBranchSelectCommand,
-	#category : 'Iceberg-Plugin-GitHub-Commands'
+	#name : 'IceGitHubRemoveBranchesCommand',
+	#superclass : 'IceGitHubRemoteCommand',
+	#category : 'Iceberg-Plugin-GitHub-Commands',
+	#package : 'Iceberg-Plugin-GitHub',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceGitHubRemoveBranchesCommand class >> browserRepositoryListActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byItemOf: IceGitHubMenuGroup
-		for: IceTipRepositoryListContext
-]
+{ #category : 'accessing - defaults' }
+IceGitHubRemoveBranchesCommand class >> defaultName [
 
-{ #category : #execute }
-IceGitHubRemoveBranchesCommand >> execute [
-	^ IceGitHubRemoveBranchesAction new
-		repository: self repository;
-		remote: self remote;
-		execute.
-
-]
-
-{ #category : #accessing }
-IceGitHubRemoveBranchesCommand >> itemNameWithoutBranches [
 	^ 'Remove Branches...'
+]
+
+{ #category : 'executing' }
+IceGitHubRemoveBranchesCommand >> execute [
+
+	^ IceGitHubRemoveBranchesAction new
+		  repository: self repository;
+		  remote: self remote;
+		  executeWithContext: context
 ]

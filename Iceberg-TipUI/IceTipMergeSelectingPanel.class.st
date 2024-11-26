@@ -1,33 +1,23 @@
 Class {
-	#name : #IceTipMergeSelectingPanel,
-	#superclass : #IceTipDiffPanel,
+	#name : 'IceTipMergeSelectingPanel',
+	#superclass : 'IceTipDiffPanel',
 	#instVars : [
-		'selectedItems',
-		'codePanel'
+		'codePanel',
+		'checkedIceNodes'
 	],
-	#category : #'Iceberg-TipUI-View'
+	#category : 'Iceberg-TipUI-View-Branch',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Branch'
 }
 
-{ #category : #specs }
-IceTipMergeSelectingPanel class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newHorizontal
-		add: #changeList width: 200;
-		add:
-			(SpBoxLayout newVertical
-				add: #diffPanel;
-				add: #codePanel;
-				yourself );
-		yourself
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipMergeSelectingPanel >> basicRefresh [
+
 	super basicRefresh.
 	self refreshCodePanel.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipMergeSelectingPanel >> changeListColumn [
 	^ SpCompositeTableColumn new
 		addColumn:
@@ -57,93 +47,76 @@ IceTipMergeSelectingPanel >> changeListColumn [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipMergeSelectingPanel >> codePanel [
-	^codePanel 
+
+	^ codePanel
 ]
 
-{ #category : #accessing }
-IceTipMergeSelectingPanel >> codePanel: aCodePresenter [
-codePanel := aCodePresenter 
+{ #category : 'layout' }
+IceTipMergeSelectingPanel >> defaultLayout [
+
+	^ SpPanedLayout newLeftToRight
+		  positionOfSlider: 25 percent;
+		  add: iceNodesTree;
+		  add: (SpBoxLayout newTopToBottom
+				add: diffPanel;
+				add: codePanel;
+				yourself);
+		  yourself
+
 ]
 
-{ #category : #private }
-IceTipMergeSelectingPanel >> entryRemoved: ann [
-	self refresh
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceTipMergeSelectingPanel >> initialize [
+
 	super initialize.
-	self subscribeToAnnouncements.
-	selectedItems := Set new.
+	checkedIceNodes := Set new.
 	self model treeRoots do: [ :root | 
 		root withAllChildrenDo: [ :child | 
-				selectedItems add: child.
-				child value isConflict
-					ifTrue: [ child value selectLeft ] ] ]
+			checkedIceNodes add: child.
+			child value isConflict ifTrue: [ child value selectLeft ] ] ]
 ]
 
-{ #category : #initialization }
-IceTipMergeSelectingPanel >> initializeCodePanel [
-codePanel text: ''.
+{ #category : 'initialization' }
+IceTipMergeSelectingPanel >> initializePresenters [
+
+	codePanel := self newCode.
+
+	"Super triggers a selection changed that requires that codePanel is already instantiated."
+	super initializePresenters.
+
 ]
 
-{ #category : #initialization }
-IceTipMergeSelectingPanel >> initializeWidgets [ 
-super initializeWidgets.
-codePanel := self newCode.
-self initializeCodePanel.
-]
-
-{ #category : #'private factory' }
-IceTipMergeSelectingPanel >> newChangeTreeDataSource [
-
-	^ IceTipTreeSelectingDataSource new
-		tool: self;
-		rootForItems: self model treeRoots;
-		childrenBlock: [ :data | data children ];
-		icon: [ :each | each value icon ];
-		format: #description;
-		selectAll;
-		yourself
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipMergeSelectingPanel >> refresh [
+
 	super refresh.
-	self model treeRoots
-		do: [ :root | 
-			selectedItems add: root.
-			root allChildrenDo: [ :child | selectedItems add: child ] ];
-		refreshCodePanel 
+	self model treeRoots do: [ :root |
+		root withAllChildrenDo: [ :each | checkedIceNodes add: each ] ].
+	self refreshCodePanel 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'private' }
 IceTipMergeSelectingPanel >> refreshCodePanel [
+
 	| visitor mergeNode |
-	visitor := IceNodeCodeDisplayVistor onCodePresenter: codePanel.
-	mergeNode := changeList selectedItem value.
+	visitor := IceNodeCodeDisplayVisitor onCodePresenter: codePanel.
+	mergeNode := iceNodesTree selectedItem value.
 	mergeNode
 		ifNil: [ codePanel text: '' ]
 		ifNotNil: [ mergeNode accept: visitor ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipMergeSelectingPanel >> selectedItems [
-	^selectedItems
+
+	^ checkedIceNodes
 ]
 
-{ #category : #'event handling' }
+{ #category : 'event handling' }
 IceTipMergeSelectingPanel >> selectionChanged [
+
 	super selectionChanged.
 	self refreshCodePanel.
-]
-
-{ #category : #initialize }
-IceTipMergeSelectingPanel >> subscribeToAnnouncements [
-	self announcer
-		when: IceTipDiffEntryRemoved 
-		send: #entryRemoved:
-		to: self	
 ]

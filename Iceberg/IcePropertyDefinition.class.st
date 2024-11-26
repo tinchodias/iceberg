@@ -4,27 +4,29 @@ I represent a property of an IceClassDefinition or IceTraitDefinition. For examp
 A property has a name and a value, and only its value can change. Properties cann't be removed from the container.
 "
 Class {
-	#name : #IcePropertyDefinition,
-	#superclass : #IceOwnedDefinition,
+	#name : 'IcePropertyDefinition',
+	#superclass : 'IceOwnedDefinition',
 	#instVars : [
 		'propertyValue'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IcePropertyDefinition >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
 	^ super = anObject and: [ self propertyValue = anObject propertyValue ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IcePropertyDefinition >> accept: aVisitor [
 	^ aVisitor visitPropertyDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IcePropertyDefinition >> addedIn: aMCDefinition [
 
 	^ aMCDefinition copy
@@ -33,19 +35,19 @@ IcePropertyDefinition >> addedIn: aMCDefinition [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePropertyDefinition >> contents [
 	^ self propertyValue asString
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IcePropertyDefinition >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: self propertyValue hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IcePropertyDefinition >> isDefaultValue [
 	name = #superclassName ifTrue: [ 
 		^ self propertyValue = #Object ].
@@ -62,35 +64,35 @@ IcePropertyDefinition >> isDefaultValue [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IcePropertyDefinition >> isLowImpactAppliedTo: anIcePropertyDefinition [ 
 	^ #(category comment commentStamp timeStamp) includes: self propertyName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IcePropertyDefinition >> isPropertyDefinition [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePropertyDefinition >> propertyName [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePropertyDefinition >> propertyValue [
 	^ propertyValue ifNil: [
 		propertyValue := ownerIceDefinition asMCDefinition basicAtPropertyNamed: name ]
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IcePropertyDefinition >> removeFromPatcher: aMCPatcher [
 	"Cannot remove a property, just change it."
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IcePropertyDefinition >> type [
 
 	^ 'property'

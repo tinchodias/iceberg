@@ -3,36 +3,39 @@ I will define a repository that already exists.
 
 "
 Class {
-	#name : #IceTipLocalRepositoryPanel,
-	#superclass : #IceTipRepositoryTypePanel,
-	#category : #'Iceberg-TipUI-View-RepositoryType'
+	#name : 'IceTipLocalRepositoryPanel',
+	#superclass : 'IceTipRepositoryTypePanel',
+	#category : 'Iceberg-TipUI-View-Repository',
+	#package : 'Iceberg-TipUI',
+	#tag : 'View-Repository'
 }
 
-{ #category : #specs }
-IceTipLocalRepositoryPanel class >> defaultSpec [
-	<spec: #default>
-	^ SpBoxLayout newVertical
-		add: #projectLocation height: self inputTextHeight;
-		yourself
-]
-
-{ #category : #accessing }
-IceTipLocalRepositoryPanel class >> icon [
-	^ self iconNamed: #smallOpen
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel class >> order [
+
 	^ 20
 ]
 
-{ #category : #specs }
-IceTipLocalRepositoryPanel class >> title [
-	^ 'Import from existing clone'
+{ #category : 'layout' }
+IceTipLocalRepositoryPanel >> defaultLayout [
+
+	^ SpGridLayout new 
+		beColumnNotHomogeneous;
+		column: 2 expand: true;
+		build: [ :builder | builder 
+			add: projectLocationLabel; add: projectLocation; nextRow ];
+		yourself
 ]
 
-{ #category : #api }
-IceTipLocalRepositoryPanel >> initialExtent [
+{ #category : 'initialization' }
+IceTipLocalRepositoryPanel >> iconForWindow [
+
+	^ self iconNamed: #smallOpen
+]
+
+{ #category : 'initialization' }
+IceTipLocalRepositoryPanel >> initialExtentForWindow [
+
 	^ (500@(
 		self class inputTextHeight * 2
 		+ self class buttonHeight 
@@ -40,50 +43,54 @@ IceTipLocalRepositoryPanel >> initialExtent [
 		)) scaledByDisplayScaleFactor
 ]
 
-{ #category : #initialization }
-IceTipLocalRepositoryPanel >> initializeWidgets [
-	super initializeWidgets.
-	self focusOrder 
-		add: self projectLocation
-]
-
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipLocalRepositoryPanel >> isLocalRepository [
+
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel >> location [
+
 	^ self projectLocation location
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel >> location: aReferenceOrString [
+
 	^ self projectLocation location: aReferenceOrString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel >> newRepository [
-	UIManager default 
-		informUser: ('Importing repository from {1}' format: { self location fullName })
-		during: [ 
-			^ IceRepositoryCreator new
-				repository: repository;
-				location: self location;
-				createRepository ]
+
+	^ self application
+		informUser:
+		('Importing repository from {1}' format: { self location fullName })
+		during: [
+			IceRepositoryCreator new
+				        repository: repository;
+				        location: self location;
+				        createRepository ].
+
 ]
 
-{ #category : #accessing }
-IceTipLocalRepositoryPanel >> validate [ 
+{ #category : 'initialization' }
+IceTipLocalRepositoryPanel >> titleForWindow [
+
+	^ 'Import from existing clone'
+]
+
+{ #category : 'accessing' }
+IceTipLocalRepositoryPanel >> validate [
+
 	self
-		assert: self location notNil  
+		assert: self location isNotNil
 		description: 'Project location must exist!'.
-	
 	self
-		assert: self location exists  
+		assert: self location exists
 		description: 'Project location must exist!'.
-		
-	self 
+	self
 		assert: (IceRepositoryCreator isGitRoot: self location)
-	 	description: 'Project location does not seems to be a valid git repository.'
+		description: 'Project location does not seems to be a valid git repository.'
 ]

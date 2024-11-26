@@ -1,43 +1,45 @@
 Class {
-	#name : #IceTipWorkingCopyBrowserTest,
-	#superclass : #IceAbstractTestCase,
+	#name : 'IceTipWorkingCopyBrowserTest',
+	#superclass : 'IceAbstractTestCase',
 	#instVars : [
 		'presenter'
 	],
-	#category : #'Iceberg-UI-Tests-Browsers'
+	#category : 'Iceberg-UI-Tests-Browsers',
+	#package : 'Iceberg-UI-Tests',
+	#tag : 'Browsers'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceTipWorkingCopyBrowserTest class >> isAbstract [
 
 	^ self name = #IceTipWorkingCopyBrowserTest 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipWorkingCopyBrowserTest >> contextMenuForIndex: index [
 
-	presenter packageList selectIndex: index.
-	^ presenter packageList contextMenu value.
+	presenter packagesTable selectIndex: index.
+	^ presenter packagesTable contextMenu value.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 IceTipWorkingCopyBrowserTest >> setUp [
+
 	super setUp.
-	
+
 	presenter := IceTipWorkingCopyBrowser onRepository: self repository.
-	presenter openWithSpec.
+	presenter open
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 IceTipWorkingCopyBrowserTest >> tearDown [
-	
-	presenter window close.
-	super tearDown.
-	
-	
+
+	presenter ifNotNil: [ 
+		presenter hasWindow ifTrue: [ presenter window close ] ].
+	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipWorkingCopyBrowserTest >> testItemsHasContextMenu [
 
 	| menu |
@@ -46,17 +48,17 @@ IceTipWorkingCopyBrowserTest >> testItemsHasContextMenu [
 	self assert: menu isNotNil.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipWorkingCopyBrowserTest >> testPackageHasBrowseRepositoryVersionOption [
 
 	| menu |
 	
 	menu := self contextMenuForIndex: 1.
-	self assert: (menu defaultGroup menuItems anySatisfy: [ :e | e name = 'Browse repository version' ])
+	self assert: (menu defaultGroup menuItems anySatisfy: [ :e | e name = 'Browse this version in Monticello' ])
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipWorkingCopyBrowserTest >> testPackageIsShownInList [
 
-	self assert: (presenter packageList items anySatisfy: [ :each | each name = self packageName1 ])
+	self assert: (presenter packagesTable items anySatisfy: [ :each | each name = self packageName1 ])
 ]

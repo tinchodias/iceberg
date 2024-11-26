@@ -6,30 +6,32 @@ My contents is an empty string.
 See my superclasses for more information.
 "
 Class {
-	#name : #IceDirectoryDefinition,
-	#superclass : #IceFileSystemDefinition,
-	#category : #'Iceberg-Changes'
+	#name : 'IceDirectoryDefinition',
+	#superclass : 'IceFileSystemDefinition',
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceDirectoryDefinition >> accept: aVisitor [
 	
 	^ aVisitor visitDirectoryDefinition: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceDirectoryDefinition >> contents [
 	
 	^ ''
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceDirectoryDefinition >> isDirectoryDefinition [
 	
 	^ true
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceDirectoryDefinition >> removeFrom: aVisitor [
 	
 	aVisitor removeFileReferenceInPath: self path

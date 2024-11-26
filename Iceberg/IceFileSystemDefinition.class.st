@@ -6,16 +6,18 @@ My concrete subclasses represent directories and files.
 See my superclasses for more information.
 "
 Class {
-	#name : #IceFileSystemDefinition,
-	#superclass : #IceDefinition,
+	#name : 'IceFileSystemDefinition',
+	#superclass : 'IceDefinition',
 	#instVars : [
 		'path',
 		'fileReference'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceFileSystemDefinition class >> named: aString path: aPath [
 	
 	^ (self named: aString)
@@ -23,31 +25,31 @@ IceFileSystemDefinition class >> named: aString path: aPath [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceFileSystemDefinition >> fileReference [
 
 	^ fileReference
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceFileSystemDefinition >> fileReference: aFileReference [
 
 	fileReference := aFileReference 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceFileSystemDefinition >> isLowImpactAppliedTo: anIceFileDefinition [
 	"May be arbitrary: We assume it doesn't affect behavior of code entities."
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceFileSystemDefinition >> path [
 	^ path
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceFileSystemDefinition >> path: anObject [
 	path := anObject
 ]

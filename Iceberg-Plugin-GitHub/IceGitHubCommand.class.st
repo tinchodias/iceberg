@@ -3,22 +3,28 @@ I'm a generic command to perform plugin actions for GitHub.
 My children define the real behavior, and they need to implement #execute.
 "
 Class {
-	#name : #IceGitHubCommand,
-	#superclass : #IceTipCommand,
-	#category : 'Iceberg-Plugin-GitHub-Commands'
+	#name : 'IceGitHubCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-Plugin-GitHub-Commands',
+	#package : 'Iceberg-Plugin-GitHub',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceGitHubCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext repositoryModel entity remotes anySatisfy: [ :remote | remote url includesSubstring: 'github.com' ]
+{ #category : 'testing' }
+IceGitHubCommand class >> isAbstract [
+
+	^ self == IceGitHubCommand
 ]
 
-{ #category : #execute }
-IceGitHubCommand >> execute [ 
-	self subclassResponsibility
+{ #category : 'testing' }
+IceGitHubCommand >> canBeExecuted [
+
+	^ super canBeExecuted and: [ self remote url includesSubstring: 'github.com' ]
 ]
 
-{ #category : #accessing }
-IceGitHubCommand >> repository [
-	^ repositoryModel entity
+{ #category : 'accessing' }
+IceGitHubCommand >> remote [
+
+	^ self subclassResponsibility
+
 ]

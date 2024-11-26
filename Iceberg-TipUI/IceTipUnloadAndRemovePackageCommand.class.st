@@ -7,40 +7,44 @@ It gives the user with two checkboxes to choose:
 Right now this is only shown for loaded packages.
 "
 Class {
-	#name : #IceTipUnloadAndRemovePackageCommand,
-	#superclass : #IceTipPackageCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipUnloadAndRemovePackageCommand',
+	#superclass : 'IceTipPackageCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipUnloadAndRemovePackageCommand class >> browserContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation byRootGroupItemOrder: 100 for: IceTipWorkingCopyContext
-]
+{ #category : 'accessing - defaults' }
+IceTipUnloadAndRemovePackageCommand class >> defaultDescription [
 
-{ #category : #testing }
-IceTipUnloadAndRemovePackageCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext packageModel isLoaded
-]
-
-{ #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultHelp [
 	^ 'Opens a dialog to choose between unloading from system and/or removing a package from the repository'
 ]
 
-{ #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultMenuIconName [
-	^ #glamorousTrash
-]
+{ #category : 'accessing - defaults' }
+IceTipUnloadAndRemovePackageCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipUnloadAndRemovePackageCommand class >> defaultMenuItemName [
 	^ 'Unload and/or remove from repository'
 ]
 
-{ #category : #execution }
+{ #category : 'testing' }
+IceTipUnloadAndRemovePackageCommand >> canBeExecuted [
+
+	^ self isPackageLoaded
+]
+
+{ #category : 'executing' }
 IceTipUnloadAndRemovePackageCommand >> execute [
 
-	(IceTipRemovePackageDialog on: self packageModel) openDialogWithSpec
+	(IceTipRemovePackageDialogPresenter 
+		newApplication: context application 
+		model: self packageModel) 
+		asModalWindow 
+			centeredRelativeTo: context window;
+			open
+]
+
+{ #category : 'accessing' }
+IceTipUnloadAndRemovePackageCommand >> iconName [
+
+	^ #glamorousTrash
 ]

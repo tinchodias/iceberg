@@ -1,10 +1,12 @@
 Class {
-	#name : #IceClassesCherryPickingTest,
-	#superclass : #IceCherryPickingTest,
-	#category : #'Iceberg-Tests-Cherrypicking'
+	#name : 'IceClassesCherryPickingTest',
+	#superclass : 'IceCherryPickingTest',
+	#category : 'Iceberg-Tests-Cherrypicking',
+	#package : 'Iceberg-Tests',
+	#tag : 'Cherrypicking'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassDependingInATrait [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -23,8 +25,8 @@ IceClassesCherryPickingTest >> testAddClassDependingInATrait [
 		inPackage: self packageName1 asSymbol
 		with: [ :class | 
 			| composition transformations |
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new
 				parse: 'TestTrait'
 				for: composition.
 			class traitComposition: composition.
@@ -39,7 +41,7 @@ IceClassesCherryPickingTest >> testAddClassDependingInATrait [
 
 	self assert: diff children size equals: 1.
 	
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 	self
 		assert: (diff / self packageName1 / 'TestClass2') value isAddition.
 	self
@@ -52,7 +54,7 @@ IceClassesCherryPickingTest >> testAddClassDependingInATrait [
 		equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassDependingInATraitWithComposition [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -69,8 +71,8 @@ IceClassesCherryPickingTest >> testAddClassDependingInATraitWithComposition [
 		inPackage: self packageName1 asSymbol
 		with: [ :class | 
 			| composition transformations |
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new
 				parse: 'TestTrait - {#hello. #world}'
 				for: composition.
 
@@ -87,7 +89,7 @@ IceClassesCherryPickingTest >> testAddClassDependingInATraitWithComposition [
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 
 	self
 		assert: (diff / self packageName1 / 'TestClass2') value isAddition.
@@ -102,7 +104,7 @@ IceClassesCherryPickingTest >> testAddClassDependingInATraitWithComposition [
 		equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassSideMethodInExistingClass [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -126,7 +128,7 @@ IceClassesCherryPickingTest >> testAddClassSideMethodInExistingClass [
 	self
 		assert:
 			(diff / self packageName1 / 'TestClass class')
-				value isAddition.
+				value isNoModification.
 
 	self
 		assert:
@@ -134,7 +136,7 @@ IceClassesCherryPickingTest >> testAddClassSideMethodInExistingClass [
 				/ 'm1') value isAddition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassUsingASharedPool [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -163,7 +165,7 @@ IceClassesCherryPickingTest >> testAddClassUsingASharedPool [
 	self assert: diff children size equals: 1.
 	self
 		assert: (diff / self packageName1) children size
-		equals: 2.
+		equals: 4.
 
 	self
 		assert:
@@ -186,7 +188,7 @@ IceClassesCherryPickingTest >> testAddClassUsingASharedPool [
 		equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassWithMethod [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -204,7 +206,7 @@ IceClassesCherryPickingTest >> testAddClassWithMethod [
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 1.
+	self assert: (diff / self packageName1) children size equals: 2.
 	self
 		assert: (diff / self packageName1 / 'TestClass2') value isAddition;
 		assert:
@@ -215,7 +217,7 @@ IceClassesCherryPickingTest >> testAddClassWithMethod [
 		assert: (diff / self packageName1 / 'TestClass2' / 'm1') value isAddition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassWithSuperclassAsDependency [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -244,7 +246,7 @@ IceClassesCherryPickingTest >> testAddClassWithSuperclassAsDependency [
 	self assert: diff children size equals: 1.
 	self
 		assert: (diff / self packageName1) children size
-		equals: 2.
+		equals: 4.
 	self
 		should: [ diff / self packageName1 / 'C' ]
 		raise: NotFound.
@@ -263,7 +265,7 @@ IceClassesCherryPickingTest >> testAddClassWithSuperclassAsDependency [
 				isClassDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testAddClassWithoutDependencies [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -281,7 +283,7 @@ IceClassesCherryPickingTest >> testAddClassWithoutDependencies [
 	self assert: diff children size equals: 1.
 	self
 		assert: (diff  / self packageName1) children size
-		equals: 1.
+		equals: 2.
 	self
 		assert:
 			(diff / self packageName1 / 'TestClass2') value
@@ -292,7 +294,7 @@ IceClassesCherryPickingTest >> testAddClassWithoutDependencies [
 				definition isClassDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testModifyClassWithoutDependencies [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -323,7 +325,7 @@ IceClassesCherryPickingTest >> testModifyClassWithoutDependencies [
 				definition isClassDefinition
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testRemoveClassWithSubclasses [
 	| commitToCherryPick diff mergeTree |
 
@@ -352,7 +354,7 @@ IceClassesCherryPickingTest >> testRemoveClassWithSubclasses [
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 	self
 		assert: (diff / self packageName1 / 'TestClass') value isRemoval.
 	self
@@ -360,7 +362,7 @@ IceClassesCherryPickingTest >> testRemoveClassWithSubclasses [
 			(diff / self packageName1 / 'TestSubclass') value isRemoval .
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceClassesCherryPickingTest >> testRemoveClassWithSubclassesAndIntermediarySubclass [
 	| commitToCherryPick diff mergeTree |
 	self repository workingCopy
@@ -400,7 +402,7 @@ IceClassesCherryPickingTest >> testRemoveClassWithSubclassesAndIntermediarySubcl
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 	self assert: (diff / self packageName1 / 'TestClass') value isRemoval.
 	self
 		assert: (diff / self packageName1 / 'TestSubclass') value isRemoval

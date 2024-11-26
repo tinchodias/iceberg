@@ -2,55 +2,58 @@
 I write versions and snapshots in tonel format.
 "
 Class {
-	#name : #IceLibgitTonelWriter,
-	#superclass : #MCWriter,
+	#name : 'IceLibgitTonelWriter',
+	#superclass : 'MCWriter',
 	#traits : 'TIceRepositoryWriter',
 	#classTraits : 'TIceRepositoryWriter classTrait',
 	#instVars : [
 		'repositoryDirectory'
 	],
-	#category : 'Iceberg-Libgit-Tonel'
+	#category : 'Iceberg-Libgit-Tonel-Writer',
+	#package : 'Iceberg-Libgit-Tonel',
+	#tag : 'Writer'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> description [
 	^ 'Tonel'
 ]
 
-{ #category : #'accessing - ancient preference selectors' }
+{ #category : 'accessing - ancient preference selectors' }
 IceLibgitTonelWriter class >> directoryNameFor: aPackage [
 	^ aPackage name
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 IceLibgitTonelWriter class >> fileOut: aVersion on: dir [
 	(self on: dir) writeVersion: aVersion
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> forInternalStore [
 	^ TonelWriter
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 IceLibgitTonelWriter class >> forInternalStoreFileOut: aMCVersion on: aRepository [
-	self forInternalStore 
-		fileOut: aMCVersion
-		on: aRepository subdirectoryReference
+
+	(self forInternalStore forVersion: (aRepository properties tonelVersion ifNil: [ self forInternalStore defaultVersion ])) new
+		directoryReference: aRepository subdirectoryReference;
+		writeVersion: aMCVersion
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> id [
 	^ #tonel
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceLibgitTonelWriter class >> isDefault [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceLibgitTonelWriter class >> isValidPackage: aFileReference [ 
 	
 	^ aFileReference basename first isLetter
@@ -58,12 +61,12 @@ IceLibgitTonelWriter class >> isValidPackage: aFileReference [
 		and: [ (aFileReference / 'package.st') exists ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> logClass [
 	^ IceLibgitTonelLog
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceLibgitTonelWriter class >> on: dir [
 	^ self new repositoryDirectory: dir
 	
@@ -71,33 +74,33 @@ IceLibgitTonelWriter class >> on: dir [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> packageNameFromDirectory: aFileReference [
 	^ aFileReference basename
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter class >> readerClass [
 	^ IceLibgitTonelReader
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter >> repositoryDirectory [
 	^ repositoryDirectory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceLibgitTonelWriter >> repositoryDirectory: anObject [
 	repositoryDirectory := anObject
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 IceLibgitTonelWriter >> writeSnapshot: aSnapshot [
 	(TonelWriter on: self repositoryDirectory) writeSnapshot: aSnapshot
 		
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 IceLibgitTonelWriter >> writeVersion: aVersion [
 	(self repositoryDirectory / aVersion package name) ensureDeleteAll.
 	self writeSnapshot: aVersion snapshot

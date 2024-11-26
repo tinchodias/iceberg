@@ -1,20 +1,28 @@
 "Shutdown Libgit"
-LGitLibrary shutDown: true.
+(Smalltalk classNamed: #LGitLibrary) shutDown: true.
+
+(Smalltalk classNamed: #IceSystemEventListener) unregisterSystemAnnouncements.
+(Smalltalk classNamed: #Iceberg) enableMetacelloIntegration: false.
 
 "Unregister all iceberg repository adapters since we are going to unload all code related to it.
 Otherwise obsolete instances will stay".
-IceMetacelloRepositoryAdapter allInstances do: #unregister.
-Smalltalk globals at: #IceSystemEventListener ifPresent: #unregisterSystemAnnouncements.
+(Smalltalk classNamed: #IceRepository) registry copy do: [ :each | each forget ].
+(Smalltalk classNamed: #IceMetacelloRepositoryAdapter) allInstances do: #unregister.
+
+"Workaround to avoid keeping an entry in World Menu to the obsolete class."
+((Smalltalk classNamed: #IceTipRepositoriesBrowser) class>>#menuCommandOn:) removeFromSystem.
+
+"Working copy keeps some annoying references that prevent a correct clean up. 
+ this is a hack to keep one element in the registry (needed for the tests)"
+MCWorkingCopy registry becomeForward: (MCWorkingCopy registry select: [ :each | each packageName = 'MonticelloMocks' ]).
 
 "Remove iceberg from system (so I can reload it)"
-MetacelloPharoPlatform select.
+MetacelloPlatform select.
+
 #(
-    'BaselineOfTonel'
+	'Calypso-SystemPlugins-Monticello-Browser'
     'BaselineOfLibGit'
     'BaselineOfIceberg'
-    'MonticelloTonel-Core'
-    'MonticelloTonel-FileSystem'
-    'MonticelloTonel-Tests'
     'Iceberg-UI' 
     'Iceberg-TipUI'
     'Iceberg-Plugin-Pharo' 
@@ -26,19 +34,22 @@ MetacelloPharoPlatform select.
     'Iceberg-Libgit-Tonel' 
     'Iceberg-Libgit-Filetree' 
     'Iceberg-Libgit' 
+    'Iceberg-Tests'
+    'Iceberg-Memory'
+    'Iceberg-UI-Tests'
+    'Iceberg-Core' 
+    'Iceberg-Changes' 
+    'Iceberg-Adapters' 
     'Iceberg'
-    'LibGit-Core')
+    'Iceberg-GitCommand'
+    'Iceberg-SmartUI'
+    'Iceberg-Pharo6'
+    'LibGit-Core'
+)
 do: [ :each |
     (each asPackageIfAbsent: [ 
         (each , ' not found') traceCr.
         nil ])
             ifNotNil: [ :package |
                 ('Removing ', each) traceCr.
-                package removeFromSystem ] ].
-
-"Loading Tonel before trying to load Iceberg.
-This is required to load iceberg packages and dependencies in Tonel format"
-Metacello new
-  baseline: 'Tonel';
-  repository: 'github://pharo-vcs/tonel:v1.0.17';
-  load.
+                package removeFromSystem ] ]

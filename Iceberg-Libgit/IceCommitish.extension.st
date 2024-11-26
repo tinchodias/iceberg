@@ -1,6 +1,6 @@
-Extension { #name : #IceCommitish }
+Extension { #name : 'IceCommitish' }
 
-{ #category : #'*Iceberg-Libgit' }
+{ #category : '*Iceberg-Libgit' }
 IceCommitish >> commitId [
 
 	^ LGitId fromHexString: self commit id

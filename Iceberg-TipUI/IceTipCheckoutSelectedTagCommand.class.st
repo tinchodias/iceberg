@@ -2,55 +2,38 @@
 Command that checks out the selected tag
 "
 Class {
-	#name : #IceTipCheckoutSelectedTagCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'tagModel'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCheckoutSelectedTagCommand',
+	#superclass : 'IceTipRemotesTreeCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceTipCheckoutSelectedTagCommand class >> actsOnTag: aRemoteModel [
-	^ true
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutSelectedTagCommand class >> defaultDescription [
 
-{ #category : #execution }
-IceTipCheckoutSelectedTagCommand class >> browserContextActivation [
-    <classAnnotation>
-    
-	^ CmdContextMenuActivation 
-		byRootGroupItemOrder: 80
-		for: IceTipRepositoryContext
-]
-
-{ #category : #execution }
-IceTipCheckoutSelectedTagCommand class >> canBeExecutedInContext: aToolContext [
-    ^ aToolContext item canActivateCommand: self
-]
-
-{ #category : #accessing }
-IceTipCheckoutSelectedTagCommand class >> defaultHelp [
 	^ 'Checkout this tag for this repository. Repository will then be in Detached Head state!'
 ]
 
-{ #category : #accessing }
-IceTipCheckoutSelectedTagCommand class >> defaultMenuIconName [
-	^ #checkout
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutSelectedTagCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipCheckoutSelectedTagCommand class >> defaultMenuItemName [
 	^ 'Checkout tag'
 ]
 
-{ #category : #execution }
-IceTipCheckoutSelectedTagCommand >> execute [
-	tagModel previewCheckout
+{ #category : 'testing' }
+IceTipCheckoutSelectedTagCommand >> actsOnTag: aRemoteModel [
+
+	^ true
 ]
 
-{ #category : #execution }
-IceTipCheckoutSelectedTagCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	tagModel := aToolContext item.
+{ #category : 'executing' }
+IceTipCheckoutSelectedTagCommand >> execute [
+	self item previewCheckout
+]
+
+{ #category : 'accessing' }
+IceTipCheckoutSelectedTagCommand >> iconName [
+
+	^ #branch
 ]

@@ -1,10 +1,12 @@
 Class {
-	#name : #IceTraitsCherryPickingTest,
-	#superclass : #IceCherryPickingTest,
-	#category : #'Iceberg-Tests-Cherrypicking'
+	#name : 'IceTraitsCherryPickingTest',
+	#superclass : 'IceCherryPickingTest',
+	#category : 'Iceberg-Tests-Cherrypicking',
+	#package : 'Iceberg-Tests',
+	#tag : 'Cherrypicking'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTraitsCherryPickingTest >> testAddTraitDependingInATrait [
 	| commitToCherryPick diff mergeTree |
 	self repository createBranch: 'b2'.
@@ -21,8 +23,8 @@ IceTraitsCherryPickingTest >> testAddTraitDependingInATrait [
 		inPackage: self packageName1 asSymbol
 		with: [ :class | 
 			| composition transformations |
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new
 				parse: 'TestTrait'
 				for: composition.
 			class traitComposition: composition.
@@ -39,7 +41,7 @@ IceTraitsCherryPickingTest >> testAddTraitDependingInATrait [
 	self assert: diff children size equals: 1.
 	self
 		assert: (diff / self packageName1) children size
-		equals: 2.
+		equals: 4.
 
 	self
 		assert:
@@ -62,7 +64,7 @@ IceTraitsCherryPickingTest >> testAddTraitDependingInATrait [
 		equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTraitsCherryPickingTest >> testRemoveTraitUsedByAClass [
 	| commitToCherryPick diff mergeTree |
 	self repository workingCopy
@@ -70,8 +72,8 @@ IceTraitsCherryPickingTest >> testRemoveTraitUsedByAClass [
 		inPackage: self packageName1 asSymbol
 		with: [ :class | 
 			| transformations composition |
-			composition := RG2TraitCompositionDefinition parent: class.
-			transformations := RG2TraitCompositionVisitor new
+			composition := RGTraitComposition parent: class.
+			transformations := RGTraitCompositionVisitor new
 				parse: 'TestTraitInitial'
 				for: composition.
 			class traitComposition: composition.
@@ -95,14 +97,14 @@ IceTraitsCherryPickingTest >> testRemoveTraitUsedByAClass [
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 	self
 		assert: (diff / self packageName1 / 'TestTraitInitial') value isRemoval.
 	self
 		assert: (diff / self packageName1 / 'TestClassUsingTrait') value isRemoval
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTraitsCherryPickingTest >> testRemoveTraitUsedByATrait [
 	| commitToCherryPick diff mergeTree |
 	self repository workingCopy
@@ -110,8 +112,8 @@ IceTraitsCherryPickingTest >> testRemoveTraitUsedByATrait [
 		inPackage: self packageName1 asSymbol
 		with: [ :class |
 			| transformations composition |
-			composition := (RG2TraitCompositionDefinition parent: class).
-			transformations := RG2TraitCompositionVisitor new
+			composition := (RGTraitComposition parent: class).
+			transformations := RGTraitCompositionVisitor new
 				parse: 'TestTraitInitial'
 				for: composition.
 
@@ -135,7 +137,7 @@ IceTraitsCherryPickingTest >> testRemoveTraitUsedByATrait [
 	diff := mergeTree collect: [ :each | each chosenOperation ].
 
 	self assert: diff children size equals: 1.
-	self assert: (diff / self packageName1) children size equals: 2.
+	self assert: (diff / self packageName1) children size equals: 4.
 	self assert: (diff / self packageName1 / 'TestTraitInitial') value isRemoval.
 	self assert: (diff / self packageName1 / 'TestSubTrait') value isRemoval.
 ]

@@ -1,69 +1,76 @@
 Class {
-	#name : #IceTipRepositoriesBrowserTest,
-	#superclass : #IceAbstractTestCase,
+	#name : 'IceTipRepositoriesBrowserTest',
+	#superclass : 'IceAbstractTestCase',
 	#instVars : [
 		'presenter',
 		'alphabeticallyFirstRepository',
 		'repositoryProvider'
 	],
-	#category : #'Iceberg-UI-Tests-Browsers'
+	#category : 'Iceberg-UI-Tests-Browsers',
+	#package : 'Iceberg-UI-Tests',
+	#tag : 'Browsers'
 }
 
-{ #category : #running }
+{ #category : 'factory' }
 IceTipRepositoriesBrowserTest >> newFixture [
 	
 	^ IceSinglePackageFixture inGit
 ]
 
-{ #category : #testing }
+{ #category : 'factory' }
 IceTipRepositoriesBrowserTest >> newRepositoryNamed: aName [
 
 	^ fixture factory newRepositoryNamed: aName
 ]
 
-{ #category : #testing }
+{ #category : 'running' }
 IceTipRepositoriesBrowserTest >> setUp [
+
 	| alphabeticallyLastRepository |
 	super setUp.
-	
-	alphabeticallyFirstRepository := self newRepositoryNamed: 'anotherOne'.
+
+	alphabeticallyFirstRepository := self newRepositoryNamed:
+		                                 'anotherOne'.
 	alphabeticallyLastRepository := self newRepositoryNamed: 'zzzz last'.
-	
-	repositoryProvider := IceTipCollectionRepositoryProvider new collection: {
-		self repository. 
-		alphabeticallyLastRepository . 
-		alphabeticallyFirstRepository } asOrderedCollection.
-	presenter := IceTipRepositoriesBrowser newOnRepositoryProvider: repositoryProvider.
-	presenter openWithSpec.
+
+	repositoryProvider := IceTipCollectionRepositoryProvider new 
+		                      collection: { 
+				                      self repository.
+				                      alphabeticallyLastRepository.
+				                      alphabeticallyFirstRepository }
+				                      asOrderedCollection.
+	presenter := IceTipRepositoriesBrowser newOnRepositoryProvider:
+		             repositoryProvider.
+	presenter open
 ]
 
-{ #category : #testing }
+{ #category : 'running' }
 IceTipRepositoriesBrowserTest >> tearDown [
 	presenter ifNotNil: [ presenter window close ]. super tearDown
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testAddRepositoryInModelWithoutRefreshDoesNotRefreshList [
 	
 	| previousList |
-	previousList := presenter repositoryList items.
+	previousList := presenter projectsPanelRepositoryList items.
 	
 	repositoryProvider addRepository: (self newRepositoryNamed: 'new repo').
 	
-	self assert: presenter repositoryList items equals: previousList.
+	self assert: presenter projectsPanelRepositoryList items equals: previousList.
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testAddRepositoryInModelWithoutRefreshDoesNotShowNewRepository [
 	
 	| newRepository |
 	newRepository := self newRepositoryNamed: 'new repo'.
 	repositoryProvider addRepository: newRepository.
 	
-	self deny: (presenter isShowingRepository: newRepository)
+	self deny: (presenter projectsPanelIsShowingRepository: newRepository)
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testAddRepositoryThenRefreshShowsNewRepository [
 	
 	| newRepository |
@@ -71,27 +78,19 @@ IceTipRepositoriesBrowserTest >> testAddRepositoryThenRefreshShowsNewRepository 
 	repositoryProvider addRepository: newRepository.
 	presenter refresh.
 	
-	self assert: (presenter isShowingRepository: newRepository)
+	self assert: (presenter projectsPanelIsShowingRepository: newRepository)
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testEditRepositoryBranchThenRefreshDoesRefreshList [
 	
 	self
-		testEditThenRefreshRepositoryProperty: #branchNameText
+		testEditThenRefreshRepositoryProperty: #branchName
 		doing: [ :repository | repository createBranch: 'toto' ]
-		makesPropertyValueTo: 'toto' asText
+		makesPropertyValueTo: 'toto'
 ]
 
-{ #category : #'tests - table' }
-IceTipRepositoriesBrowserTest >> testEditRepositoryBranchWithoutRefreshDoesNotRefreshList [
-		
-	self
-		testEditWithoutRefreshRepositoryProperty: #branchNameText
-		doing: [ :repository | repository createBranch: 'toto' ]
-]
-
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testEditRepositoryNameThenRefreshDoesRefreshList [
 	
 	| newName |	
@@ -102,54 +101,39 @@ IceTipRepositoriesBrowserTest >> testEditRepositoryNameThenRefreshDoesRefreshLis
 		makesPropertyValueTo: newName
 ]
 
-{ #category : #'tests - table' }
-IceTipRepositoriesBrowserTest >> testEditRepositoryNameWithoutRefreshDoesNotRefreshList [
-	
-	self
-		testEditWithoutRefreshRepositoryProperty: #name
-		doing: [ :repository | repository name: 'newname' ]
-]
-
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testEditRepositoryProperty: aProperty doing: aBlock makesPropertyValueTo: aValue [
-	
-	| firstRepository repositoryModel oldValue newValue |	
-	firstRepository := repositoryProvider repositories first.
-	repositoryModel := presenter repositoryModels first.
+
+	| firstRepository repositoryModel oldValue newValue |
+	firstRepository := repositoryProvider repositories last.
+	repositoryModel := presenter projectsPanelRepositoryModels detect: [
+		                   :m | m isModelOf: firstRepository ].
 	oldValue := repositoryModel perform: aProperty.
 	aBlock value: firstRepository.
-	
+
 	"Get again the repository model in case it was changed"
-	repositoryModel := presenter repositoryModels first.
-	
+	repositoryModel := presenter projectsPanelRepositoryModels detect: [
+		                   :m | m isModelOf: firstRepository ].
+
+
 	self assert: repositoryModel entity equals: firstRepository.
-	
+
 	newValue := repositoryModel perform: aProperty.
-	self assert: newValue equals: aValue.
+	self assert: newValue equals: aValue
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testEditRepositoryStatusThenRefreshDoesRefreshList [
 	
 	self
-		testEditThenRefreshRepositoryProperty: #statusText
+		testEditThenRefreshRepositoryProperty: #status
 		doing: [ :repository |
 			"Make the repository missing by removing its underlying repository"
 			repository repositoryDirectory ensureDeleteAll ]
-		makesPropertyValueTo: (IceTipRepositoryModel on: nil) localRepositoryMissingText
+		makesPropertyValueTo: (IceTipRepositoryModel on: nil) localRepositoryMissing
 ]
 
-{ #category : #'tests - table' }
-IceTipRepositoriesBrowserTest >> testEditRepositoryStatusWithoutRefreshDoesNotRefreshList [
-	
-	self
-		testEditWithoutRefreshRepositoryProperty: #statusText
-		doing: [ :repository | 
-			"Make the repository missing by removing its underlying repository"
-			repository repositoryDirectory ensureDeleteAll ]
-]
-
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testEditThenRefreshRepositoryProperty: aProperty doing: aBlock makesPropertyValueTo: aValue [
 
 	self
@@ -160,174 +144,162 @@ IceTipRepositoriesBrowserTest >> testEditThenRefreshRepositoryProperty: aPropert
 		makesPropertyValueTo: aValue
 ]
 
-{ #category : #'tests - table' }
-IceTipRepositoriesBrowserTest >> testEditWithoutRefreshRepositoryProperty: aProperty doing: aBlock [
-	
-	| repositoryModel |
-	repositoryModel := presenter repositoryModels first.
-	self
-		testEditRepositoryProperty: aProperty
-		doing: aBlock
-		makesPropertyValueTo: (repositoryModel perform: aProperty)
-]
-
-{ #category : #'tests - structural' }
+{ #category : 'tests - structural' }
 IceTipRepositoriesBrowserTest >> testHasAddButtonOnTheRight [
 
 	self assert: (presenter toolbar rightItems anySatisfy: [:aButton | aButton label = 'Add']).
 ]
 
-{ #category : #'tests - structural' }
+{ #category : 'tests - structural' }
 IceTipRepositoriesBrowserTest >> testHasFetchAllButtonOnTheLeft [
 
 	self assert: (presenter toolbar leftItems anySatisfy: [:aButton | aButton label = 'Fetch all']).
 ]
 
-{ #category : #'tests - structural' }
+{ #category : 'tests - structural' }
 IceTipRepositoriesBrowserTest >> testHasSettingsButtonOnTheRight [
 
 	self assert: (presenter toolbar rightItems anySatisfy: [:aButton | aButton label = 'Settings']).
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testInitialListShowsElementsInOriginalOrder [
 	
 	self
-		assert: (presenter repositoryList valueAtColumn: 1 row: 1)
-		equals: presenter repositoryList items first descriptionWithDecoration asString.
+		assert: (presenter projectsPanelRepositoryList valueAtColumn: 1 row: 1)
+		equals: presenter projectsPanelRepositoryList items first description.
 	self
-		assert: (presenter repositoryList valueAtColumn: 1 row: 2)
-		equals: presenter repositoryList items second descriptionWithDecoration asString.
+		assert: (presenter projectsPanelRepositoryList valueAtColumn: 1 row: 2)
+		equals: presenter projectsPanelRepositoryList items second description.
 	self
-		assert: (presenter repositoryList valueAtColumn: 1 row: 3)
-		equals: presenter repositoryList items third descriptionWithDecoration asString.
+		assert: (presenter projectsPanelRepositoryList valueAtColumn: 1 row: 3)
+		equals: presenter projectsPanelRepositoryList items third description.
 ]
 
-{ #category : #'tests - context menu' }
+{ #category : 'tests - context menu' }
 IceTipRepositoriesBrowserTest >> testListHasContextMenuHasPackagesOptionEnabled [
 	
 	| menu |
 	
-	presenter repositoryList selectIndex: 1.
-	menu := presenter repositoryList contextMenu value.
+	presenter projectsPanelRepositoryList selectIndex: 1.
+	menu := presenter projectsPanelRepositoryList contextMenu value.
 	
 	self assert: (menu defaultGroup menuItems at: 1) name equals: 'Packages'.
 	self assert: (menu defaultGroup menuItems at: 1) isEnabled
 ]
 
-{ #category : #'tests - context menu' }
+{ #category : 'tests - context menu' }
 IceTipRepositoriesBrowserTest >> testListHasContextMenuHasRepairRepositoryOptionDisabled [
-	
+
 	| menu |
-	
-	presenter repositoryList selectIndex: 1.
-	menu := presenter repositoryList contextMenu value.
-	
-	self assert: (menu defaultGroup menuItems at: 2) name equals: 'Repair repository'.
-	self deny: (menu defaultGroup menuItems at: 2) isEnabled
+	presenter projectsPanelRepositoryList selectIndex: 1.
+	menu := presenter projectsPanelRepositoryList contextMenu value.
+
+	self deny: (menu defaultGroup menuItems anySatisfy: [ :each | 
+			 each name = IceTipRepairCommand defaultName ])
 ]
 
-{ #category : #'tests - context menu' }
+{ #category : 'tests - context menu' }
 IceTipRepositoriesBrowserTest >> testListHasContextMenuOnSelection [
 
 	| menu |
 
-	presenter repositoryList selectIndex: 1.
-	menu := presenter repositoryList contextMenu value.
+	presenter projectsPanelRepositoryList selectIndex: 1.
+	menu := presenter projectsPanelRepositoryList contextMenu value.
 	
 	self assert: menu defaultGroup menuItems isNotEmpty
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testListShowsNotLoadedProject [
 	
-	self assert: (presenter repositoryList valueAtColumn: 1 row: 3) equals: '*anotherOne' asText.
-	self assert: (presenter repositoryList valueAtColumn: 2 row: 3) equals: 'Not loaded' asText.
-	self assert: (presenter repositoryList valueAtColumn: 3 row: 3) equals: 'master' asText.
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 1 row: 3) equals: '*anotherOne'.
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 2 row: 3) equals: 'Not loaded'.
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 3 row: 3) equals: 'master'.
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testListShowsUpToDateProject [
 
-	self assert: (presenter repositoryList valueAtColumn: 1 row: 1) equals: 'test-project'.
-	self assert: (presenter repositoryList valueAtColumn: 2 row: 1) equals: 'Up to date'. 	
-	self assert: (presenter repositoryList valueAtColumn: 3 row: 1) equals: 'master'. 
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 1 row: 1) equals: 'test-project'.
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 2 row: 1) equals: 'Up to date'. 	
+	self assert: (presenter projectsPanelRepositoryList valueAtColumn: 3 row: 1) equals: 'master'. 
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingByBranchDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 3
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingByNameDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingByStatusDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 2
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingDescendingByBranchDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 3.
-	presenter repositoryList clickOnColumnHeaderAt: 3.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingDescendingByNameDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 1.
-	presenter repositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingDescendingByStatusDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 2.
-	presenter repositoryList clickOnColumnHeaderAt: 2.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingOriginalByBranchDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 3.
-	presenter repositoryList clickOnColumnHeaderAt: 3.
-	presenter repositoryList clickOnColumnHeaderAt: 3.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 3.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingOriginalByNameDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 1.
-	presenter repositoryList clickOnColumnHeaderAt: 1.
-	presenter repositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 1.
 ]
 
-{ #category : #'tests - table sorting' }
+{ #category : 'tests - table sorting' }
 IceTipRepositoriesBrowserTest >> testSortingOriginalByStatusDoesNotFail [
 	
 	"Smoke test because there is no way to access the real shown elements for now"
-	presenter repositoryList clickOnColumnHeaderAt: 2.
-	presenter repositoryList clickOnColumnHeaderAt: 2.
-	presenter repositoryList clickOnColumnHeaderAt: 2.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2.
+	presenter projectsPanelRepositoryList clickOnColumnHeaderAt: 2.
 ]
 
-{ #category : #'tests - table' }
+{ #category : 'tests - table' }
 IceTipRepositoriesBrowserTest >> testTableHasTheCorrectColumns [
 
-	self assertCollection: (presenter repositoryList columns collect: #title) hasSameElements:  { 'Repositories'. 'Status'. 'Branch'}
+	self assertCollection: (presenter projectsPanelRepositoryList columns collect: #title) hasSameElements:  { 'Repositories'. 'Status'. 'Branch'}
 ]

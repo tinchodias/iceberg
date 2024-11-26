@@ -1,42 +1,29 @@
 "
-I'm a generic command to perform actions where remote is the main actor.
-Tipically, this is usually Pull and Push operations. My children will take care about it.
+I'm a the abstract superclass of commands that act on remotes. 
 "
 Class {
-	#name : #IceTipRemoteActionCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#instVars : [
-		'badge'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipRemoteActionCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #testing }
-IceTipRemoteActionCommand class >> canBeExecutedInContext: aToolContext [
-	^ aToolContext isRepositoryOperational
-		and: [ aToolContext repositoryModel hasRemotes ]
-]
-
-{ #category : #accessing }
+{ #category : 'testing' }
 IceTipRemoteActionCommand class >> isAbstract [ 
 	^ self == IceTipRemoteActionCommand
 ]
 
-{ #category : #execution }
-IceTipRemoteActionCommand >> badge [
-	^ badge
+{ #category : 'testing' }
+IceTipRemoteActionCommand >> canBeExecuted [
+
+	^ self isRepositoryOperational
+		and: [ self repositoryModel hasRemotes ]
 ]
 
-{ #category : #execution }
-IceTipRemoteActionCommand >> badge: aNumber [
-	"if zero reset to nil to make it dissapear"
-	badge := aNumber = 0 
-		ifTrue: [ nil ]
-		ifFalse: [ aNumber ]
-]
-
-{ #category : #validating }
+{ #category : 'validating' }
 IceTipRemoteActionCommand >> validateRemotesPresent [
+
 	self repositoryModel hasRemotes
-		ifFalse: [ IceNoRemote signal  ]
+		ifFalse: [ IceNoRemote signal ]
 ]

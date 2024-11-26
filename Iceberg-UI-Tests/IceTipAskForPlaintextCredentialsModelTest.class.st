@@ -1,50 +1,61 @@
 Class {
-	#name : #IceTipAskForPlaintextCredentialsModelTest,
-	#superclass : #TestCase,
+	#name : 'IceTipAskForPlaintextCredentialsModelTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'store',
 		'dialog'
 	],
-	#category : #'Iceberg-UI-Tests'
+	#category : 'Iceberg-UI-Tests',
+	#package : 'Iceberg-UI-Tests'
 }
 
-{ #category : #running }
+{ #category : 'tests' }
+IceTipAskForPlaintextCredentialsModelTest >> openNonModal: aDialog [
+	
+	aDialog asDialogWindow open
+]
+
+{ #category : 'running' }
 IceTipAskForPlaintextCredentialsModelTest >> setUp [
+
 	super setUp.
 	store := IceCredentialStore new.
-	dialog := IceTipAskForPlaintextCredentialsModel new
-		credentialStore: store;
-		yourself
+	dialog := IceTipAskForPlaintextCredentialsPresenter new
+		          credentialStore: store;
+		          yourself
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 IceTipAskForPlaintextCredentialsModelTest >> tearDown [
+
 	dialog ifNotNil: [ [dialog window close] on: LGitNoCredentialsProvided do: [  ] ].
+	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptCreatesCredential [
 
 	| cred |
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog . 
 	
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
 	
 	dialog window triggerOkAction.
+
 	cred := dialog credentials.
 
 	self assert: cred username equals: 'bbb'.
 	self assert: cred password equals: 'aaa'.	
 ]
 
-{ #category : #'tests - storing' }
+{ #category : 'tests - storing' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptDoNotStoresCredential [
-
 	| cred |
+	
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
@@ -58,10 +69,10 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptDoNotStoresCredential [
 	self assert: cred password equals: ''.		
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptEnabledAndDisabled [
 	dialog askingHostname: 'github.com'.
-	dialog openNonModal.
+	self openNonModal: dialog. 
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
 	self assert: dialog okButton isEnabled.
@@ -76,19 +87,19 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptEnabledAndDisabled [
 	self assert: dialog okButton isEnabled
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptIsBlockedInTheBeginning [
 	dialog askingHostname: 'github.com'.
-	dialog openNonModal.
+	self openNonModal: dialog. 
 	self deny: dialog okButton isEnabled
 ]
 
-{ #category : #'tests - storing' }
+{ #category : 'tests - storing' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredential [
 
 	| cred |
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
@@ -102,7 +113,7 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredential [
 	self assert: cred password equals: 'aaa'.		
 ]
 
-{ #category : #'tests - storing' }
+{ #category : 'tests - storing' }
 IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredentialReplacesOld [
 
 	| cred orig |
@@ -111,7 +122,7 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredentialReplacesO
 	orig username: 'aUsername'.
 	orig password: 'aPassword'.
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
 	dialog passwordInput text: 'aaa'.
 	dialog usernameInput text: 'bbb'.
@@ -125,29 +136,29 @@ IceTipAskForPlaintextCredentialsModelTest >> testAcceptStoresCredentialReplacesO
 	self assert: cred password equals: 'aaa'.		
 ]
 
-{ #category : #'tests - cancel' }
+{ #category : 'tests - cancel' }
 IceTipAskForPlaintextCredentialsModelTest >> testCancelThrowsException [
 
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
 	self should: [ dialog window triggerCancelAction ] raise: LGitNoCredentialsProvided
 ]
 
-{ #category : #'tests - cancel' }
+{ #category : 'tests - cancel' }
 IceTipAskForPlaintextCredentialsModelTest >> testCloseThrowsException [
 
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
 	self should: [ dialog window close ] raise: LGitNoCredentialsProvided
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 IceTipAskForPlaintextCredentialsModelTest >> testTitle [
 
 	dialog askingHostname: 'github.com'. 
-	dialog openNonModal. 
+	self openNonModal: dialog. 
 	
-	self assert: dialog title equals: 'Please log in to github.com'.
+	self assert: dialog titleForWindow equals: 'Please log in to github.com'.
 ]

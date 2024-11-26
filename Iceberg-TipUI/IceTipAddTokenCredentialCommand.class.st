@@ -1,42 +1,29 @@
 Class {
-	#name : #IceTipAddTokenCredentialCommand,
-	#superclass : #IceTipAbstractCredentialStoreCommand,
-	#category : #'Iceberg-TipUI-Credentials'
+	#name : 'IceTipAddTokenCredentialCommand',
+	#superclass : 'IceTipAbstractCredentialStoreCommand',
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #activation }
-IceTipAddTokenCredentialCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipCredentialsStoreContext
-		order: 100
-]
+{ #category : 'accessing - defaults' }
+IceTipAddTokenCredentialCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipAddTokenCredentialCommand class >> defaultHelp [
 	^ 'Add a new token credential'
 ]
 
-{ #category : #accessing }
-IceTipAddTokenCredentialCommand class >> defaultMenuIconName [
-	^ #add
-]
-
-{ #category : #accessing }
-IceTipAddTokenCredentialCommand class >> defaultMenuItemName [
+{ #category : 'accessing - defaults' }
+IceTipAddTokenCredentialCommand class >> defaultName [
 	^ 'Token'
 ]
 
-{ #category : #accessing }
-IceTipAddTokenCredentialCommand class >> defaultPosition [
-	^ #right
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipAddTokenCredentialCommand >> execute [
-	IceTipAddTokenCredentialsModel new
-		credentialStore: store;
-		tool: tool;
-		openNonModal.
+
+	((IceTipAddTokenCredentialsPresenter newApplication: context application)
+		credentialStore: self store;
+		tool: self tool;
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
 ]

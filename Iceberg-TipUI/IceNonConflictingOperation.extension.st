@@ -1,12 +1,12 @@
-Extension { #name : #IceNonConflictingOperation }
+Extension { #name : 'IceNonConflictingOperation' }
 
-{ #category : #'*Iceberg-TipUI' }
-IceNonConflictingOperation >> operationIcon [
+{ #category : '*Iceberg-TipUI' }
+IceNonConflictingOperation >> operationIconName [
 	
-	^ operation icon
+	^ operation iconName
 ]
 
-{ #category : #'*Iceberg-TipUI' }
+{ #category : '*Iceberg-TipUI' }
 IceNonConflictingOperation >> preferredColor [
 	
 	^ self isResolved

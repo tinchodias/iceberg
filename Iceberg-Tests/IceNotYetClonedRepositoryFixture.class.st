@@ -1,19 +1,20 @@
 Class {
-	#name : #IceNotYetClonedRepositoryFixture,
-	#superclass : #Object,
+	#name : 'IceNotYetClonedRepositoryFixture',
+	#superclass : 'Object',
 	#instVars : [
 		'factory',
 		'projectName',
 		'packageName1',
 		'packageName2',
-		'remoteFileUrl',
 		'remoteRepository',
 		'location'
 	],
-	#category : 'Iceberg-Tests-Common-Fixtures'
+	#category : 'Iceberg-Tests-Common-Fixtures',
+	#package : 'Iceberg-Tests',
+	#tag : 'Common-Fixtures'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture class >> inGit [
 
 	^ self new
@@ -21,7 +22,7 @@ IceNotYetClonedRepositoryFixture class >> inGit [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture class >> inMemory [
 
 	^ self new
@@ -29,24 +30,33 @@ IceNotYetClonedRepositoryFixture class >> inMemory [
 		yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'private' }
+IceNotYetClonedRepositoryFixture >> deleteAllForcingClose [
+	"On windows it is possible we need to finalize everything before deleting the files. 
+	 We do not do it directly to avoid to lose too much speed"
+
+	Smalltalk garbageCollect.
+	self location ifNotNil: #ensureDeleteAll
+]
+
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture >> ensureRemoteRepository [
 	
 	^ remoteRepository := factory ensureRemoteRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> factory [
 	^ factory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> factory: aFactory [
 
 	factory := aFactory
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture >> initialize [
 	super initialize.
 	location := FileLocator imageDirectory / 'test' / UUID new asString.
@@ -55,59 +65,63 @@ IceNotYetClonedRepositoryFixture >> initialize [
 	packageName2 := 'IceMockPackage2'.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceNotYetClonedRepositoryFixture >> isGit [
 	
 	^ factory isGit
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceNotYetClonedRepositoryFixture >> isUnbornProjectFixture [
 	
 	^ false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture >> location [
 	
 	^ location
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 IceNotYetClonedRepositoryFixture >> newRemoteNamed: aName toRepository: aRepository [
 
 	^ factory newRemoteNamed: aName toRepository: aRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> packageName1 [
 	^ packageName1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> packageName1: anObject [
 	packageName1 := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> packageName2 [
 	^ packageName2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceNotYetClonedRepositoryFixture >> packageName2: anObject [
 	packageName2 := anObject
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 IceNotYetClonedRepositoryFixture >> setUp [
 
 	projectName := 'test-project'.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 IceNotYetClonedRepositoryFixture >> tearDown [
 
-	Smalltalk garbageCollect.
-	self location ifNotNil: #ensureDeleteAll.
+	[ self location ifNotNil: #ensureDeleteAll ]
+		on: CannotDeleteFileException
+		do: [ 
+			"On windows it is possible we need to finalize everything before deleting the files. 
+			 We do not do it directly to avoid to lose too much speed"
+			self deleteAllForcingClose ]
 ]

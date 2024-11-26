@@ -2,41 +2,38 @@
 I'm a command to perform a fetch operation on all registered projects.
 "
 Class {
-	#name : #IceTipFetchAllProjectCommand,
-	#superclass : #IceTipRepositoryCommand,
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipFetchAllProjectCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #accessing }
-IceTipFetchAllProjectCommand class >> defaultHelp [
+{ #category : 'accessing - defaults' }
+IceTipFetchAllProjectCommand class >> defaultDescription [
+
 	^ 'Fetch (bring new commits) from all repositories in your list.'
 ]
 
-{ #category : #accessing }
-IceTipFetchAllProjectCommand class >> defaultMenuIconName [
-	^ #smallUpdate
-]
+{ #category : 'accessing - defaults' }
+IceTipFetchAllProjectCommand class >> defaultName [
 
-{ #category : #accessing }
-IceTipFetchAllProjectCommand class >> defaultMenuItemName [
 	^ 'Fetch all'
 ]
 
-{ #category : #accessing }
-IceTipFetchAllProjectCommand class >> toolbarRepositoryListActivation [
-	<classAnnotation>
+{ #category : 'testing' }
+IceTipFetchAllProjectCommand >> canBeExecuted [ 
 	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipRepositoryListContext
-		order: 20
+	"This command can be executed with our without selection"
+	^ true
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipFetchAllProjectCommand >> execute [
+
 	| repositories |
-	(UIManager default confirm: 'This operation can take some times depending on the size and number of your repositories. Are you sure you want to fetch all repositories?' label: 'Proceed?')
-		ifFalse: [ ^ self ].
-		
+	self isConfirmed ifFalse: [ ^ self ].
+	
 	repositories := IceRepository registry.
 	UIManager default
 		informUserDuring: [ :bar | 
@@ -47,7 +44,24 @@ IceTipFetchAllProjectCommand >> execute [
 					bar label: ('Fetching incoming commits of {1}' format: {each name}).
 					bar value: index + 1.
 					each fetch ] ].
-			
+	
 	"Inform an unespecified change to force a refresh"
 	Iceberg announcer announce: IceRepositoryModified new
+]
+
+{ #category : 'accessing' }
+IceTipFetchAllProjectCommand >> iconName [
+
+	^ #smallUpdate
+]
+
+{ #category : 'executing' }
+IceTipFetchAllProjectCommand >> isConfirmed [
+
+	^ self application newConfirm
+		  	title: 'Proceed?';
+			label: 
+		  'This operation can take some times depending on the size and number of your repositories. Are you sure you want to fetch all repositories?';
+			openModal 
+		 
 ]

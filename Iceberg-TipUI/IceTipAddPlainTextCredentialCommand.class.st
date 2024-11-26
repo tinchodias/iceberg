@@ -2,44 +2,30 @@
 I create a new plaintext credential on the credential store.
 "
 Class {
-	#name : #IceTipAddPlainTextCredentialCommand,
-	#superclass : #IceTipAbstractCredentialStoreCommand,
-	#category : #'Iceberg-TipUI-Credentials'
+	#name : 'IceTipAddPlainTextCredentialCommand',
+	#superclass : 'IceTipAbstractCredentialStoreCommand',
+	#category : 'Iceberg-TipUI-Credentials',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Credentials'
 }
 
-{ #category : #activation }
-IceTipAddPlainTextCredentialCommand class >> browserShortcutActivation [
-	<classAnnotation>
-	
-	^ IceTipToolbarActivation 
-		byRootGroupItemFor: IceTipCredentialsStoreContext
-		order: 100
-]
-
-{ #category : #accessing }
-IceTipAddPlainTextCredentialCommand class >> defaultHelp [
+{ #category : 'accessing - defaults' }
+IceTipAddPlainTextCredentialCommand class >> defaultDescription [
 	^ 'Add a new plain text credential'
 ]
 
-{ #category : #accessing }
-IceTipAddPlainTextCredentialCommand class >> defaultMenuIconName [
-	^ #add
-]
-
-{ #category : #accessing }
-IceTipAddPlainTextCredentialCommand class >> defaultMenuItemName [
+{ #category : 'accessing - defaults' }
+IceTipAddPlainTextCredentialCommand class >> defaultName [
 	^ 'Plain Text'
 ]
 
-{ #category : #accessing }
-IceTipAddPlainTextCredentialCommand class >> defaultPosition [
-	^ #right
-]
-
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipAddPlainTextCredentialCommand >> execute [
-	IceTipAddPlaintextCredentialsModel new
-		credentialStore: store;
-		tool: tool;
-		openNonModal.
+
+	((IceTipAddPlaintextCredentialsPresenter newApplication: context application)
+		credentialStore: self store;
+		tool: self tool;
+		asDialogWindow)
+			centeredRelativeTo: context window;
+			open
 ]

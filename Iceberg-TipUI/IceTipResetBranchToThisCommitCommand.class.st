@@ -1,48 +1,67 @@
+"
+I'm a command to reset the selected branch to the selected commit. It does not modify the working copy.
+"
 Class {
-	#name : #IceTipResetBranchToThisCommitCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'selectedCommitish',
-		'selectedBranch'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipResetBranchToThisCommitCommand',
+	#superclass : 'IceTipRepositoryCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipResetBranchToThisCommitCommand class >> browserHistoryContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byRootGroupItemOrder: 10
-		for: IceTipHistoryContext
-]
+{ #category : 'accessing - defaults' }
+IceTipResetBranchToThisCommitCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipResetBranchToThisCommitCommand class >> defaultHelp [
 	^ 'Resets the selected branch to the selected commit. It does not modify the working copy (!!).'
 ]
 
-{ #category : #activation }
-IceTipResetBranchToThisCommitCommand class >> defaultMenuIconName [
+{ #category : 'testing' }
+IceTipResetBranchToThisCommitCommand >> canBeExecuted [
+
+	^ self selectedBranch isNotNil
+]
+
+{ #category : 'executing' }
+IceTipResetBranchToThisCommitCommand >> defaultNameFromContext [
+
+	| shortId branchName |
+	shortId := self selectedCommitish ifNotNil: [ :commitish | commitish shortId ] ifNil: [''].
+	branchName := self selectedBranch ifNotNil: [:branch | branch name ] ifNil: [ '' ].
+
+	^ 'Reset ', branchName, ' to commit ', shortId
+]
+
+{ #category : 'executing' }
+IceTipResetBranchToThisCommitCommand >> execute [
+	
+	self selectedBranch resetToCommit: self selectedCommitish.
+	Iceberg announcer announce: (IceRepositoryModified for: self repository).
+]
+
+{ #category : 'accessing' }
+IceTipResetBranchToThisCommitCommand >> iconName [
+
 	^ #bottom
 ]
 
-{ #category : #execution }
-IceTipResetBranchToThisCommitCommand >> defaultMenuItemName [
+{ #category : 'initialization' }
+IceTipResetBranchToThisCommitCommand >> name [
 
-	^ 'Reset ', selectedBranch name, ' to commit ', selectedCommitish shortId
+	^ self context
+		  ifNil: [ self className ]
+		  ifNotNil: [ self defaultNameFromContext ]
 ]
 
-{ #category : #execution }
-IceTipResetBranchToThisCommitCommand >> execute [
-	
-	selectedBranch resetToCommit: selectedCommitish.
-	Iceberg announcer announce: (IceRepositoryModified for: self repositoryModel entity).
+{ #category : 'accessing' }
+IceTipResetBranchToThisCommitCommand >> selectedBranch [
+
+	| selected |
+	selected := self context model.
+	^ (selected isNotNil and: [ selected isBranch ]) ifTrue: [ selected ]
 ]
 
-{ #category : #execution }
-IceTipResetBranchToThisCommitCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	selectedCommitish := aToolContext item.
-	selectedBranch := aToolContext selectedBranch.
+{ #category : 'accessing' }
+IceTipResetBranchToThisCommitCommand >> selectedCommitish [
+
+	^ self item
 ]

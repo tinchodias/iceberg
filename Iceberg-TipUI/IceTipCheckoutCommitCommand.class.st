@@ -3,46 +3,40 @@ I checkout a specific commit from history.
 I will let your repository in detach mode!
 "
 Class {
-	#name : #IceTipCheckoutCommitCommand,
-	#superclass : #IceTipCommand,
-	#instVars : [
-		'selectedCommit'
-	],
-	#category : #'Iceberg-TipUI-Commands'
+	#name : 'IceTipCheckoutCommitCommand',
+	#superclass : 'IceTipCommand',
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #activation }
-IceTipCheckoutCommitCommand class >> browserHistoryContextActivation [
-	<classAnnotation>
-	
-	^ CmdContextMenuActivation
-		byRootGroupItemOrder: 10
-		for: IceTipHistoryContext
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutCommitCommand class >> defaultDescription [
 
-{ #category : #accessing }
-IceTipCheckoutCommitCommand class >> defaultHelp [
 	^ 'Set the selected commit as current commit and load the code in the image'
 ]
 
-{ #category : #activation }
-IceTipCheckoutCommitCommand class >> defaultMenuIconName [
-	^ #refresh
-]
+{ #category : 'accessing - defaults' }
+IceTipCheckoutCommitCommand class >> defaultName [
 
-{ #category : #activation }
-IceTipCheckoutCommitCommand class >> defaultMenuItemName [
 	^ 'Checkout'
 ]
 
-{ #category : #execution }
+{ #category : 'executing' }
 IceTipCheckoutCommitCommand >> execute [
-	
-	(IceTipCheckoutPreviewBrowser onBranch: selectedCommit) openWithSpec
+
+	(IceTipCheckoutPreviewBrowser onBranch: self selectedCommit)
+		open
 ]
 
-{ #category : #execution }
-IceTipCheckoutCommitCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.
-	selectedCommit := aToolContext selectedCommit
+{ #category : 'accessing' }
+IceTipCheckoutCommitCommand >> iconName [
+
+	^ #refresh
+]
+
+{ #category : 'accessing' }
+IceTipCheckoutCommitCommand >> selectedCommit [
+
+	^ self context selectedCommit
 ]

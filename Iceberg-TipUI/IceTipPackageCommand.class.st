@@ -2,27 +2,48 @@
 Abstract class representing commands to be applied on top of packages.
 "
 Class {
-	#name : #IceTipPackageCommand,
-	#superclass : #IceTipCommand,
+	#name : 'IceTipPackageCommand',
+	#superclass : 'IceTipCommand',
 	#instVars : [
 		'packageModel'
 	],
-	#category : #'Iceberg-TipUI-Commands'
+	#category : 'Iceberg-TipUI-Commands',
+	#package : 'Iceberg-TipUI',
+	#tag : 'Commands'
 }
 
-{ #category : #accessing }
+{ #category : 'testing' }
 IceTipPackageCommand class >> isAbstract [
 
 	^ self == IceTipPackageCommand
 ]
 
-{ #category : #accessing }
-IceTipPackageCommand >> packageModel [
-	^ packageModel
+{ #category : 'testing' }
+IceTipPackageCommand >> hasPackageModel [
+
+	^ self packageModel isNotNil
 ]
 
-{ #category : #execution }
-IceTipPackageCommand >> readParametersFromContext: aToolContext [
-	super readParametersFromContext: aToolContext.	
-	packageModel := aToolContext packageModel
+{ #category : 'testing' }
+IceTipPackageCommand >> isPackageLoaded [ 
+
+	^ self hasPackageModel and: [ self packageModel isLoaded ]
+]
+
+{ #category : 'accessing' }
+IceTipPackageCommand >> package [
+
+	^ self packageModel entity
+]
+
+{ #category : 'accessing' }
+IceTipPackageCommand >> packageModel [
+
+	^ packageModel ifNil: [self context packageModel]
+]
+
+{ #category : 'accessing' }
+IceTipPackageCommand >> packageModel: anIceTipPackageModel [ 
+
+	packageModel := anIceTipPackageModel
 ]

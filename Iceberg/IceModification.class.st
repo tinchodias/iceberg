@@ -2,15 +2,17 @@
 I am a modification in a tree. I contain the definition I'm changing (right) and the new (left) version of the definition. I know what is the icon for modification and how to calculate a conflict with other operations.
 "
 Class {
-	#name : #IceModification,
-	#superclass : #IceOperation,
+	#name : 'IceModification',
+	#superclass : 'IceOperation',
 	#instVars : [
 		'oldDefinition'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 IceModification class >> left: leftDefinition right: rightDefinition [
 
 	^ self new
@@ -19,20 +21,20 @@ IceModification class >> left: leftDefinition right: rightDefinition [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceModification >> = anotherOperation [
 
 	^ super = anotherOperation
 		and: [ self rightDefinition = anotherOperation rightDefinition ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceModification >> accept: aVisitor [
 	
 	^ aVisitor visitModification: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> description [
 	^ definition key asString,
 			(self isOnlyLowImpact
@@ -40,30 +42,30 @@ IceModification >> description [
 				ifFalse: [ '' ])
 ]
 
-{ #category : #operations }
+{ #category : 'operations' }
 IceModification >> inverse [
 	
 	^ IceModification left: self rightDefinition right: self leftDefinition
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceModification >> isModification [
 	
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceModification >> isOnlyLowImpact [
 	^ definition isLowImpactAppliedTo: oldDefinition 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> leftContents [
 	
 	^ definition contents
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceModification >> mergeWithLeftAddition: anIceAddition [ 
 	
 	"This should not happen. If I represent a modification of a node, that means that the original definition existed on the base version.
@@ -71,7 +73,7 @@ IceModification >> mergeWithLeftAddition: anIceAddition [
 	self shouldNotImplement
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceModification >> mergeWithLeftModification: anIceModification [ 
 	
 	"If the modification is the same, I can just keep any of them."
@@ -81,43 +83,43 @@ IceModification >> mergeWithLeftModification: anIceModification [
 	^ IceConflictingOperation left: anIceModification right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceModification >> mergeWithLeftNoOperation: anIceNoModification [ 
 	
 	^ IceNonConflictingOperation operation: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceModification >> mergeWithLeftRemoval: anIceRemoval [ 
 	
 	^ IceConflictingOperation left: anIceRemoval right: self
 ]
 
-{ #category : #merging }
+{ #category : 'merging' }
 IceModification >> mergeWithOperation: anOperation [
 	
 	^ anOperation mergeWithLeftModification: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> oldDefinition [
 	
 	^ oldDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> rightContents [
 	
 	^ oldDefinition contents
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> rightDefinition [
 	
 	^ oldDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceModification >> rightDefinition: aDefinition [
 	
 	oldDefinition := aDefinition

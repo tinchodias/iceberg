@@ -1,30 +1,36 @@
+"
+Error while cloning a project - the location on disk already exists
+
+"
 Class {
-	#name : #IceCloneLocationAlreadyExists,
-	#superclass : #IceCloneError,
+	#name : 'IceCloneLocationAlreadyExists',
+	#superclass : 'IceCloneError',
 	#instVars : [
 		'location'
 	],
-	#category : #'Iceberg-Libgit-Exceptions'
+	#category : 'Iceberg-Libgit-Exceptions',
+	#package : 'Iceberg-Libgit',
+	#tag : 'Exceptions'
 }
 
-{ #category : #signalling }
+{ #category : 'signalling' }
 IceCloneLocationAlreadyExists class >> signalFor: aLocation [
 	^ self new
 		location: aLocation;
 		signal.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceCloneLocationAlreadyExists >> acceptError: aVisitor [
 	aVisitor visitCloneLocationAlreadyExists: self.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceCloneLocationAlreadyExists >> location [
 	^ location
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceCloneLocationAlreadyExists >> location: anObject [
 	location := anObject
 ]

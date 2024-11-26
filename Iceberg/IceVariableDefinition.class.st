@@ -4,15 +4,17 @@ I represent a variable of an IceClassDefinition or IceTraitDefinition.
 Variables have a name, that identify them, and a type. They can be added and removed from the container.
 "
 Class {
-	#name : #IceVariableDefinition,
-	#superclass : #IceOwnedDefinition,
+	#name : 'IceVariableDefinition',
+	#superclass : 'IceOwnedDefinition',
 	#instVars : [
 		'mcVariableDefinition'
 	],
-	#category : #'Iceberg-Changes'
+	#category : 'Iceberg-Changes',
+	#package : 'Iceberg',
+	#tag : 'Changes'
 }
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceVariableDefinition >> = anObject [
 	"Answer whether the receiver and anObject represent the same object."
 
@@ -20,47 +22,47 @@ IceVariableDefinition >> = anObject [
 		and: [ mcVariableDefinition = anObject mcVariableDefinition ]
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 IceVariableDefinition >> accept: aVisitor [
 	^ aVisitor visitVariableDefinition: self
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceVariableDefinition >> addedIn: aMCDefinition [
 	^ aMCDefinition copyWithVariable: mcVariableDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceVariableDefinition >> contents [
 	
 	^ 'Variable of type: ', self typeToShow
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 IceVariableDefinition >> hash [
 	"Answer an integer value that is related to the identity of the receiver."
 
 	^ super hash bitXor: mcVariableDefinition hash
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 IceVariableDefinition >> isVariableDefinition [
 	
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceVariableDefinition >> mcVariableDefinition [
 	^ mcVariableDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceVariableDefinition >> mcVariableDefinition: aMCVariableDefinition [
 	mcVariableDefinition := aMCVariableDefinition.
 	self name: mcVariableDefinition name
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceVariableDefinition >> printOn: aStream [
 	"Append a sequence of characters to aStream that identify the receiver."
 
@@ -72,7 +74,7 @@ IceVariableDefinition >> printOn: aStream [
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 
 	self flag: #todo. "Check this"
@@ -85,18 +87,18 @@ IceVariableDefinition >> removeFromPatcher: aMCPatcher [
 		ifAbsent: [ "Nothing to do: the container of this variable was removed." ]
 ]
 
-{ #category : #patching }
+{ #category : 'patching' }
 IceVariableDefinition >> removedIn: aMCDefinition [
 	^ aMCDefinition copyWithoutVariable: mcVariableDefinition
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceVariableDefinition >> type [
 
 	^ self typeToShow, ' variable'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 IceVariableDefinition >> typeToShow [
 	^ mcVariableDefinition class type
 ]
