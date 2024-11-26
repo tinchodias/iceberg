@@ -23,15 +23,11 @@ Class {
 IceTipOptionDialogPresenter >> accept [
 
 	[
-	self selectedType class = IceTipLocalRepositoryPanel
+	(self selectedType class = IceTipLocalRepositoryPanel and: [
+		 (IceRepositoryCreator isGitRoot: self selectedType location) not ])
 		ifTrue: [
-			(IceRepositoryCreator isGitRoot: self selectedType location)
-				ifFalse: [
-					self inform: ('"{1}" git repository not found' format:
-							 { self selectedType location fullName }) ]
-				ifTrue: [
-					self doAccept.
-					self closeWindow ] ]
+			self inform: ('"{1}" git repository not found' format:
+					 { self selectedType location fullName }) ]
 		ifFalse: [
 			self doAccept.
 			self closeWindow ] ]
