@@ -62,8 +62,6 @@ IceTipRepairRepositoryDialogPresenter >> initialExtentForWindow [
 IceTipRepairRepositoryDialogPresenter >> initializeDialogWindow: aWindow [
 
 	super initializeDialogWindow: aWindow.
-
-	self refreshDialogButtons.	
 	
 	aWindow 
 		addShortcutWith: [ :action | action 
@@ -77,17 +75,20 @@ IceTipRepairRepositoryDialogPresenter >> initializeOptionsList [
 	optionsList
 		hideColumnHeaders;
 		addColumn: (SpCompositeTableColumn new
-			addColumn: (SpImageTableColumn new
-				evaluated: #icon;
-				beNotExpandable;
-				yourself);
-			addColumn: (SpStringTableColumn new
-				evaluated: #title;
-				yourself);
-			yourself);
+				 addColumn: (SpImageTableColumn new
+						  evaluated: #icon;
+						  beNotExpandable;
+						  yourself);
+				 addColumn: (SpStringTableColumn new
+						  evaluated: #title;
+						  yourself);
+				 yourself);
 		items: self model availableRepairOptions;
-		whenSelectionChangedDo: [ :selection | self selectionChanged: selection selectedItem ];
-		whenActivatedDo: [ :selection | selection ifNotNil: [ self accept ] ]
+		whenSelectionChangedDo: [ :selection |
+		self selectionChanged: selection selectedItem ];
+		whenActivatedDo: [ :selection | selection ifNotNil: [ self accept ] ].
+	optionsList items isEmpty ifFalse: [
+		optionsList selectItem: optionsList items first ]
 ]
 
 { #category : 'initialization' }
