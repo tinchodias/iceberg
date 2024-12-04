@@ -98,11 +98,12 @@ IceTipCheckoutNewBranchPanel >> initializePresenters [
 
 	self initializeCurrentBranchLabel.
 	branchLabel := self newLabel
-		label: 'New branch';
-		yourself.
+		               label: 'New branch';
+		               yourself.
 	branchInputText := self newTextInput
-		placeholder: 'e.g., feature/what';
-		yourself
+		                   placeholder: 'e.g., feature/what';
+		                   whenSubmitDo: [ :branchName | self accept ];
+		                   yourself
 ]
 
 { #category : 'testing' }
