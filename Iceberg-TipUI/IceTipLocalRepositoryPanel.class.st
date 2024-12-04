@@ -86,11 +86,12 @@ IceTipLocalRepositoryPanel >> validate [
 
 	self
 		assert: self location isNotNil
-		description: 'Project location must exist!'.
+		description: 'Please provide a project location!'.
 	self
 		assert: self location exists
 		description: 'Project location must exist!'.
-	self
+	self 
 		assert: (IceRepositoryCreator isGitRoot: self location)
-		description: 'Project location does not seems to be a valid git repository.'
+		description: 'Project location does not seems to be a valid git repository'
+
 ]
