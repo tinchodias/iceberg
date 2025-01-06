@@ -18,6 +18,11 @@ Class {
 }
 
 { #category : 'accessing' }
+IceTipAddTokenCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ (self inputTextHeight * 5 + self buttonHeight))
+]
+
+{ #category : 'accessing' }
 IceTipAddTokenCredentialsPresenter >> accept [
 
 	self acceptAddAction

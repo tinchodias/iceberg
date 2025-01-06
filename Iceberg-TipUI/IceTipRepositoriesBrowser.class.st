@@ -63,6 +63,11 @@ IceTipRepositoriesBrowser class >> buildSelectionExtraCommandGroupWith: presente
 ]
 
 { #category : 'accessing' }
+IceTipRepositoriesBrowser class >> defaultPreferredExtent [
+	^ (600 @ 500)
+]
+
+{ #category : 'accessing' }
 IceTipRepositoriesBrowser class >> iconForWorldMenu [
 
 	^ self iconNamed: #komitterSmalltalkhubRemote

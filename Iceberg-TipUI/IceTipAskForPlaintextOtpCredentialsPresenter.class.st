@@ -10,6 +10,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAskForPlaintextOtpCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ 210)
+]
+
 { #category : 'layout' }
 IceTipAskForPlaintextOtpCredentialsPresenter >> defaultLayout [
 

@@ -10,6 +10,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAskForPlaintextCredentialsPresenter class >> defaultPreferredExtent [
+	^ (450 @ 180)
+]
+
 { #category : 'actions' }
 IceTipAskForPlaintextCredentialsPresenter >> accept [
 

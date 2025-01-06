@@ -14,6 +14,11 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipHistoryActionBrowser class >> defaultPreferredExtent [
+	^ (800@600)
+]
+
 { #category : 'actions' }
 IceTipHistoryActionBrowser >> accept [
 

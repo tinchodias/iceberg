@@ -6,6 +6,11 @@ Class {
 	#tag : 'View-Branch'
 }
 
+{ #category : 'accessing' }
+IceTipDiscardAllChangesPreviewBrowser class >> defaultPreferredExtent [
+	^ (900 @ 400)
+]
+
 { #category : 'instance creation' }
 IceTipDiscardAllChangesPreviewBrowser class >> onRepository: anIceModelRepository [
 

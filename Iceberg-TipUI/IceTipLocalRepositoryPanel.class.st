@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : 'accessing' }
+IceTipLocalRepositoryPanel class >> defaultPreferredExtent [
+	^ (500@(
+		self  inputTextHeight * 2
+		+ self  buttonHeight 
+		+ 50 "Yes, a magic number"
+		))
+]
+
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel class >> order [
 
 	^ 20

@@ -13,6 +13,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAddPlaintextCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ (self  inputTextHeight * 5 + self  buttonHeight))
+]
+
 { #category : 'testing' }
 IceTipAddPlaintextCredentialsPresenter >> accept [
 

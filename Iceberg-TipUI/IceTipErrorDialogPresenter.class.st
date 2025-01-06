@@ -19,6 +19,15 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceTipErrorDialogPresenter class >> defaultPreferredExtent [
+	^ (500@(
+		self inputTextHeight * 2
+		+ self buttonHeight 
+		+ 50 "Yes, a magic number"
+		))
+]
+
 { #category : 'initialization' }
 IceTipErrorDialogPresenter >> accept [
 	

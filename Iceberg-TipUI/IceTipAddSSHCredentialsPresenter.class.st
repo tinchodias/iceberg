@@ -13,6 +13,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAddSSHCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ (self  inputTextHeight * 7 + self buttonHeight))
+]
+
 { #category : 'actions' }
 IceTipAddSSHCredentialsPresenter >> accept [
 

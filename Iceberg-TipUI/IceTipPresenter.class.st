@@ -67,8 +67,8 @@ IceTipPresenter >> initializeWindow: aSpWindowPresenter [
 
 	self setTitleTo: aSpWindowPresenter.
 	self setWindowIconTo: aSpWindowPresenter.
-	self setInitialExtentTo: aSpWindowPresenter
-	
+	"self setInitialExtentTo: aSpWindowPresenter."
+
 
 ]
 

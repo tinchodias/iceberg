@@ -43,6 +43,11 @@ IceTipGitHubPullRequestListBrowser class >> buildSelectionCommandGroupWith: pres
 
 ]
 
+{ #category : 'accessing' }
+IceTipGitHubPullRequestListBrowser class >> defaultPreferredExtent [
+	^ (700 @ 700)
+]
+
 { #category : 'instance creation' }
 IceTipGitHubPullRequestListBrowser class >> onRepository: aRepository [
 

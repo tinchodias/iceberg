@@ -31,6 +31,11 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceGitHubCreatePullRequestModel class >> defaultPreferredExtent [
+	^ (700 @ 300)
+]
+
 { #category : 'instance creation' }
 IceGitHubCreatePullRequestModel class >> new [
 	self error: 'Use #repository:credentials:headRemote:'

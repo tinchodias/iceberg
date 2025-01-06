@@ -15,6 +15,11 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestModel class >> defaultPreferredExtent [
+	^ (500 @ 250)
+]
+
 { #category : 'actions' }
 IceGitHubRejectPullRequestModel >> accept [
 

@@ -37,6 +37,11 @@ IceTipVersionHistoryBrowser class >> buildSelectionCommandGroupWith: presenter f
 
 ]
 
+{ #category : 'accessing' }
+IceTipVersionHistoryBrowser class >> defaultPreferredExtent [
+	^ (700@700)
+]
+
 { #category : 'instance creation' }
 IceTipVersionHistoryBrowser class >> onRepository: aRepository method: aMethod [
 

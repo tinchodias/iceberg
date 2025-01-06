@@ -17,6 +17,12 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipAddRemoteDialogPresenter class >> defaultPreferredExtent [
+
+	^ 500 @ (self inputTextHeight * 2 + self buttonHeight + 50) "Yes, a magic number"
+]
+
 { #category : 'actions' }
 IceTipAddRemoteDialogPresenter >> accept [
 

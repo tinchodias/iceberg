@@ -12,6 +12,15 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipRemoveRepositoryDialogPresenter class >> defaultPreferredExtent [
+	^ (500@(
+		self  inputTextHeight * 2
+		+ self  buttonHeight 
+		+ 50 "Yes, a magic number"
+		))
+]
+
 { #category : 'actions' }
 IceTipRemoveRepositoryDialogPresenter >> accept [
 

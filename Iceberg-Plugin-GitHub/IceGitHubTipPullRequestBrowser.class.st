@@ -37,6 +37,11 @@ IceGitHubTipPullRequestBrowser class >> buildSelectionCommandGroupWith: presente
 	"Nothing to add"
 ]
 
+{ #category : 'accessing' }
+IceGitHubTipPullRequestBrowser class >> defaultPreferredExtent [
+	^ (1050 @ 800)
+]
+
 { #category : 'instance creation' }
 IceGitHubTipPullRequestBrowser class >> newApplication: app model: aModel pullRequest: aPullRequest [
 

@@ -9,6 +9,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipEditSSHCredentialsPresenter class >> defaultPreferredExtent [
+	^ (500@230)
+]
+
 { #category : 'actions' }
 IceTipEditSSHCredentialsPresenter >> accept [
 

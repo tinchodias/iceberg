@@ -37,6 +37,11 @@ IceTipHistoryBrowser class >> buildSelectionCommandGroupWith: presenter for: aCo
 
 ]
 
+{ #category : 'accessing' }
+IceTipHistoryBrowser class >> defaultPreferredExtent [
+	^ (700 @ 700)
+]
+
 { #category : 'specs' }
 IceTipHistoryBrowser class >> panelSpec [
 	

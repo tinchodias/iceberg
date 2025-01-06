@@ -18,6 +18,11 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceTipGitUsernameAndEmailDialogPresenter class >> defaultPreferredExtent [
+	^ (400@200)
+]
+
 { #category : 'actions' }
 IceTipGitUsernameAndEmailDialogPresenter >> accept [
 

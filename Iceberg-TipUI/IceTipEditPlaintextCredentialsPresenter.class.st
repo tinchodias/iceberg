@@ -9,6 +9,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipEditPlaintextCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ 160)
+]
+
 { #category : 'actions' }
 IceTipEditPlaintextCredentialsPresenter >> accept [ 
 	

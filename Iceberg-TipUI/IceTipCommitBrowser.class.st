@@ -39,6 +39,11 @@ IceTipCommitBrowser class >> buildSelectionCommandGroupWith: presenter for: aCom
 
 ]
 
+{ #category : 'accessing' }
+IceTipCommitBrowser class >> defaultPreferredExtent [
+	^ (800@600)
+]
+
 { #category : 'instance creation' }
 IceTipCommitBrowser class >> onRepository: aRepository [
 

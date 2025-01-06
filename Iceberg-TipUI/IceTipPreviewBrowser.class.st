@@ -27,6 +27,11 @@ IceTipPreviewBrowser class >> buildSelectionCommandGroupWith: presenter for: aCo
 	"Nothing to add"
 ]
 
+{ #category : 'accessing' }
+IceTipPreviewBrowser class >> defaultPreferredExtent [
+	^ (800 @ 400)
+]
+
 { #category : 'accessing - ui' }
 IceTipPreviewBrowser >> actionPanel [
 
