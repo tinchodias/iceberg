@@ -122,12 +122,6 @@ IceTipWorkingCopyBrowser >> iconFor: aPackage [
 ]
 
 { #category : 'initialization' }
-IceTipWorkingCopyBrowser >> initialExtentForWindow [
-
-	^ (700 @ 500) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipWorkingCopyBrowser >> initializePackagesTable [
 
 	packagesTable

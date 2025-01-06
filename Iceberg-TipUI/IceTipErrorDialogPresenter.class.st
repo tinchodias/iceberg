@@ -71,16 +71,6 @@ IceTipErrorDialogPresenter >> iconPanel [
 ]
 
 { #category : 'initialization' }
-IceTipErrorDialogPresenter >> initialExtentForWindow [
-
-	^ (500@(
-		self class inputTextHeight * 2
-		+ self class buttonHeight 
-		+ 50 "Yes, a magic number"
-		)) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipErrorDialogPresenter >> initializeDialogWindow: aWindow [
 
 	aWindow 

@@ -64,12 +64,6 @@ IceTipOptionDialogPresenter >> doAccept [
 ]
 
 { #category : 'initialization' }
-IceTipOptionDialogPresenter >> initialExtentForWindow [
-
-	^ (700 @ 300) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipOptionDialogPresenter >> initializeDialogWindow: aWindowPresenter [
 
 	aWindowPresenter

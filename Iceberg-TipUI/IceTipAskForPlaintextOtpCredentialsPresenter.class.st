@@ -34,12 +34,6 @@ IceTipAskForPlaintextOtpCredentialsPresenter >> defaultLayout [
 ]
 
 { #category : 'initialization' }
-IceTipAskForPlaintextOtpCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ 210) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipAskForPlaintextOtpCredentialsPresenter >> initializePresenters [
 
 	super initializePresenters.

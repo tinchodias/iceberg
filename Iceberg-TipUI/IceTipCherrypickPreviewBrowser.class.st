@@ -66,12 +66,6 @@ IceTipCherrypickPreviewBrowser >> doCherryPick [
 ]
 
 { #category : 'initialization' }
-IceTipCherrypickPreviewBrowser >> initialExtentForWindow [
-
-	^ (800 @ 600) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipCherrypickPreviewBrowser >> initializePresenters [
 
 	diffPanel := self instantiate: (IceTipMergeSelectingPanel onDiff: self model diff).

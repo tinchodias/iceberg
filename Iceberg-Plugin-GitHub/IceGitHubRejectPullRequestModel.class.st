@@ -57,12 +57,6 @@ IceGitHubRejectPullRequestModel >> defaultType [
 	^ 'merge'
 ]
 
-{ #category : 'api' }
-IceGitHubRejectPullRequestModel >> initialExtentForWindow [
-
-	^ (500 @ 250) scaledByDisplayScaleFactor
-]
-
 { #category : 'initialization' }
 IceGitHubRejectPullRequestModel >> initializeDialogWindow: aDialogWindowPresenter [
 

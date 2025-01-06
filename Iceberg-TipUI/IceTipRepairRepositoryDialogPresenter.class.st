@@ -58,12 +58,6 @@ IceTipRepairRepositoryDialogPresenter >> detailPanel [
 ]
 
 { #category : 'initialization' }
-IceTipRepairRepositoryDialogPresenter >> initialExtentForWindow [
-
-	^ (700 @ 500) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipRepairRepositoryDialogPresenter >> initializeDialogWindow: aWindow [
 
 	super initializeDialogWindow: aWindow.

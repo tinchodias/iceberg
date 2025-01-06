@@ -44,13 +44,6 @@ IceTipAddPlaintextCredentialsPresenter >> hostnameFromInput [
 ]
 
 { #category : 'initialization' }
-IceTipAddPlaintextCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ (self class inputTextHeight * 5 + self class buttonHeight))
-		  scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipAddPlaintextCredentialsPresenter >> initializePresenters [
 
 	super initializePresenters.

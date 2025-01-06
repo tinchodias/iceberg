@@ -101,12 +101,6 @@ IceTipGitHubPullRequestListBrowser >> fetchPullRequests [
 ]
 
 { #category : 'initialization' }
-IceTipGitHubPullRequestListBrowser >> initialExtentForWindow [
-
-	^ (700 @ 700) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipGitHubPullRequestListBrowser >> initializePresenters [
 
 	super initializePresenters.

@@ -106,12 +106,6 @@ IceTipRepositoryBrowser >> historyPanel [
 ]
 
 { #category : 'initialization' }
-IceTipRepositoryBrowser >> initialExtentForWindow [
-
-	^ (1000 @ 700) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipRepositoryBrowser >> initializePresenters [
 
 	sidebarTree := self newTreeTable.

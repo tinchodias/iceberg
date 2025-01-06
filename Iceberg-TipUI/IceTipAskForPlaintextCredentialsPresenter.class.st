@@ -52,12 +52,6 @@ IceTipAskForPlaintextCredentialsPresenter >> defaultLayout [
 ]
 
 { #category : 'initialization' }
-IceTipAskForPlaintextCredentialsPresenter >> initialExtentForWindow [
-
-	^ (450 @ 180) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipAskForPlaintextCredentialsPresenter >> titleForWindow [
 
 	^ 'Please log in to ' , askingHostname

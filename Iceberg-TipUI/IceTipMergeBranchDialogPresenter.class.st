@@ -65,12 +65,6 @@ IceTipMergeBranchDialogPresenter >> doAccept [
 	self selectedType doAccept
 ]
 
-{ #category : 'initialization' }
-IceTipMergeBranchDialogPresenter >> initialExtentForWindow [
-
-	^ (600 @ 400) scaledByDisplayScaleFactor
-]
-
 { #category : 'accessing' }
 IceTipMergeBranchDialogPresenter >> model [
 

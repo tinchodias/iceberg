@@ -127,12 +127,6 @@ IceGitHubTipPullRequestBrowser >> diff [
 ]
 
 { #category : 'initialization' }
-IceGitHubTipPullRequestBrowser >> initialExtentForWindow [
-
-	^ (1050 @ 800) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceGitHubTipPullRequestBrowser >> initializeCommitsTable [
 
 	| textStylingBlock |

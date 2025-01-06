@@ -79,12 +79,6 @@ IceTipHistoryBrowser >> defaultLayout [
 ]
 
 { #category : 'initialization' }
-IceTipHistoryBrowser >> initialExtentForWindow [
-
-	^ (700 @ 700) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipHistoryBrowser >> initializeCommitList [
 
 	commitList

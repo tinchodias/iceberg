@@ -250,12 +250,6 @@ IceGitHubCreatePullRequestModel >> headRemote [
 ]
 
 { #category : 'initialization' }
-IceGitHubCreatePullRequestModel >> initialExtentForWindow [
-
-	^ (700 @ 300) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceGitHubCreatePullRequestModel >> initializeDialogWindow: aWindow [
 
 	aWindow

@@ -45,13 +45,6 @@ IceTipAddSSHCredentialsPresenter >> hostnameFromInput [
 ]
 
 { #category : 'initialization' }
-IceTipAddSSHCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ (self class inputTextHeight * 7 + self class buttonHeight))
-		  scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipAddSSHCredentialsPresenter >> initializePresenters [
 
 	super initializePresenters.

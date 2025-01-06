@@ -81,12 +81,6 @@ IceTipGitUsernameAndEmailDialogPresenter >> globalCheckbox [
 ]
 
 { #category : 'initialization' }
-IceTipGitUsernameAndEmailDialogPresenter >> initialExtentForWindow [
-
-	^ (400@200) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipGitUsernameAndEmailDialogPresenter >> initializePresenters [
 
 	nameLabel := self newLabel

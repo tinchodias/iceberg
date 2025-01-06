@@ -34,12 +34,6 @@ IceTipEditSSHCredentialsPresenter >> defaultLayout [
 		yourself
 ]
 
-{ #category : 'initialization' }
-IceTipEditSSHCredentialsPresenter >> initialExtentForWindow [
-
-	^ (500@230) scaledByDisplayScaleFactor
-]
-
 { #category : 'actions' }
 IceTipEditSSHCredentialsPresenter >> refreshCredentialsFromPresenter [
 

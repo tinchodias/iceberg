@@ -95,14 +95,6 @@ IceTipFiletreeToTonelDialogPresenter >> iconPanel [
 ]
 
 { #category : 'initialization' }
-IceTipFiletreeToTonelDialogPresenter >> initialExtentForWindow [
-
-	^ (500
-	   @ (self class inputTextHeight * 5 + self class buttonHeight + 50))
-		  scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipFiletreeToTonelDialogPresenter >> initializePresenters [
 
 	super initializePresenters.

@@ -39,12 +39,6 @@ IceGitHubRemoveBranchesModel >> displayBlock: aBlock [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> initialExtentForWindow [
-
-	^ 550 @ 500
-]
-
-{ #category : 'initialization' }
 IceGitHubRemoveBranchesModel >> initialize [
 
 	selectedItems := Set new.

@@ -32,12 +32,6 @@ IceTipEditPlaintextCredentialsPresenter >> defaultLayout [
 		yourself
 ]
 
-{ #category : 'initialization' }
-IceTipEditPlaintextCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ 160) scaledByDisplayScaleFactor
-]
-
 { #category : 'actions' }
 IceTipEditPlaintextCredentialsPresenter >> refreshCredentialsFromPresenter [
 

@@ -62,16 +62,6 @@ IceTipRemoveRepositoryDialogPresenter >> iconPanel [
 ]
 
 { #category : 'initialization' }
-IceTipRemoveRepositoryDialogPresenter >> initialExtentForWindow [
-
-	^ (500@(
-		self class inputTextHeight * 2
-		+ self class buttonHeight 
-		+ 50 "Yes, a magic number"
-		)) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipRemoveRepositoryDialogPresenter >> initializePresenters [
 
 	iconPanel := self newImage

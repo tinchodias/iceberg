@@ -29,12 +29,6 @@ IceTipDiscardAllChangesPreviewBrowser >> doDiscardAll [
 ]
 
 { #category : 'initialization' }
-IceTipDiscardAllChangesPreviewBrowser >> initialExtentForWindow [
-
-	^ (900 @ 400) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipDiscardAllChangesPreviewBrowser >> initializePresenters [ 
 
 	super initializePresenters.

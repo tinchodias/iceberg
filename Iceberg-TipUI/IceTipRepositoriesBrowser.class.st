@@ -166,12 +166,6 @@ IceTipRepositoriesBrowser >> iconForWindow [
 ]
 
 { #category : 'initialization' }
-IceTipRepositoriesBrowser >> initialExtentForWindow [
-
-	^ (600 @ 500) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipRepositoriesBrowser >> initializePresenters [
 
 	notifyPanel := self newPresenter.

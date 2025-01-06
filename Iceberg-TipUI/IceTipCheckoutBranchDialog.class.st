@@ -62,12 +62,6 @@ IceTipCheckoutBranchDialog >> doAccept [
 	self selectedType doAccept
 ]
 
-{ #category : 'initialization' }
-IceTipCheckoutBranchDialog >> initialExtentForWindow [
-
-	^ (600 @ 400) scaledByDisplayScaleFactor
-]
-
 { #category : 'accessing' }
 IceTipCheckoutBranchDialog >> model [
 

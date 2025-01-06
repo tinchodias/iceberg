@@ -50,12 +50,6 @@ IceTipAddTokenCredentialsPresenter >> hostnameFromInput [
 ]
 
 { #category : 'initialization' }
-IceTipAddTokenCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ (self class inputTextHeight * 5 + self class buttonHeight)) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipAddTokenCredentialsPresenter >> initializePresenters [
 
 	super initializePresenters.

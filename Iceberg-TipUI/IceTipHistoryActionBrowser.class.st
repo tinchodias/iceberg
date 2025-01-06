@@ -44,12 +44,6 @@ IceTipHistoryActionBrowser >> commitsPanel: aSpPresenter [
 ]
 
 { #category : 'initialization' }
-IceTipHistoryActionBrowser >> initialExtentForWindow [
-
-	^ (800@600) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipHistoryActionBrowser >> initializePresenters [
 
 	commitsPanel := self instantiate: IceTipHistoryBrowser on: self model.

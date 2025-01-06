@@ -147,12 +147,6 @@ IceTipCommitBrowser >> doExpandSelection [
 ]
 
 { #category : 'initialization' }
-IceTipCommitBrowser >> initialExtentForWindow [
-
-	^ (800@600) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipCommitBrowser >> initialize [
 
 	super initialize.

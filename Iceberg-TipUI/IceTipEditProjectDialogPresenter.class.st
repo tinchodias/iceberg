@@ -203,21 +203,6 @@ IceTipEditProjectDialogPresenter >> hasToShowWarning [
 ]
 
 { #category : 'initialization' }
-IceTipEditProjectDialogPresenter >> initialExtentForWindow [
-
-	^ self hasToShowWarning 
-		ifTrue: [ (475@525) scaledByDisplayScaleFactor ]
-		ifFalse: [  
-			(475@(
-				200 "Tree"
-				+ (self class inputTextHeight * 3)
-				+ self class buttonHeight 
-				+ 75 "Yes, a magic number"
-			)) scaledByDisplayScaleFactor]
-
-]
-
-{ #category : 'initialization' }
 IceTipEditProjectDialogPresenter >> initialize [
 
 	selectedDirectoryPath := RelativePath new.

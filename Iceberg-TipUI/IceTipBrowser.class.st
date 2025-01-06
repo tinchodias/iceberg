@@ -126,12 +126,6 @@ IceTipBrowser >> iconForWindow [
 ]
 
 { #category : 'initialization' }
-IceTipBrowser >> initialExtentForWindow [
-
-	^ (600 @ 400) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipBrowser >> initialize [
 
 	super initialize.

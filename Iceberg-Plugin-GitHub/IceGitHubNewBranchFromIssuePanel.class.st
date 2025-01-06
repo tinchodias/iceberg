@@ -57,12 +57,6 @@ IceGitHubNewBranchFromIssuePanel >> icon [
 ]
 
 { #category : 'initialization' }
-IceGitHubNewBranchFromIssuePanel >> initialExtentForWindow [
-
-	^ 800 @ 175
-]
-
-{ #category : 'initialization' }
 IceGitHubNewBranchFromIssuePanel >> initialize [
 
 	super initialize.

@@ -57,14 +57,6 @@ IceTipRemovePackageDialogPresenter >> iconPanel [
 ]
 
 { #category : 'initialization' }
-IceTipRemovePackageDialogPresenter >> initialExtentForWindow [
-
-	^ (500
-		@ (self class inputTextHeight * 2 + self class buttonHeight + 75))
-		scaledByDisplayScaleFactor	"Yes, a magic number"
-]
-
-{ #category : 'initialization' }
 IceTipRemovePackageDialogPresenter >> initializePresenters [
 
 	iconPanel := self newImage

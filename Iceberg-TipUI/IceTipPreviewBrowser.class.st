@@ -56,12 +56,6 @@ IceTipPreviewBrowser >> diffPanel [
 ]
 
 { #category : 'initialization' }
-IceTipPreviewBrowser >> initialExtentForWindow [
-
-	^ (800 @ 400) scaledByDisplayScaleFactor
-]
-
-{ #category : 'initialization' }
 IceTipPreviewBrowser >> initializePresenters [
 
 	diffPanel := self instantiate: IceTipDiffPanel on: self model diff.

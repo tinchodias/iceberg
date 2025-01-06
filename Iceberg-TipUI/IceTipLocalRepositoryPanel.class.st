@@ -42,16 +42,6 @@ IceTipLocalRepositoryPanel >> iconForWindow [
 	^ self iconNamed: #smallOpen
 ]
 
-{ #category : 'initialization' }
-IceTipLocalRepositoryPanel >> initialExtentForWindow [
-
-	^ (500@(
-		self class inputTextHeight * 2
-		+ self class buttonHeight 
-		+ 50 "Yes, a magic number"
-		)) scaledByDisplayScaleFactor
-]
-
 { #category : 'testing' }
 IceTipLocalRepositoryPanel >> isLocalRepository [
 
