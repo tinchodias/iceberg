@@ -24,6 +24,13 @@ Class {
 }
 
 { #category : 'accessing' }
+IceGitHubNewBranchFromIssuePanel class >> defaultPreferredExtent [ 
+
+
+	^ 800 @ 175
+]
+
+{ #category : 'accessing' }
 IceGitHubNewBranchFromIssuePanel >> branchName [
 	
 	^ '{1}-{2}' format: { 

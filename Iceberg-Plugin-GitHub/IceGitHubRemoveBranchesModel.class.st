@@ -16,6 +16,13 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceGitHubRemoveBranchesModel class >> defaultPreferredExtent [ 
+
+
+	^ 550 @ 500
+]
+
 { #category : 'actions' }
 IceGitHubRemoveBranchesModel >> confirmSelection [
 

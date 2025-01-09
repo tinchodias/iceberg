@@ -23,6 +23,17 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipEditProjectDialogPresenter class >> defaultPreferredExtent [
+
+	^ self new hasToShowWarning
+		  ifTrue: [ (475 @ 525) scaledByDisplayScaleFactor ]
+		  ifFalse: [
+			  (475
+			   @ (200 + (self inputTextHeight * 3) + self buttonHeight + 75))
+				  scaledByDisplayScaleFactor "Tree" "Yes, a magic number" ]
+]
+
 { #category : 'actions' }
 IceTipEditProjectDialogPresenter >> accept [
 
