@@ -16,6 +16,12 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'class initialization' }
+IceGitHubRemoveBranchesPresenter class >> initialize [
+
+	self deprecatedAliases: { #IceGitHubRemoveBranchesModel }
+]
+
 { #category : 'actions' }
 IceGitHubRemoveBranchesPresenter >> confirmSelection [
 

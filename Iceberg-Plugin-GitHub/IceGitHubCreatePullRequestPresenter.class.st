@@ -31,6 +31,12 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'class initialization' }
+IceGitHubCreatePullRequestPresenter class >> initialize [
+
+	self deprecatedAliases: { #IceGitHubCreatePullReqsuestModel }
+]
+
 { #category : 'instance creation' }
 IceGitHubCreatePullRequestPresenter class >> new [
 	self error: 'Use #repository:credentials:headRemote:'

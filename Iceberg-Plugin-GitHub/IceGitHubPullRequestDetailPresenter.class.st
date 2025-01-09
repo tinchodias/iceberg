@@ -37,6 +37,12 @@ IceGitHubPullRequestDetailPresenter class >> buildCommandsGroupWith: presenterIn
 			register: (IceTipOpenCheckUrlCommand forSpecContext: presenterIntance))
 ]
 
+{ #category : 'class initialization' }
+IceGitHubPullRequestDetailPresenter class >> initialize [
+ 
+	self deprecatedAliases: { #IceGitHubPullRequestDetailModel }
+]
+
 { #category : 'accessing - ui' }
 IceGitHubPullRequestDetailPresenter >> authorLabel [
 	^ authorLabel

@@ -15,6 +15,12 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'class initialization' }
+IceGitHubRejectPullRequestPresenter class >> initialize [
+
+	self deprecatedAliases: { #IceGitHubRejectPullRequestModel }
+]
+
 { #category : 'actions' }
 IceGitHubRejectPullRequestPresenter >> accept [
 
