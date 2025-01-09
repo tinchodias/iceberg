@@ -79,59 +79,65 @@ IceTipCommentPanel >> fixesLabel [
 
 { #category : 'initialization' }
 IceTipCommentPanel >> initializePresenters [
-	| fixesHelpString |
 
+	| fixesHelpString |
 	pushCheckbox := self newCheckBox.
 	optionsButton := self newToolbar
-		displayMode: self application toolbarDisplayMode; 
-		add: (self newToolbarToggleButton
-			icon: (self application iconNamed: #smallSave);
-			label: 'Save image';
-			help: 'Save image when committing';
-			state: self isSaving;
-			whenChangedDo: [ :aBoolean | self saveOnCommit: aBoolean ];
-			yourself);
-		add: (self newToolbarToggleButton
-			icon: (self application iconNamed: #smallError);
-			label: 'Run critics';
-			help: 'Run critics when committing';
-			state: self isRunningCriticsOnCommit;
-			whenChangedDo: [ :aBoolean | self runCriticsOnCommit: aBoolean ];
-			yourself);
-		yourself.
+		                 displayMode: self application toolbarDisplayMode;
+		                 add: (self newToolbarToggleButton
+				                  icon: (self application iconNamed: #smallSave);
+				                  label: 'Save image';
+				                  help: 'Save image when committing';
+				                  state: self isSaving;
+				                  whenChangedDo: [ :aBoolean |
+					                  self saveOnCommit: aBoolean ];
+				                  yourself);
+		                 add: (self newToolbarToggleButton
+				                  icon: (self application iconNamed: #smallError);
+				                  label: 'Run critics';
+				                  help: 'Run critics when committing';
+				                  state: self isRunningCriticsOnCommit;
+				                  whenChangedDo: [ :aBoolean |
+					                  self runCriticsOnCommit: aBoolean ];
+				                  yourself);
+		                 yourself.
 
 	self repositoryModel branchModel hasUpstream
 		ifTrue: [
 			pushCheckbox
-				label: (('Push changes to {1}' format: {self repositoryRemoteName}));
+				label:
+					('Push changes to {1}' format: { self repositoryRemoteName });
 				state: self isPushing;
 				whenChangedDo: [ :state | self pushOnCommit: state ] ]
 		ifFalse: [
 			pushCheckbox
-				label: 'Cannot push new branch automatically. Use the `Push` option';
+				label:
+					'Cannot push new branch automatically. Use the `Push` option';
 				enabled: false ].
 
-	commentText := self newText
-		placeholder: 'A comment for your commit';
-		yourself.
+	commentText := self newText text:
+		               'Branch: ' , repositoryModel branchName
+		               , ',  Fixes # ' yourself.
 
 	fixesHelpString := 'Enter the number of the issue that you fixed. Github will close it when it will be committed or merged in the default branch'.
 	fixesLabel := self newLabel
-		label: 'Fixes #';
-		help: fixesHelpString;
-		yourself.
+		              label: 'Fixes #';
+		              help: fixesHelpString;
+		              yourself.
 	fixesField := self newNumberInput
-		help: fixesHelpString;
-		placeholder: 'issue number';
-		beInteger;
-		yourself.
+		              help: fixesHelpString;
+		              placeholder: 'issue number';
+		              beInteger;
+		              yourself.
 
 	actionButtonBar := self newButtonBar.
 	actionButtonBar add: (commitButton := self newButton
-		label: 'Commit';
-		icon: (self iconNamed: #smallOk);
-		help: ('Commit your changes to {1}' format: { self repositoryName });
-		yourself)
+			                 label: 'Commit';
+			                 icon: (self iconNamed: #smallOk);
+			                 help:
+				                 ('Commit your changes to {1}' format:
+						                  { self repositoryName });
+			                 yourself)
 ]
 
 { #category : 'testing' }
