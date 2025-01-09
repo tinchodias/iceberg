@@ -189,13 +189,6 @@ IceTipDiffPanel >> iceNodesTree [
 ]
 
 { #category : 'initialization' }
-IceTipDiffPanel >> initialize [
-
-	super initialize.
-	self subscribeToAnnouncements
-]
-
-{ #category : 'initialization' }
 IceTipDiffPanel >> initializeDiffPanel [
 
 	diffPanel showOptions: false
@@ -235,12 +228,6 @@ IceTipDiffPanel >> mainList [
 ]
 
 { #category : 'accessing' }
-IceTipDiffPanel >> model [
-
-	^ model
-]
-
-{ #category : 'accessing' }
 IceTipDiffPanel >> refresh [
 
 	self model reset.
@@ -275,12 +262,6 @@ IceTipDiffPanel >> selectionChanged [
 		self
 			diffContentsLeft: itemValue rightContents
 			right: itemValue leftContents ]
-]
-
-{ #category : 'initialization' }
-IceTipDiffPanel >> setModelBeforeInitialization: anObject [
-
-	model := anObject
 ]
 
 { #category : 'initialization' }
