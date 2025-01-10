@@ -2,7 +2,7 @@
 I'm a spec model to present a detailed view of a Pull Request.
 "
 Class {
-	#name : 'IceGitHubPullRequestDetailModel',
+	#name : 'IceGitHubPullRequestDetailPresenter',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'urlLabel',
@@ -30,35 +30,41 @@ Class {
 }
 
 { #category : 'commands' }
-IceGitHubPullRequestDetailModel class >> buildCommandsGroupWith: presenterIntance forRoot: rootCommandGroup [
+IceGitHubPullRequestDetailPresenter class >> buildCommandsGroupWith: presenterIntance forRoot: rootCommandGroup [
 
 	rootCommandGroup register:
 		((CmCommandGroup named: 'checks commands') asSpecGroup 
 			register: (IceTipOpenCheckUrlCommand forSpecContext: presenterIntance))
 ]
 
+{ #category : 'class initialization' }
+IceGitHubPullRequestDetailPresenter class >> initialize [
+ 
+	self deprecatedAliases: { #IceGitHubPullRequestDetailModel }
+]
+
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> authorLabel [
+IceGitHubPullRequestDetailPresenter >> authorLabel [
 	^ authorLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> authorText [
+IceGitHubPullRequestDetailPresenter >> authorText [
 	^ authorText
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> bodyText [
+IceGitHubPullRequestDetailPresenter >> bodyText [
 	^ bodyText
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> checksTable [
+IceGitHubPullRequestDetailPresenter >> checksTable [
 	^ checksTable
 ]
 
 { #category : 'layout' }
-IceGitHubPullRequestDetailModel >> defaultLayout [
+IceGitHubPullRequestDetailPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
 		borderWidth: 5;
@@ -91,23 +97,23 @@ IceGitHubPullRequestDetailModel >> defaultLayout [
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> fromLabel [
+IceGitHubPullRequestDetailPresenter >> fromLabel [
 	^ fromLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> fromText [
+IceGitHubPullRequestDetailPresenter >> fromText [
 	^ fromText
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> iconForMergeable: mergeable [
+IceGitHubPullRequestDetailPresenter >> iconForMergeable: mergeable [
 	mergeable = true ifTrue: [ ^ self iconNamed: #smallOk ].
 	^ self iconNamed: #smallCancel
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> iconForStatus: status [
+IceGitHubPullRequestDetailPresenter >> iconForStatus: status [
 	status = 'success' ifTrue: [ ^ self iconNamed: #testGreen ].
 	status = 'failure' ifTrue: [ ^ self iconNamed: #testRed ].
 	status = 'pending' ifTrue: [ ^ self iconNamed: #testYellow ].
@@ -116,7 +122,7 @@ IceGitHubPullRequestDetailModel >> iconForStatus: status [
 ]
 
 { #category : 'initialization' }
-IceGitHubPullRequestDetailModel >> initializePresenters [
+IceGitHubPullRequestDetailPresenter >> initializePresenters [
 
 	urlLabel := self newLabel label: 'Url'.
 	authorLabel := self newLabel label: 'Author'.
@@ -142,17 +148,17 @@ IceGitHubPullRequestDetailModel >> initializePresenters [
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> mergeableLabel [
+IceGitHubPullRequestDetailPresenter >> mergeableLabel [
 	^ mergeableLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> mergeableMessage [
+IceGitHubPullRequestDetailPresenter >> mergeableMessage [
 	^ mergeableMessage
 ]
 
 { #category : 'private - factory' }
-IceGitHubPullRequestDetailModel >> newChecksTable [
+IceGitHubPullRequestDetailPresenter >> newChecksTable [
 
 	^ self newTable
 		addColumn: (SpCompositeTableColumn new
@@ -176,19 +182,19 @@ IceGitHubPullRequestDetailModel >> newChecksTable [
 ]
 
 { #category : 'accessing' }
-IceGitHubPullRequestDetailModel >> pullRequest [
+IceGitHubPullRequestDetailPresenter >> pullRequest [
 	^ pullRequest
 ]
 
 { #category : 'accessing' }
-IceGitHubPullRequestDetailModel >> pullRequest: aPullRequest [
+IceGitHubPullRequestDetailPresenter >> pullRequest: aPullRequest [
 	
 	pullRequest := aPullRequest.
 	self updatePresenter
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> retrieveDetail [
+IceGitHubPullRequestDetailPresenter >> retrieveDetail [
 	
 	self mergeableMessage text: (self mergeableMessage text , '  Loading...' ).
 	self schedule: [ 
@@ -205,7 +211,7 @@ IceGitHubPullRequestDetailModel >> retrieveDetail [
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> retrieveStatuses [
+IceGitHubPullRequestDetailPresenter >> retrieveStatuses [
 "	self statusPanel widget addMorphBack: 'Loading...' asMorph."
 	self statusMessage text: (statusMessage text , '  Loading...').
 	self schedule: [ 
@@ -225,13 +231,13 @@ IceGitHubPullRequestDetailModel >> retrieveStatuses [
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> schedule: aBlock [
+IceGitHubPullRequestDetailPresenter >> schedule: aBlock [
 
 	self scheduler schedule: aBlock
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> scheduler [
+IceGitHubPullRequestDetailPresenter >> scheduler [
 
 	^ scheduler ifNil: [ 
 			scheduler := TKTWorkerPool new
@@ -241,22 +247,22 @@ IceGitHubPullRequestDetailModel >> scheduler [
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> statusIcon [
+IceGitHubPullRequestDetailPresenter >> statusIcon [
 	^ statusIcon
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> statusLabel [
+IceGitHubPullRequestDetailPresenter >> statusLabel [
 	^ statusLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> statusMessage [
+IceGitHubPullRequestDetailPresenter >> statusMessage [
 	^ statusMessage
 ]
 
 { #category : 'private' }
-IceGitHubPullRequestDetailModel >> textForMergeable: mergeable [
+IceGitHubPullRequestDetailPresenter >> textForMergeable: mergeable [
 
 	mergeable = true ifTrue: [ ^ 'Yes' ].
 	mergeable = false ifTrue: [ ^ 'There are conflicts' ].
@@ -266,17 +272,17 @@ IceGitHubPullRequestDetailModel >> textForMergeable: mergeable [
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> toLabel [
+IceGitHubPullRequestDetailPresenter >> toLabel [
 	^ toLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> toText [
+IceGitHubPullRequestDetailPresenter >> toText [
 	^ toText
 ]
 
 { #category : 'initialization' }
-IceGitHubPullRequestDetailModel >> updatePresenter [
+IceGitHubPullRequestDetailPresenter >> updatePresenter [
 
 	self pullRequest ifNil: [ ^ self ].
 	
@@ -290,11 +296,11 @@ IceGitHubPullRequestDetailModel >> updatePresenter [
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> urlLabel [
+IceGitHubPullRequestDetailPresenter >> urlLabel [
 	^ urlLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubPullRequestDetailModel >> urlText [
+IceGitHubPullRequestDetailPresenter >> urlText [
 	^ urlText
 ]
