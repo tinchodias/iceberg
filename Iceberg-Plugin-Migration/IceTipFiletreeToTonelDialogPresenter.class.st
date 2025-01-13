@@ -17,6 +17,12 @@ Class {
 	#tag : 'UI'
 }
 
+{ #category : 'accessing' }
+IceTipFiletreeToTonelDialogPresenter class >> defaultPreferredExtent [
+
+	^ 500 @ (self inputTextHeight * 5 + self buttonHeight + 50)
+]
+
 { #category : 'actions' }
 IceTipFiletreeToTonelDialogPresenter >> accept [
 	
@@ -86,14 +92,6 @@ IceTipFiletreeToTonelDialogPresenter >> doAccept [
 IceTipFiletreeToTonelDialogPresenter >> iconPanel [
 
 	^ iconPanel
-]
-
-{ #category : 'initialization' }
-IceTipFiletreeToTonelDialogPresenter >> initialExtentForWindow [
-
-	^ (500
-	   @ (self class inputTextHeight * 5 + self class buttonHeight + 50))
-		  scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

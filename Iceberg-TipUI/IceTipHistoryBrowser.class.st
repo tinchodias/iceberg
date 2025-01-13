@@ -37,6 +37,11 @@ IceTipHistoryBrowser class >> buildSelectionCommandGroupWith: presenter for: aCo
 
 ]
 
+{ #category : 'accessing' }
+IceTipHistoryBrowser class >> defaultPreferredExtent [
+	^ (700 @ 700)
+]
+
 { #category : 'specs' }
 IceTipHistoryBrowser class >> panelSpec [
 	
@@ -71,12 +76,6 @@ IceTipHistoryBrowser >> defaultLayout [
 		  add: commitList;
 		  add: commitInfoTabs;
 		  yourself
-]
-
-{ #category : 'initialization' }
-IceTipHistoryBrowser >> initialExtentForWindow [
-
-	^ (700 @ 700) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

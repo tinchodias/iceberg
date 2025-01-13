@@ -6,6 +6,11 @@ Class {
 	#tag : 'View-Branch'
 }
 
+{ #category : 'accessing' }
+IceTipDiscardAllChangesPreviewBrowser class >> defaultPreferredExtent [
+	^ (900 @ 400)
+]
+
 { #category : 'instance creation' }
 IceTipDiscardAllChangesPreviewBrowser class >> onRepository: anIceModelRepository [
 
@@ -21,12 +26,6 @@ IceTipDiscardAllChangesPreviewBrowser >> doDiscardAll [
 	self model newDiscardAction 
 		onSuccess: [ self closeWindow ];
 		executeWithContext: self
-]
-
-{ #category : 'initialization' }
-IceTipDiscardAllChangesPreviewBrowser >> initialExtentForWindow [
-
-	^ (900 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

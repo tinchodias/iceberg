@@ -9,6 +9,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipEditSSHCredentialsPresenter class >> defaultPreferredExtent [
+	^ (500@230)
+]
+
 { #category : 'actions' }
 IceTipEditSSHCredentialsPresenter >> accept [
 
@@ -27,12 +32,6 @@ IceTipEditSSHCredentialsPresenter >> defaultLayout [
 			add: privateKeyLabel; add: privateKeyInput; nextRow;
 			add: passphraseLabel; add: passphraseInput; nextRow ];
 		yourself
-]
-
-{ #category : 'initialization' }
-IceTipEditSSHCredentialsPresenter >> initialExtentForWindow [
-
-	^ (500@230) scaledByDisplayScaleFactor
 ]
 
 { #category : 'actions' }

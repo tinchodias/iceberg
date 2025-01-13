@@ -49,6 +49,11 @@ IceTipWorkingCopyBrowser class >> buildSelectionCommandGroupWith: presenter for:
 
 ]
 
+{ #category : 'accessing' }
+IceTipWorkingCopyBrowser class >> defaultPreferredExtent [
+	^ (700 @ 500)
+]
+
 { #category : 'instance creation' }
 IceTipWorkingCopyBrowser class >> onRepository: aRepository [
 
@@ -114,12 +119,6 @@ IceTipWorkingCopyBrowser >> iconFor: aPackage [
 			ifNotNil: [ :aName | ^ self iconNamed: aName ] ].
 
 	^ self iconNamed: #package
-]
-
-{ #category : 'initialization' }
-IceTipWorkingCopyBrowser >> initialExtentForWindow [
-
-	^ (700 @ 500) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }
