@@ -68,7 +68,7 @@ IceGitHubTipPullRequestBrowser >> acceptButton [
 { #category : 'actions' }
 IceGitHubTipPullRequestBrowser >> acceptPullRequest [
 
-	IceGitHubAcceptPullRequestModel new
+	IceGitHubAcceptPullRequestPresenter new
 		onAccept: [ :aModel | 
 			IceGitHubAPI ensureCredentials.
 			self pullRequest acceptMessage: aModel message type: aModel type.
@@ -259,7 +259,7 @@ IceGitHubTipPullRequestBrowser >> rejectButton [
 { #category : 'actions' }
 IceGitHubTipPullRequestBrowser >> rejectPullRequest [
 
-	((IceGitHubRejectPullRequestModel newApplication: self application)
+	((IceGitHubRejectPullRequestPresenter newApplication: self application)
 		onAccept: [ :aModel | 
 			IceGitHubAPI ensureCredentials.
 			self pullRequest rejectMessage: aModel message.

@@ -2,7 +2,7 @@
 I'm a dialog for collecting data to accept a pull request.
 "
 Class {
-	#name : 'IceGitHubAcceptPullRequestModel',
+	#name : 'IceGitHubAcceptPullRequestPresenter',
 	#superclass : 'IceTipPresenter',
 	#instVars : [
 		'messageLabel',
@@ -21,8 +21,14 @@ IceGitHubAcceptPullRequestModel class >> defaultPreferredExtent [
 	^ (600 @ 300)
 ]
 
+{ #category : 'class initialization' }
+IceGitHubAcceptPullRequestPresenter class >> initialize [
+
+	self deprecatedAliases: { #IceGitHubAcceptPullRequestModel }
+]
+
 { #category : 'actions' }
-IceGitHubAcceptPullRequestModel >> accept [
+IceGitHubAcceptPullRequestPresenter >> accept [
 
 	acceptBlock ifNotNil: [ 
 		acceptBlock cull: self ].
@@ -30,13 +36,13 @@ IceGitHubAcceptPullRequestModel >> accept [
 ]
 
 { #category : 'accessing' }
-IceGitHubAcceptPullRequestModel >> availableTypes [
+IceGitHubAcceptPullRequestPresenter >> availableTypes [
 
 	^ #( 'merge' 'squash' 'rebase' )
 ]
 
 { #category : 'initialization' }
-IceGitHubAcceptPullRequestModel >> connectPresenters [
+IceGitHubAcceptPullRequestPresenter >> connectPresenters [
 
 	self typeList
 		items: self availableTypes;
@@ -44,7 +50,7 @@ IceGitHubAcceptPullRequestModel >> connectPresenters [
 ]
 
 { #category : 'layout' }
-IceGitHubAcceptPullRequestModel >> defaultLayout [
+IceGitHubAcceptPullRequestPresenter >> defaultLayout [
 
 	^ SpGridLayout new 
 		beColumnNotHomogeneous;
@@ -56,13 +62,13 @@ IceGitHubAcceptPullRequestModel >> defaultLayout [
 ]
 
 { #category : 'accessing' }
-IceGitHubAcceptPullRequestModel >> defaultType [
+IceGitHubAcceptPullRequestPresenter >> defaultType [
 
 	^ 'merge'
 ]
 
 { #category : 'initialization' }
-IceGitHubAcceptPullRequestModel >> initializeDialogWindow: aDialogWindowPresenter [
+IceGitHubAcceptPullRequestPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 	
 	aDialogWindowPresenter
 		addButton: 'Cancel' do: [ :presenter | 
@@ -73,7 +79,7 @@ IceGitHubAcceptPullRequestModel >> initializeDialogWindow: aDialogWindowPresente
 ]
 
 { #category : 'initialization' }
-IceGitHubAcceptPullRequestModel >> initializePresenters [
+IceGitHubAcceptPullRequestPresenter >> initializePresenters [
 
 	messageLabel := self newLabel.
 	messageText := self newText.
@@ -87,13 +93,13 @@ IceGitHubAcceptPullRequestModel >> initializePresenters [
 ]
 
 { #category : 'accessing' }
-IceGitHubAcceptPullRequestModel >> message [
+IceGitHubAcceptPullRequestPresenter >> message [
 
 	^ self messageText text asString
 ]
 
 { #category : 'accessing' }
-IceGitHubAcceptPullRequestModel >> messageGhostText [
+IceGitHubAcceptPullRequestPresenter >> messageGhostText [
 
 	^ 'Commit title
 
@@ -101,42 +107,42 @@ Add an optional extented description'
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubAcceptPullRequestModel >> messageLabel [
+IceGitHubAcceptPullRequestPresenter >> messageLabel [
 
 	^ messageLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubAcceptPullRequestModel >> messageText [
+IceGitHubAcceptPullRequestPresenter >> messageText [
 
 	^ messageText
 ]
 
 { #category : 'events' }
-IceGitHubAcceptPullRequestModel >> onAccept: aBlock [
+IceGitHubAcceptPullRequestPresenter >> onAccept: aBlock [
 	acceptBlock := aBlock
 ]
 
 { #category : 'specs' }
-IceGitHubAcceptPullRequestModel >> titleForWindow [
+IceGitHubAcceptPullRequestPresenter >> titleForWindow [
 
 	^ 'Accept pull request'
 ]
 
 { #category : 'accessing' }
-IceGitHubAcceptPullRequestModel >> type [
+IceGitHubAcceptPullRequestPresenter >> type [
 
 	^ self typeList selectedItem
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubAcceptPullRequestModel >> typeLabel [
+IceGitHubAcceptPullRequestPresenter >> typeLabel [
 
 	^ typeLabel
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubAcceptPullRequestModel >> typeList [
+IceGitHubAcceptPullRequestPresenter >> typeList [
 
 	^ typeList
 ]

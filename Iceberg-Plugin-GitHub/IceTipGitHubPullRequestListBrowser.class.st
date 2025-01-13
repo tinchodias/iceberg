@@ -105,7 +105,7 @@ IceTipGitHubPullRequestListBrowser >> initializePresenters [
 
 	super initializePresenters.
 	pullRequests := self newTable.
-	details := self instantiate: IceGitHubPullRequestDetailModel.
+	details := self instantiate: IceGitHubPullRequestDetailPresenter.
 	
 	self initializePullRequestsTable.
 

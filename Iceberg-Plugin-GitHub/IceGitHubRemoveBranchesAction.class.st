@@ -20,7 +20,7 @@ IceGitHubRemoveBranchesAction >> basicExecute [
 		informUser: ('Retrieving branch information from {1}' format: {self remote url})
 		during: [ self cacheAllBranches ].
 	
-	((IceGitHubRemoveBranchesModel newApplication: context application)
+	((IceGitHubRemoveBranchesPresenter newApplication: context application)
 		remote: remote;
 		items: branchesByName values ;
 		onAccept: [ :selection | self removeBranches: selection ];

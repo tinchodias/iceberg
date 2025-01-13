@@ -2,7 +2,7 @@
 I'm a dialog to select a list of anything (used by branches now).
 "
 Class {
-	#name : 'IceGitHubRemoveBranchesModel',
+	#name : 'IceGitHubRemoveBranchesPresenter',
 	#superclass : 'IceTipPresenter',
 	#instVars : [
 		'selectedItems',
@@ -23,15 +23,21 @@ IceGitHubRemoveBranchesModel class >> defaultPreferredExtent [
 	^ 550 @ 500
 ]
 
+{ #category : 'class initialization' }
+IceGitHubRemoveBranchesPresenter class >> initialize [
+
+	self deprecatedAliases: { #IceGitHubRemoveBranchesModel }
+]
+
 { #category : 'actions' }
-IceGitHubRemoveBranchesModel >> confirmSelection [
+IceGitHubRemoveBranchesPresenter >> confirmSelection [
 
 	acceptBlock ifNotNil: [ acceptBlock value: selectedItems ].
 	self closeWindow
 ]
 
 { #category : 'layout' }
-IceGitHubRemoveBranchesModel >> defaultLayout [
+IceGitHubRemoveBranchesPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
 		  add: listPanel;"
@@ -40,7 +46,7 @@ IceGitHubRemoveBranchesModel >> defaultLayout [
 ]
 
 { #category : 'api' }
-IceGitHubRemoveBranchesModel >> displayBlock: aBlock [
+IceGitHubRemoveBranchesPresenter >> displayBlock: aBlock [
 	
 	displayBlock := aBlock
 ]
@@ -53,7 +59,7 @@ IceGitHubRemoveBranchesModel >> initialize [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> initializeDialogWindow: aDialogWindowPresenter [
+IceGitHubRemoveBranchesPresenter >> initializeDialogWindow: aDialogWindowPresenter [
 
 	aDialogWindowPresenter
 		addButton: 'Cancel' do: [ :presenter | 
@@ -65,7 +71,7 @@ IceGitHubRemoveBranchesModel >> initializeDialogWindow: aDialogWindowPresenter [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> initializePresenters [
+IceGitHubRemoveBranchesPresenter >> initializePresenters [
 
 	listPanel := self newTable.
 	listPanel
@@ -80,37 +86,37 @@ IceGitHubRemoveBranchesModel >> initializePresenters [
 ]
 
 { #category : 'api' }
-IceGitHubRemoveBranchesModel >> items: aCollection [
+IceGitHubRemoveBranchesPresenter >> items: aCollection [
 
 	self listPanel items: aCollection
 ]
 
 { #category : 'accessing - ui' }
-IceGitHubRemoveBranchesModel >> listPanel [
+IceGitHubRemoveBranchesPresenter >> listPanel [
 
 	^ listPanel
 ]
 
 { #category : 'events' }
-IceGitHubRemoveBranchesModel >> onAccept: aBlock [
+IceGitHubRemoveBranchesPresenter >> onAccept: aBlock [
 
 	acceptBlock := aBlock
 ]
 
 { #category : 'accessing' }
-IceGitHubRemoveBranchesModel >> remote [
+IceGitHubRemoveBranchesPresenter >> remote [
 
 	^ remote
 ]
 
 { #category : 'accessing' }
-IceGitHubRemoveBranchesModel >> remote: anObject [
+IceGitHubRemoveBranchesPresenter >> remote: anObject [
 
 	remote := anObject
 ]
 
 { #category : 'accessing' }
-IceGitHubRemoveBranchesModel >> timeSinceLastCommit: branch [
+IceGitHubRemoveBranchesPresenter >> timeSinceLastCommit: branch [
 
 	| lastCommitDate |
 	lastCommitDate := 	((((branch at: 'commit') at: 'commit')
@@ -119,14 +125,14 @@ IceGitHubRemoveBranchesModel >> timeSinceLastCommit: branch [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> titleForWindow [
+IceGitHubRemoveBranchesPresenter >> titleForWindow [
 
 	^ 'Select branches to remove on remote {1}' format:
 		  { self remote name }
 ]
 
 { #category : 'private' }
-IceGitHubRemoveBranchesModel >> triggerAcceptAction [
+IceGitHubRemoveBranchesPresenter >> triggerAcceptAction [
 		
 	acceptBlock ifNil: [ ^ self ].
 	acceptBlock value: selectedItems

@@ -28,7 +28,7 @@ IceGitHubNewPullRequestAction >> basicExecute [
 
 	(self validateMakePullRequestOn: self repository) ifFalse: [ ^ #() ].
 
-	((IceGitHubCreatePullRequestModel 
+	((IceGitHubCreatePullRequestPresenter 
 		newApplication: context application
 			repository: self repository
 			credentials: self credentials
