@@ -13,13 +13,6 @@ Class {
 	#tag : 'View-WorkingCopy'
 }
 
-{ #category : 'accessing' }
-IceTipRemovePackageDialogPresenter class >> defaultPreferredExtent [
-
-	^ (500 @ (self inputTextHeight * 2 + self buttonHeight + 75))
-		  scaledByDisplayScaleFactor "Yes, a magic number"
-]
-
 { #category : 'actions' }
 IceTipRemovePackageDialogPresenter >> accept [
 
@@ -61,6 +54,14 @@ IceTipRemovePackageDialogPresenter >> defaultLayout [
 IceTipRemovePackageDialogPresenter >> iconPanel [
 
 	^ iconPanel
+]
+
+{ #category : 'initialization' }
+IceTipRemovePackageDialogPresenter >> initialExtentForWindow [
+
+	^ (500
+		@ (self class inputTextHeight * 2 + self class buttonHeight + 75))
+		scaledByDisplayScaleFactor	"Yes, a magic number"
 ]
 
 { #category : 'initialization' }

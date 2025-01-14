@@ -19,11 +19,6 @@ Class {
 	#tag : 'View'
 }
 
-{ #category : 'accessing' }
-IceTipOptionDialogPresenter class >> defaultPreferredExtent [
-	^ (700 @ 300)
-]
-
 { #category : 'actions' }
 IceTipOptionDialogPresenter >> accept [
 
@@ -67,6 +62,12 @@ IceTipOptionDialogPresenter >> defaultLayout [
 IceTipOptionDialogPresenter >> doAccept [
 
 	self subclassResponsibility
+]
+
+{ #category : 'initialization' }
+IceTipOptionDialogPresenter >> initialExtentForWindow [
+
+	^ (700 @ 300) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

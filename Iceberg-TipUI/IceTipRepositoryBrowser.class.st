@@ -52,11 +52,6 @@ IceTipRepositoryBrowser class >> buildSelectionCommandGroupWith: presenter for: 
 
 ]
 
-{ #category : 'accessing' }
-IceTipRepositoryBrowser class >> defaultPreferredExtent [
-	^ (1000 @ 700)
-]
-
 { #category : 'instance creation' }
 IceTipRepositoryBrowser class >> new [
 	self error: 'Use #onRepository:'
@@ -103,6 +98,12 @@ IceTipRepositoryBrowser >> defaultLayout [
 IceTipRepositoryBrowser >> historyPanel [
 
 	^ historyPanel
+]
+
+{ #category : 'initialization' }
+IceTipRepositoryBrowser >> initialExtentForWindow [
+
+	^ (1000 @ 700) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

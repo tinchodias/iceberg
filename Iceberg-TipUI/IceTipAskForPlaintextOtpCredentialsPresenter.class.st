@@ -10,11 +10,6 @@ Class {
 	#tag : 'Credentials'
 }
 
-{ #category : 'accessing' }
-IceTipAskForPlaintextOtpCredentialsPresenter class >> defaultPreferredExtent [
-	^ (350 @ 210)
-]
-
 { #category : 'layout' }
 IceTipAskForPlaintextOtpCredentialsPresenter >> defaultLayout [
 
@@ -31,6 +26,12 @@ IceTipAskForPlaintextOtpCredentialsPresenter >> defaultLayout [
 				add: tokenLabel; add: tokenInput; nextRow ]);
 		add: storeCheckbox expand: false;
 		yourself
+]
+
+{ #category : 'initialization' }
+IceTipAskForPlaintextOtpCredentialsPresenter >> initialExtentForWindow [
+
+	^ (350 @ 210) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

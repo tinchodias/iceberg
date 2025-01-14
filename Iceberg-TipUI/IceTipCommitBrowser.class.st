@@ -39,11 +39,6 @@ IceTipCommitBrowser class >> buildSelectionCommandGroupWith: presenter for: aCom
 
 ]
 
-{ #category : 'accessing' }
-IceTipCommitBrowser class >> defaultPreferredExtent [
-	^ (800@600)
-]
-
 { #category : 'instance creation' }
 IceTipCommitBrowser class >> onRepository: aRepository [
 
@@ -144,6 +139,12 @@ IceTipCommitBrowser >> doCommit: aCollection message: aString pushing: pushingBo
 IceTipCommitBrowser >> doExpandSelection [
 	
 	diffPanel doExpandSelection
+]
+
+{ #category : 'initialization' }
+IceTipCommitBrowser >> initialExtentForWindow [
+
+	^ (800@600) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

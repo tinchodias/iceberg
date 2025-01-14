@@ -18,11 +18,6 @@ Class {
 	#tag : 'View'
 }
 
-{ #category : 'accessing' }
-IceTipGitUsernameAndEmailDialogPresenter class >> defaultPreferredExtent [
-	^ (400@200)
-]
-
 { #category : 'actions' }
 IceTipGitUsernameAndEmailDialogPresenter >> accept [
 
@@ -78,6 +73,12 @@ IceTipGitUsernameAndEmailDialogPresenter >> emailLabel [
 { #category : 'accessing - ui' }
 IceTipGitUsernameAndEmailDialogPresenter >> globalCheckbox [
 	^ globalCheckbox
+]
+
+{ #category : 'initialization' }
+IceTipGitUsernameAndEmailDialogPresenter >> initialExtentForWindow [
+
+	^ (400@200) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

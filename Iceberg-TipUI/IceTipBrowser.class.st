@@ -63,11 +63,6 @@ IceTipBrowser class >> buildSelectionExtraCommandGroupWith: presenter for: aComm
 	aCommandGroup register: (IceFiletreeToTonelCommand forSpecContext: presenter)
 ]
 
-{ #category : 'accessing' }
-IceTipBrowser class >> defaultPreferredExtent [
-	^ (600 @ 400)
-]
-
 { #category : 'commands' }
 IceTipBrowser class >> generalCommandGroupName [
 
@@ -123,6 +118,12 @@ IceTipBrowser >> hasSelectedItem [
 IceTipBrowser >> iconForWindow [
 
 	^ self iconNamed: #komitterSmalltalkhubRemote
+]
+
+{ #category : 'initialization' }
+IceTipBrowser >> initialExtentForWindow [
+
+	^ (600 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

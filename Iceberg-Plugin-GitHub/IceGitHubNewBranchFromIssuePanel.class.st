@@ -24,13 +24,6 @@ Class {
 }
 
 { #category : 'accessing' }
-IceGitHubNewBranchFromIssuePanel class >> defaultPreferredExtent [ 
-
-
-	^ 800 @ 175
-]
-
-{ #category : 'accessing' }
 IceGitHubNewBranchFromIssuePanel >> branchName [
 	
 	^ '{1}-{2}' format: { 
@@ -61,6 +54,12 @@ IceGitHubNewBranchFromIssuePanel >> defaultLayout [
 IceGitHubNewBranchFromIssuePanel >> icon [
 
 	^ (self iconNamed: #github) scaledToSize: 16@16
+]
+
+{ #category : 'initialization' }
+IceGitHubNewBranchFromIssuePanel >> initialExtentForWindow [
+
+	^ 800 @ 175
 ]
 
 { #category : 'initialization' }
