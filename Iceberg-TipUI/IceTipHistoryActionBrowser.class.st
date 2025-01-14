@@ -14,6 +14,11 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipHistoryActionBrowser class >> defaultPreferredExtent [
+	^ (800@600)
+]
+
 { #category : 'actions' }
 IceTipHistoryActionBrowser >> accept [
 
@@ -36,12 +41,6 @@ IceTipHistoryActionBrowser >> commitsPanel [
 IceTipHistoryActionBrowser >> commitsPanel: aSpPresenter [
 
 	commitsPanel := aSpPresenter
-]
-
-{ #category : 'initialization' }
-IceTipHistoryActionBrowser >> initialExtentForWindow [
-
-	^ (800@600) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

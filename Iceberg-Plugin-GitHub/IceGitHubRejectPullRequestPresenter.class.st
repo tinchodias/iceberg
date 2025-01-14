@@ -15,6 +15,11 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceGitHubRejectPullRequestPresenter class >> defaultPreferredExtent [
+	^ (500 @ 250)
+]
+
 { #category : 'class initialization' }
 IceGitHubRejectPullRequestPresenter class >> initialize [
 
@@ -56,12 +61,6 @@ IceGitHubRejectPullRequestPresenter >> defaultLayout [
 IceGitHubRejectPullRequestPresenter >> defaultType [
 
 	^ 'merge'
-]
-
-{ #category : 'api' }
-IceGitHubRejectPullRequestPresenter >> initialExtentForWindow [
-
-	^ (500 @ 250) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

@@ -17,6 +17,12 @@ Class {
 	#tag : 'View-Repository'
 }
 
+{ #category : 'accessing' }
+IceTipAddRemoteDialogPresenter class >> defaultPreferredExtent [
+
+	^ 500 @ (self inputTextHeight * 2 + self buttonHeight + 50) "Yes, a magic number"
+]
+
 { #category : 'actions' }
 IceTipAddRemoteDialogPresenter >> accept [
 
@@ -41,16 +47,6 @@ IceTipAddRemoteDialogPresenter >> defaultLayout [
 			add: urlLabel; add: urlText; nextRow ];
 		yourself
 	
-]
-
-{ #category : 'initialization' }
-IceTipAddRemoteDialogPresenter >> initialExtentForWindow [
-
-	^ (500@(
-		self class inputTextHeight * 2
-		+ self class buttonHeight 
-		+ 50 "Yes, a magic number"
-		)) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

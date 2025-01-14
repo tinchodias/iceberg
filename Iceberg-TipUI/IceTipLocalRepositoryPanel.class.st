@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : 'accessing' }
+IceTipLocalRepositoryPanel class >> defaultPreferredExtent [
+	^ (500@(
+		self  inputTextHeight * 2
+		+ self  buttonHeight 
+		+ 50 "Yes, a magic number"
+		))
+]
+
+{ #category : 'accessing' }
 IceTipLocalRepositoryPanel class >> order [
 
 	^ 20
@@ -31,16 +40,6 @@ IceTipLocalRepositoryPanel >> defaultLayout [
 IceTipLocalRepositoryPanel >> iconForWindow [
 
 	^ self iconNamed: #smallOpen
-]
-
-{ #category : 'initialization' }
-IceTipLocalRepositoryPanel >> initialExtentForWindow [
-
-	^ (500@(
-		self class inputTextHeight * 2
-		+ self class buttonHeight 
-		+ 50 "Yes, a magic number"
-		)) scaledByDisplayScaleFactor
 ]
 
 { #category : 'testing' }

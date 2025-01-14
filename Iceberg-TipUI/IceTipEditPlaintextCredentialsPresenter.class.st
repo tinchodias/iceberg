@@ -9,6 +9,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipEditPlaintextCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ 160)
+]
+
 { #category : 'actions' }
 IceTipEditPlaintextCredentialsPresenter >> accept [ 
 	
@@ -25,12 +30,6 @@ IceTipEditPlaintextCredentialsPresenter >> defaultLayout [
 			add: usernameLabel; add: usernameInput; nextRow;
 			add: passwordLabel; add: passwordInput; nextRow ];
 		yourself
-]
-
-{ #category : 'initialization' }
-IceTipEditPlaintextCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ 160) scaledByDisplayScaleFactor
 ]
 
 { #category : 'actions' }

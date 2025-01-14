@@ -10,6 +10,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAskForPlaintextCredentialsPresenter class >> defaultPreferredExtent [
+	^ (450 @ 180)
+]
+
 { #category : 'actions' }
 IceTipAskForPlaintextCredentialsPresenter >> accept [
 
@@ -44,12 +49,6 @@ IceTipAskForPlaintextCredentialsPresenter >> defaultLayout [
 		add: storeCheckbox expand: false;
 		yourself
 
-]
-
-{ #category : 'initialization' }
-IceTipAskForPlaintextCredentialsPresenter >> initialExtentForWindow [
-
-	^ (450 @ 180) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

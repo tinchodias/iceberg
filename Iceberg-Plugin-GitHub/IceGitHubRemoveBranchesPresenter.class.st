@@ -16,6 +16,13 @@ Class {
 	#tag : 'View'
 }
 
+{ #category : 'accessing' }
+IceGitHubRemoveBranchesPresenter class >> defaultPreferredExtent [ 
+
+
+	^ 550 @ 500
+]
+
 { #category : 'class initialization' }
 IceGitHubRemoveBranchesPresenter class >> initialize [
 
@@ -42,12 +49,6 @@ IceGitHubRemoveBranchesPresenter >> defaultLayout [
 IceGitHubRemoveBranchesPresenter >> displayBlock: aBlock [
 	
 	displayBlock := aBlock
-]
-
-{ #category : 'initialization' }
-IceGitHubRemoveBranchesPresenter >> initialExtentForWindow [
-
-	^ 550 @ 500
 ]
 
 { #category : 'initialization' }
