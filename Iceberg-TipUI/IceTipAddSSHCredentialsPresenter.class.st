@@ -13,6 +13,11 @@ Class {
 	#tag : 'Credentials'
 }
 
+{ #category : 'accessing' }
+IceTipAddSSHCredentialsPresenter class >> defaultPreferredExtent [
+	^ (350 @ (self  inputTextHeight * 7 + self buttonHeight))
+]
+
 { #category : 'actions' }
 IceTipAddSSHCredentialsPresenter >> accept [
 
@@ -37,13 +42,6 @@ IceTipAddSSHCredentialsPresenter >> defaultLayout [
 IceTipAddSSHCredentialsPresenter >> hostnameFromInput [
 	
 	^ hostInput text
-]
-
-{ #category : 'initialization' }
-IceTipAddSSHCredentialsPresenter >> initialExtentForWindow [
-
-	^ (350 @ (self class inputTextHeight * 7 + self class buttonHeight))
-		  scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

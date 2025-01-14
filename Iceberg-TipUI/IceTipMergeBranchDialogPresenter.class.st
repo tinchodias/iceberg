@@ -15,6 +15,11 @@ Class {
 	#tag : 'View-Branch'
 }
 
+{ #category : 'accessing' }
+IceTipMergeBranchDialogPresenter class >> defaultPreferredExtent [
+	^ (600 @ 400)
+]
+
 { #category : 'instance creation' }
 IceTipMergeBranchDialogPresenter class >> onRepository: aRepository [
 
@@ -58,12 +63,6 @@ IceTipMergeBranchDialogPresenter >> createMergeBranchTypes [
 IceTipMergeBranchDialogPresenter >> doAccept [
 
 	self selectedType doAccept
-]
-
-{ #category : 'initialization' }
-IceTipMergeBranchDialogPresenter >> initialExtentForWindow [
-
-	^ (600 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : 'accessing' }

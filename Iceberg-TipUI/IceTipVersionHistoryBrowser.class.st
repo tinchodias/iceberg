@@ -37,6 +37,11 @@ IceTipVersionHistoryBrowser class >> buildSelectionCommandGroupWith: presenter f
 
 ]
 
+{ #category : 'accessing' }
+IceTipVersionHistoryBrowser class >> defaultPreferredExtent [
+	^ (700@700)
+]
+
 { #category : 'instance creation' }
 IceTipVersionHistoryBrowser class >> onRepository: aRepository method: aMethod [
 
@@ -58,12 +63,6 @@ IceTipVersionHistoryBrowser >> defaultLayout [
 		add: commitList;
 		add: commitPanel;
 		yourself
-]
-
-{ #category : 'initialization' }
-IceTipVersionHistoryBrowser >> initialExtentForWindow [
-
-	^ (700@700) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }
