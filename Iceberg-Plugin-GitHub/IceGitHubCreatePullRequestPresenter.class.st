@@ -256,7 +256,7 @@ IceGitHubCreatePullRequestPresenter >> headRemote [
 ]
 
 { #category : 'initialization' }
-IceGitHubCreatePullRequestModel >> initializeDialogWindow: aWindow [
+IceGitHubCreatePullRequestPresenter >> initializeDialogWindow: aWindow [
 
 	aWindow
 		addButton: 'Cancel' do: [ :presenter | 
