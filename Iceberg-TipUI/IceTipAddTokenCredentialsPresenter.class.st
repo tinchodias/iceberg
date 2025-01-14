@@ -18,11 +18,6 @@ Class {
 }
 
 { #category : 'accessing' }
-IceTipAddTokenCredentialsPresenter class >> defaultPreferredExtent [
-	^ (350 @ (self inputTextHeight * 5 + self buttonHeight))
-]
-
-{ #category : 'accessing' }
 IceTipAddTokenCredentialsPresenter >> accept [
 
 	self acceptAddAction
@@ -47,6 +42,12 @@ IceTipAddTokenCredentialsPresenter >> defaultLayout [
 IceTipAddTokenCredentialsPresenter >> hostnameFromInput [
 	
 	^ hostInput text
+]
+
+{ #category : 'initialization' }
+IceTipAddTokenCredentialsPresenter >> initialExtentForWindow [
+
+	^ (350 @ (self class inputTextHeight * 5 + self class buttonHeight)) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

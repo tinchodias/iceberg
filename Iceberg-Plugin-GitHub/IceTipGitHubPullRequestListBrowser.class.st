@@ -43,11 +43,6 @@ IceTipGitHubPullRequestListBrowser class >> buildSelectionCommandGroupWith: pres
 
 ]
 
-{ #category : 'accessing' }
-IceTipGitHubPullRequestListBrowser class >> defaultPreferredExtent [
-	^ (700 @ 700)
-]
-
 { #category : 'instance creation' }
 IceTipGitHubPullRequestListBrowser class >> onRepository: aRepository [
 
@@ -98,6 +93,12 @@ IceTipGitHubPullRequestListBrowser >> fetchPullRequests [
 			(IceGitHubPullRequest fromJSON: each)
 				repository: self repository entity;
 				yourself ]
+]
+
+{ #category : 'initialization' }
+IceTipGitHubPullRequestListBrowser >> initialExtentForWindow [
+
+	^ (700 @ 700) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

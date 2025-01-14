@@ -22,11 +22,6 @@ IceTipCherrypickPreviewBrowser class >> buildSelectionCommandGroupWith: presente
 	"Nothing to add"
 ]
 
-{ #category : 'accessing' }
-IceTipCherrypickPreviewBrowser class >> defaultPreferredExtent [
-	^ (800 @ 600)
-]
-
 { #category : 'instance creation' }
 IceTipCherrypickPreviewBrowser class >> onCommitish: aCommitish [
 	^ self
@@ -63,6 +58,12 @@ IceTipCherrypickPreviewBrowser >> doCherryPick [
 	root accept: IceMergeToChangeTreeVisitor new.
 	self model repository workingCopy loadChangesInWorkingCopy: root.
 	self closeWindow
+]
+
+{ #category : 'initialization' }
+IceTipCherrypickPreviewBrowser >> initialExtentForWindow [
+
+	^ (800 @ 600) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

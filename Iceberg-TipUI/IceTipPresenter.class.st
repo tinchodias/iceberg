@@ -52,14 +52,23 @@ IceTipPresenter >> iconForWindow [
 ]
 
 { #category : 'initialization' }
+IceTipPresenter >> initialExtentForWindow [
+	"Answer either nil or a Point representing the initial extent of this presenter.
+	It is used during initialization if this presenter is opened inside a SpWindowPresenter. 
+	Answer nil if there is not a suggested extent."
+
+	^ nil
+]
+
+{ #category : 'initialization' }
 IceTipPresenter >> initializeWindow: aSpWindowPresenter [
 
 	super initializeWindow: aSpWindowPresenter.
 
 	self setTitleTo: aSpWindowPresenter.
 	self setWindowIconTo: aSpWindowPresenter.
-	"self setInitialExtentTo: aSpWindowPresenter."
-
+	self setInitialExtentTo: aSpWindowPresenter
+	
 
 ]
 

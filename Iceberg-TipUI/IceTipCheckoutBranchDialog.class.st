@@ -15,11 +15,6 @@ Class {
 	#tag : 'View-Branch'
 }
 
-{ #category : 'accessing' }
-IceTipCheckoutBranchDialog class >> defaultPreferredExtent [
-	^ (600 @ 400)
-]
-
 { #category : 'instance creation' }
 IceTipCheckoutBranchDialog class >> onRepository: aRepository [
 
@@ -60,6 +55,12 @@ IceTipCheckoutBranchDialog >> createCheckoutBranchTypes [
 IceTipCheckoutBranchDialog >> doAccept [
 
 	self selectedType doAccept
+]
+
+{ #category : 'initialization' }
+IceTipCheckoutBranchDialog >> initialExtentForWindow [
+
+	^ (600 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : 'accessing' }

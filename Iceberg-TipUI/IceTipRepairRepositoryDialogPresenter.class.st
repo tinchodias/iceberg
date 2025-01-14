@@ -13,11 +13,6 @@ Class {
 	#tag : 'View-Repository'
 }
 
-{ #category : 'accessing' }
-IceTipRepairRepositoryDialogPresenter class >> defaultPreferredExtent [
-	^ (700 @ 500)
-]
-
 { #category : 'instance creation' }
 IceTipRepairRepositoryDialogPresenter class >> onRepository: aRepository [
 
@@ -55,6 +50,12 @@ IceTipRepairRepositoryDialogPresenter >> defaultLayout [
 IceTipRepairRepositoryDialogPresenter >> detailPanel [
 
 	^ detailPanel
+]
+
+{ #category : 'initialization' }
+IceTipRepairRepositoryDialogPresenter >> initialExtentForWindow [
+
+	^ (700 @ 500) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

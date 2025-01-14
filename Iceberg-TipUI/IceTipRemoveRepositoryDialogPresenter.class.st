@@ -12,15 +12,6 @@ Class {
 	#tag : 'View-Repository'
 }
 
-{ #category : 'accessing' }
-IceTipRemoveRepositoryDialogPresenter class >> defaultPreferredExtent [
-	^ (500@(
-		self  inputTextHeight * 2
-		+ self  buttonHeight 
-		+ 50 "Yes, a magic number"
-		))
-]
-
 { #category : 'actions' }
 IceTipRemoveRepositoryDialogPresenter >> accept [
 
@@ -59,6 +50,16 @@ IceTipRemoveRepositoryDialogPresenter >> defaultLayout [
 IceTipRemoveRepositoryDialogPresenter >> iconPanel [
 
 	^ iconPanel
+]
+
+{ #category : 'initialization' }
+IceTipRemoveRepositoryDialogPresenter >> initialExtentForWindow [
+
+	^ (500@(
+		self class inputTextHeight * 2
+		+ self class buttonHeight 
+		+ 50 "Yes, a magic number"
+		)) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

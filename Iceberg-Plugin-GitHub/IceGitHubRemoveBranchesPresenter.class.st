@@ -16,13 +16,6 @@ Class {
 	#tag : 'View'
 }
 
-{ #category : 'accessing' }
-IceGitHubRemoveBranchesModel class >> defaultPreferredExtent [ 
-
-
-	^ 550 @ 500
-]
-
 { #category : 'class initialization' }
 IceGitHubRemoveBranchesPresenter class >> initialize [
 
@@ -52,7 +45,13 @@ IceGitHubRemoveBranchesPresenter >> displayBlock: aBlock [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> initialize [
+IceGitHubRemoveBranchesPresenter >> initialExtentForWindow [
+
+	^ 550 @ 500
+]
+
+{ #category : 'initialization' }
+IceGitHubRemoveBranchesPresenter >> initialize [
 
 	selectedItems := Set new.
 	super initialize

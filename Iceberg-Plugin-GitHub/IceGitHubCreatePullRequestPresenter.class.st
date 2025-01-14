@@ -31,11 +31,6 @@ Class {
 	#tag : 'View'
 }
 
-{ #category : 'accessing' }
-IceGitHubCreatePullRequestModel class >> defaultPreferredExtent [
-	^ (700 @ 300)
-]
-
 { #category : 'class initialization' }
 IceGitHubCreatePullRequestPresenter class >> initialize [
 
@@ -256,7 +251,13 @@ IceGitHubCreatePullRequestPresenter >> headRemote [
 ]
 
 { #category : 'initialization' }
-IceGitHubCreatePullRequestModel >> initializeDialogWindow: aWindow [
+IceGitHubCreatePullRequestPresenter >> initialExtentForWindow [
+
+	^ (700 @ 300) scaledByDisplayScaleFactor
+]
+
+{ #category : 'initialization' }
+IceGitHubCreatePullRequestPresenter >> initializeDialogWindow: aWindow [
 
 	aWindow
 		addButton: 'Cancel' do: [ :presenter | 

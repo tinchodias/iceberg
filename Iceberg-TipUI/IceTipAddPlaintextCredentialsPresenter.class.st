@@ -13,11 +13,6 @@ Class {
 	#tag : 'Credentials'
 }
 
-{ #category : 'accessing' }
-IceTipAddPlaintextCredentialsPresenter class >> defaultPreferredExtent [
-	^ (350 @ (self  inputTextHeight * 5 + self  buttonHeight))
-]
-
 { #category : 'testing' }
 IceTipAddPlaintextCredentialsPresenter >> accept [
 
@@ -41,6 +36,13 @@ IceTipAddPlaintextCredentialsPresenter >> defaultLayout [
 IceTipAddPlaintextCredentialsPresenter >> hostnameFromInput [
 
 	^ hostInput text
+]
+
+{ #category : 'initialization' }
+IceTipAddPlaintextCredentialsPresenter >> initialExtentForWindow [
+
+	^ (350 @ (self class inputTextHeight * 5 + self class buttonHeight))
+		  scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

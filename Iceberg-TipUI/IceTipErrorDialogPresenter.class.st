@@ -19,15 +19,6 @@ Class {
 	#tag : 'View'
 }
 
-{ #category : 'accessing' }
-IceTipErrorDialogPresenter class >> defaultPreferredExtent [
-	^ (500@(
-		self inputTextHeight * 2
-		+ self buttonHeight 
-		+ 50 "Yes, a magic number"
-		))
-]
-
 { #category : 'initialization' }
 IceTipErrorDialogPresenter >> accept [
 	
@@ -68,6 +59,16 @@ IceTipErrorDialogPresenter >> exception: anException [
 IceTipErrorDialogPresenter >> iconPanel [
 
 	^ iconPanel
+]
+
+{ #category : 'initialization' }
+IceTipErrorDialogPresenter >> initialExtentForWindow [
+
+	^ (500@(
+		self class inputTextHeight * 2
+		+ self class buttonHeight 
+		+ 50 "Yes, a magic number"
+		)) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }

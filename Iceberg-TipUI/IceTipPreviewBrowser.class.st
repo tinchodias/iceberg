@@ -27,11 +27,6 @@ IceTipPreviewBrowser class >> buildSelectionCommandGroupWith: presenter for: aCo
 	"Nothing to add"
 ]
 
-{ #category : 'accessing' }
-IceTipPreviewBrowser class >> defaultPreferredExtent [
-	^ (800 @ 400)
-]
-
 { #category : 'accessing - ui' }
 IceTipPreviewBrowser >> actionPanel [
 
@@ -53,6 +48,12 @@ IceTipPreviewBrowser >> defaultLayout [
 IceTipPreviewBrowser >> diffPanel [
 
 	^ diffPanel
+]
+
+{ #category : 'initialization' }
+IceTipPreviewBrowser >> initialExtentForWindow [
+
+	^ (800 @ 400) scaledByDisplayScaleFactor
 ]
 
 { #category : 'initialization' }
