@@ -32,7 +32,7 @@ Class {
 }
 
 { #category : 'accessing' }
-IceGitHubCreatePullRequestModel class >> defaultPreferredExtent [
+IceGitHubCreatePullRequestPresenter class >> defaultPreferredExtent [
 	^ (700 @ 300)
 ]
 

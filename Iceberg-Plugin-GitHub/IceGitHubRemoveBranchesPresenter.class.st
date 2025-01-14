@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : 'accessing' }
-IceGitHubRemoveBranchesModel class >> defaultPreferredExtent [ 
+IceGitHubRemoveBranchesPresenter class >> defaultPreferredExtent [ 
 
 
 	^ 550 @ 500
@@ -52,7 +52,7 @@ IceGitHubRemoveBranchesPresenter >> displayBlock: aBlock [
 ]
 
 { #category : 'initialization' }
-IceGitHubRemoveBranchesModel >> initialize [
+IceGitHubRemoveBranchesPresenter >> initialize [
 
 	selectedItems := Set new.
 	super initialize

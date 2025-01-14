@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : 'accessing' }
-IceGitHubRejectPullRequestModel class >> defaultPreferredExtent [
+IceGitHubRejectPullRequestPresenter class >> defaultPreferredExtent [
 	^ (500 @ 250)
 ]
 
